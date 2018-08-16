@@ -1,0 +1,27 @@
+<?php /** @var \Klevu\Categorynavigation\Block\Product\Tracking $block */ ?>
+<?php if ($block->isExtensionConfigured() && $block->getRefererRoute() == 'catalog') { ?>
+<script type="text/javascript">
+require(['jquery'], function(){
+        var referrer, search_term, klevu_search_product_tracking;
+        search_term = '<?php echo $block->getCategoryName(); ?>';
+        if (search_term) {
+            klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;
+            klevu_search_product_tracking.klevu_term = search_term;
+            var param = jQuery.param(klevu_search_product_tracking);
+            jQuery.ajax({
+                url:'//<?php echo $block->getCategoryNavigationTrackingUrl($block->getStoreId()) ?>/analytics/productTracking',
+                type: 'GET',
+                data: param,
+                dataType: 'json',
+                statusCode: {
+                    200: function(data) {
+					
+                    }
+                },
+				timeout: 3000,
+                crossDomain: true
+            });
+        }
+});
+</script>
+<?php } ?>
