@@ -86,14 +86,20 @@ class Collection
         $this->_session = $session;
     }
     
-   	public function afterSetOrder(\Magento\Catalog\Model\ResourceModel\Product\Collection $collection)
-    {
-	  
+   	
+	//if above afterSetOrder does not work then this method will be called
+	public function aroundSetCollection(
+        \Magento\Catalog\Block\Product\ProductList\Toolbar $subject,
+        \Closure $proceed,
+        $collection
+    ) {
+		
+		$result = $proceed($collection);
 		$helper = $this->_searchHelper;
         $config = $this->_searchHelperConfig;
         if ($config->isExtensionConfigured() && $helper->categoryLandingStatus() == static::KLEVU_PRESERVE_LAYOUT) {
-        $currentCategory = $this->_registry->registry('current_category');
-        $categoryId = $this->_session->getData('category_klevu_id');
+			$currentCategory = $this->_registry->registry('current_category');
+			$categoryId = $this->_session->getData('category_klevu_id');
             if($currentCategory)
             {
 				$this->_session->setData('category_klevu_id', $currentCategory->getId());
@@ -104,17 +110,19 @@ class Collection
             $module_name = $this->request->getModuleName();
             $action = $this->request->getActionName();
             if (empty($collection_order) && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
-				$collection->getSelect()->reset(\Zend_Db_Select::ORDER);
-                $collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) ASC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+					$subject->getCollection()->getSelect()->reset(\Zend_Db_Select::ORDER);
+					$subject->getCollection()->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) ASC', implode(',', $this->_registry->registry('klevu_product_ids')))));
             } else {
                 if ($collection_order == 'relevance' && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
-				$collection->getSelect()->reset(\Zend_Db_Select::ORDER);
-                $collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) ASC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+					$subject->getCollection()->getSelect()->reset(\Zend_Db_Select::ORDER);
+					$subject->getCollection()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) ASC', implode(',', $this->_registry->registry('klevu_product_ids')))));
                 }
             }     
         }
-        return $collection;
-	}
+		$result = $proceed($collection);
+        return $result;
+		
+    }
     
     public function getSearchFilters()
     {

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
-	<type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
-        <plugin name="klevu_categorynavigation" type="Klevu\Categorynavigation\Model\ResourceModel\Product\Collection" disabled="false" sortOrder="101"/>
+    <type name="Magento\Catalog\Block\Product\ProductList\Toolbar">
+        <plugin name="klevu_categorynavigation::setRelevance" type="Klevu\Categorynavigation\Model\ResourceModel\Product\Collection" sortOrder="101"/>
     </type>
 </config>
