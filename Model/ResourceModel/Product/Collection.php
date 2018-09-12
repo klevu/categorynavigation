@@ -103,7 +103,8 @@ class Collection
             if($currentCategory)
             {
 				$this->_session->setData('category_klevu_id', $currentCategory->getId());
-				$this->_registry->register('klevu_product_ids',$this->_getProductIds());	
+                $productRegistry = $this->_registry->registry('klevu_product_ids');
+                if(!$productRegistry) $this->_registry->register('klevu_product_ids',$this->_getProductIds());
 			}
 			
             $collection_order = $this->request->getParam('product_list_order');
