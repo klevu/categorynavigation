@@ -42,7 +42,7 @@ class Idsearch extends \Klevu\Search\Model\Api\Actionall
     const ENDPOINT = "/cloud-search/n-search/idsearch";
     const METHOD   = "GET";
 
-    const DEFAULT_REQUEST_MODEL = "Klevu\Search\Model\Api\Request\Post";
+    const DEFAULT_REQUEST_MODEL = "Klevu\Categorynavigation\Model\Api\Request\Get";
     const DEFAULT_RESPONSE_MODEL = "Klevu\Search\Model\Api\Response\Data";
     
     /**
