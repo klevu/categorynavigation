@@ -104,19 +104,19 @@ class Collection
             {
 				$this->_session->setData('category_klevu_id', $currentCategory->getId());
                 $productRegistry = $this->_registry->registry('klevu_product_ids');
-                if(!$productRegistry) $this->_registry->register('klevu_product_ids',$this->_getProductIds());
+                if(!$productRegistry) $this->_registry->register('klevu_product_ids',array_reverse($this->_getProductIds()));
 			}
 			
             $collection_order = $this->request->getParam('product_list_order');
             $module_name = $this->request->getModuleName();
             $action = $this->request->getActionName();
             if (empty($collection_order) && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
-					$subject->getCollection()->getSelect()->reset(\Zend_Db_Select::ORDER);
-					$subject->getCollection()->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) ASC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+				$collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+                $collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) DESC', implode(',', $this->_registry->registry('klevu_product_ids')))));
             } else {
-                if ($collection_order == 'relevance' && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
-					$subject->getCollection()->getSelect()->reset(\Zend_Db_Select::ORDER);
-					$subject->getCollection()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) ASC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+                if ($collection_order == 'position' && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
+					$collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+					$collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) DESC', implode(',', $this->_registry->registry('klevu_product_ids')))));
                 }
             }     
         }
