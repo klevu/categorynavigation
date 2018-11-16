@@ -111,12 +111,19 @@ class Collection
             $module_name = $this->request->getModuleName();
             $action = $this->request->getActionName();
             if (empty($collection_order) && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
-				$collection->getSelect()->reset(\Zend_Db_Select::ORDER);
-                $collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) DESC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+                $ids = $this->_registry->registry('klevu_product_ids');
+                if(!empty($ids)) {
+                    $collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+                    $collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) DESC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+                }
+
             } else {
                 if ($collection_order == 'position' && !empty($this->_registry->registry('klevu_product_ids')) && $module_name == "catalog" && $action == "view") {
-					$collection->getSelect()->reset(\Zend_Db_Select::ORDER);
-					$collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) DESC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+                    $ids = $this->_registry->registry('klevu_product_ids');
+                    if(!empty($ids)) {
+                        $collection->getSelect()->reset(\Zend_Db_Select::ORDER);
+                        $collection->getSelect()->order(new \Zend_Db_Expr(sprintf('FIELD(`e`.`entity_id`, %s) DESC', implode(',', $this->_registry->registry('klevu_product_ids')))));
+                    }
                 }
             }     
         }
