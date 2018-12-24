@@ -76,6 +76,8 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
 
     const XML_PATH_CATEGORY_NAVIGATION_URL = "klevu_search/general/category_navigation_url";
 	const XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL = "klevu_search/general/category_navigation_tracking_url";
+    const XML_PATH_CATEGORY_RELEVANCE = "klevu_search/categorylanding/klevu_cat_relevance";
+
     
 
 
@@ -184,5 +186,16 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     {
         \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ReinitableConfigInterface')->reinit();
     }
-   
+
+    /**
+     * @param null $store
+     * @return string
+     */
+    public function getCategoryNavigationRelevance($store = null)
+    {
+        return $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_RELEVANCE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
+        
+    }
+
+
 }

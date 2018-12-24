@@ -23,6 +23,11 @@
                   <label>Maximum Number Of Products Per Category</label>
                   <comment><![CDATA[This value can be upto 4000.]]></comment>
                 </field>
+                <field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInStore="1">
+                    <label>Sort by Klevu Relevance</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[When option "Klevu Powered - Preserve Theme Layout" is selected.]]></comment>
+                </field>
             </group>
     </section>
   </system>

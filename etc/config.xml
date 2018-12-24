@@ -8,6 +8,7 @@
       <categorylanding>
         <enabledcategorynavigation>1</enabledcategorynavigation>
         <max_no_of_products>4000</max_no_of_products>
+		<klevu_cat_relevance>1</klevu_cat_relevance>
       </categorylanding>
     </klevu_search>
   </default>

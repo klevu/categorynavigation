@@ -2,7 +2,7 @@
 
 namespace Klevu\Categorynavigation\Model\Api\Action;
 
-class Idsearch extends \Klevu\Search\Model\Api\Actionall
+class CatnavIdsearch extends \Klevu\Search\Model\Api\Actionall
 {
     /**
      * @var \Klevu\Search\Model\Api\Response\Invalid
@@ -42,7 +42,7 @@ class Idsearch extends \Klevu\Search\Model\Api\Actionall
     const ENDPOINT = "/cloud-search/n-search/idsearch";
     const METHOD   = "GET";
 
-    const DEFAULT_REQUEST_MODEL = "Klevu\Categorynavigation\Model\Api\Request\Get";
+    const DEFAULT_REQUEST_MODEL = "Klevu\Search\Model\Api\Request\Get";
     const DEFAULT_RESPONSE_MODEL = "Klevu\Search\Model\Api\Response\Data";
     
     /**
