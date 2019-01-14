@@ -1,0 +1,78 @@
+<?php /** @var \Klevu\Categorynavigation\Block\Product\View $block */ ?>
+<?php if ($block->isExtensionConfigured() && $block->getCurrentController() == 'category') { ?>
+    <?php if ($block->checkPreserveLayout()) { ?>
+    <script type="text/javascript">
+        var already_reported;
+        var array_difference;
+        function productViewTracking() {
+            try {
+                var category_product_ids = document.querySelectorAll("div[data-product-id]");
+                let product_ids = [];
+                for (var i = 0; i < category_product_ids.length; i++) {
+                    if (category_product_ids[i].dataset) {
+                        currentProductIds = category_product_ids.length;
+                        product_ids.push(category_product_ids[i].dataset.productId);
+                    }
+                }
+
+                var p = '<?php echo $block->getRequest()->getParam('p'); ?>';
+                klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;
+                klevu_search_product_tracking.klevu_productIds = product_ids.join();
+                if (p) {
+                    klevu_pageStartsFrom = (p - 1) * localStorage.getItem("product_per_page");
+                } else {
+                    klevu_pageStartsFrom = 0;
+                    localStorage.setItem("product_per_page", product_ids.length);
+                }
+                if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
+                    j = 1;
+                    if (already_reported) {
+                        a = klevu_search_product_tracking.klevu_productIds.split(",");
+                        b = already_reported.split(",");
+                        klevu_pageStartsFrom = j * b.length;
+                        //console.log(klevu_pageStartsFrom);
+                        var array_difference = jQuery(a).not(b).get();
+                        j++;
+                    }
+                    already_reported = klevu_search_product_tracking.klevu_productIds;
+                    if (already_reported) {
+                        if (array_difference) {
+                            klevu_search_product_tracking.klevu_productIds = array_difference.join();
+                        }
+                    }
+                    klevu_search_product_tracking.klevu_pageStartsFrom = klevu_pageStartsFrom;
+					klevu_search_product_tracking.klevu_shopperIP = klevu_user_ip;
+                  klevu_search_product_tracking.klevu_sessionId = klevu_user_sessionId;
+                  klevu_search_product_tracking.klevu_loginCustomerEmail = klevu_user_loginCustomerEmail;
+                    var param = jQuery.param(klevu_search_product_tracking);
+                    jQuery.ajax({
+                            url: '//<?php echo $block->getCategoryNavigationTrackingUrl($block->getStoreId()) ?>/analytics/categoryProductViewTracking',
+                            type: 'GET',
+                            data: param,
+                            dataType: 'json',
+                            statusCode: {
+                                200: function (data) {
+                                    localStorage.setItem("klevu_cat_productIds", klevu_search_product_tracking.klevu_productIds);
+                                    localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
+                                }
+                            },
+                            timeout: 3000,
+                            crossDomain: true
+                    });
+
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        require(['jquery'], productViewTracking);
+        if (typeof addEventListener === 'undefined') {
+            window.attachEvent('onscroll', productViewTracking, false);
+        } else {
+            window.addEventListener('scroll', productViewTracking, false);
+        }
+        localStorage.setItem("klevu_product_call_sent",'');
+    </script>
+    <?php } ?>
+<?php } ?>

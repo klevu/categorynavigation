@@ -4,11 +4,15 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.2.6</li>
-<li>EE 2.0.0 to 2.2.6</li>
+<li>CE 2.0.0 to 2.3.0</li>
+<li>EE 2.0.0 to 2.3.0</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.18</h3>
+<li>Magento version 2.3.0 support</li>
+<li>Category view and product click tracking</li>
+
 <h3>Version 2.1.17</h3>
 <li>Added new ordering type "Relevance" that will be used for Klevu category ordering, configurable from magento admin</li>
 <li>Removed overide of position ordering</li>

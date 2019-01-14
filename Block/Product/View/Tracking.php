@@ -1,11 +1,11 @@
 <?php
 
-namespace Klevu\Categorynavigation\Block\Product;
+namespace Klevu\Categorynavigation\Block\Product\View;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Session\Generic;
-use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use \Magento\Framework\App\Request\Http;
 use \Magento\Framework\Registry;
 
 
@@ -17,7 +17,6 @@ class Tracking extends \Magento\Framework\View\Element\Template
 
     protected $registry;
     protected $storeManagerInterface;
-    protected $customerSession;
     protected $customerGroupCollection;
     protected $stockHelper;
     protected $configHelper;
@@ -33,12 +32,11 @@ class Tracking extends \Magento\Framework\View\Element\Template
         \Klevu\Search\Helper\Price $priceHelper,
         \Klevu\Search\Helper\Data $searchHelperData,
         \Klevu\Categorynavigation\Helper\Data $navigationHelper,
+        \Magento\Framework\App\Request\Http $klevuhttp,
         \Klevu\Categorynavigation\Helper\Config $navigationConfigHelper,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress,
-        \Magento\Catalog\Model\Category $category,
         \Magento\Framework\App\Response\RedirectInterface $redirectInterface,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        \Magento\Catalog\Model\Category $category,
         array $data = []
     )
     {
@@ -47,15 +45,15 @@ class Tracking extends \Magento\Framework\View\Element\Template
         $this->_stockHelper = $stockHelper;
         $this->_configHelper = $configHelper;
         $this->_priceHelper = $priceHelper;
-        $this->_customerSession = $customerSession;
+
         $this->_searchHelperData = $searchHelperData;
-        $this->_remoteAddress = $remoteAddress;
+        $this->_klevuhttp = $klevuhttp;
         $this->_navigationHelper = $navigationHelper;
         $this->_navigationConfigHelper = $navigationConfigHelper;
-        $this->_category = $category;
+        $this->_requestInterface = $context->getRequest();
         $this->_redirectInterface = $redirectInterface;
         $this->_categoryFactory = $categoryFactory;
-        $this->_requestInterface = $context->getRequest();
+        $this->_category = $category;
         parent::__construct($context, $data);
     }
 
@@ -66,70 +64,30 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getJsonTrackingData()
     {
-        // Get the product
-        $product = $this->_registry->registry('current_product');
-        $id = $product->getId();
+        // Get the category
+        $category = $this->_registry->registry('current_category');
         $store = $this->_storeManagerInterface->getStore();
         $js_api_key = $this->_configHelper->getJsApiKey();
-
-        $name = $product->getName();
-        $product_url = $product->getProductUrl();
-        $product_sku = $product->getSku();
-
-        if ($product->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-            $parent = $product;
-            $productTypeInstance = $product->getTypeInstance();
-            $usedProducts = $productTypeInstance->getUsedProducts($product);
-            foreach ($usedProducts as $child) {
-                $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $child, $store);
-                $product_sale_price = $product_saleprice['salePrice'];
-
-            }
-        } else {
-            $parent = null;
-            $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $product, $store);
-            $product_sale_price = $product_saleprice['salePrice'];
-        }
-
-        $product = [
+        $categoryViewProducts = [
             'klevu_apiKey' => $js_api_key,
-            'klevu_categoryName' => $this->getCategoryName()->getName(),
-            'klevu_categoryPath' => $this->getCategoryNameFormPath($this->getCategoryName()->getPath()),
-            'klevu_productId' => $id,
-            'klevu_productName' => $name,
-            'klevu_productUrl' => $product_url,
-            'klevu_productSku' => $product_sku,
-            'klevu_salePrice' => $product_sale_price,
-            'klevu_shopperIP' => $this->_searchHelperData->getIp(),
-            'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
-            'klevu_productRatings' => $this->convertToRatingStar($product->getRating()),
-            'klevu_sessionId' => md5(session_id())
+            'klevu_categoryName' => $category->getName(),
+            'klevu_categoryPath' => $this->getCategoryNameFormPath($category->getPath()),
+            'klevu_shopperIP' => "",
+            'klevu_loginCustomerEmail' => "",
+            'klevu_sessionId' => ""
         ];
-        return json_encode($product);
+        return json_encode($categoryViewProducts);
     }
 
     /**
      * Check klevu configured or nor
      * @return boolean
      */
-
     public function isExtensionConfigured()
     {
         return $this->_configHelper->isExtensionConfigured();
     }
 
-    /**
-     * Check klevu presevelayout template selected for category navigation
-     * @return boolean
-     */
-    public function checkPreserveLayout()
-    {
-        if ($this->_navigationHelper->categoryLandingStatus() == static::KLEVU_PRESERVE_LAYOUT) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * Get Store wise category navigation url
@@ -150,11 +108,25 @@ class Tracking extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Check klevu presevelayout template selected for category navigation
+     * @return boolean
+     */
+    public function checkPreserveLayout()
+    {
+        if ($this->_navigationHelper->categoryLandingStatus() == static::KLEVU_PRESERVE_LAYOUT) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get from category path from referer category page
      * @return string
      */
     public function getCategoryName()
     {
+
         $refUrl = explode("/", $this->_redirectInterface->getRefererUrl());
         $cat_url = explode(".", end($refUrl));
         if (isset($cat_url)) {
@@ -166,6 +138,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
         }
 
     }
+
 
     /**
      * Get category name from path 2/3/4/5
@@ -194,26 +167,19 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getCategoryNameFromId($categoryId)
     {
+        $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $category = $this->_category->load($categoryId);
         $categoryName = $category->getName();
         return $categoryName;
     }
 
     /**
-     * Convert percent to rating star
-     *
-     * @param int percentage
-     *
-     * @return float
+     * Get current controller name
+     * @return string
      */
-    public function convertToRatingStar($percentage)
+    public function getCurrentController()
     {
-        if (!empty($percentage) && $percentage != 0) {
-            $start = $percentage * 5;
-            return round($start / 100, 2);
-        } else {
-            return;
-        }
+        return $this->_klevuhttp->getControllerName();
     }
 
 
