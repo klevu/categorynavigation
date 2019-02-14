@@ -22,7 +22,7 @@
                     klevu_pageStartsFrom = (p - 1) * localStorage.getItem("product_per_page");
                 } else {
                     klevu_pageStartsFrom = 0;
-                    localStorage.setItem("product_per_page", product_ids.length);
+                    sessionStorage.setItem("product_per_page", product_ids.length);
                 }
                 if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
                     j = 1;
@@ -52,8 +52,8 @@
                             dataType: 'json',
                             statusCode: {
                                 200: function (data) {
-                                    localStorage.setItem("klevu_cat_productIds", klevu_search_product_tracking.klevu_productIds);
-                                    localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
+                                    sessionStorage.setItem("klevu_cat_productIds_"+klevu_search_product_tracking.klevu_categoryName, klevu_search_product_tracking.klevu_productIds);
+                                    sessionStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
                                 }
                             },
                             timeout: 3000,
@@ -72,7 +72,7 @@
         } else {
             window.addEventListener('scroll', productViewTracking, false);
         }
-        localStorage.setItem("klevu_product_call_sent",'');
+        sessionStorage.setItem("klevu_product_call_sent",'');
     </script>
     <?php } ?>
 <?php } ?>

@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.19</h3>
+<li>Change from using localStorage to using sessionStorage</li>
+
 <h3>Version 2.1.18</h3>
 <li>Magento version 2.3.0 support</li>
 <li>Category view and product click tracking</li>
