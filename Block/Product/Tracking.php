@@ -93,17 +93,15 @@ class Tracking extends \Magento\Framework\View\Element\Template
 
         $product = [
             'klevu_apiKey' => $js_api_key,
-            'klevu_categoryName' => $this->getCategoryName()->getName(),
-            'klevu_categoryPath' => $this->getCategoryNameFormPath($this->getCategoryName()->getPath()),
             'klevu_productId' => $id,
             'klevu_productName' => $name,
             'klevu_productUrl' => $product_url,
             'klevu_productSku' => $product_sku,
             'klevu_salePrice' => $product_sale_price,
-            'klevu_shopperIP' => $this->_searchHelperData->getIp(),
-            'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
-            'klevu_productRatings' => $this->convertToRatingStar($product->getRating()),
-            'klevu_sessionId' => md5(session_id())
+			'klevu_productRatings' => $this->convertToRatingStar($product->getRating())
+            //'klevu_shopperIP' => $this->_searchHelperData->getIp(),
+            //'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
+            //'klevu_sessionId' => md5(session_id())
         ];
         return json_encode($product);
     }

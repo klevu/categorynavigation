@@ -4,6 +4,21 @@
         <script type="text/javascript">
             var already_reported;
             var array_difference;
+            var klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;
+            var hours = 24; // Reset when storage is more than 24hours
+            var now = new Date().getTime();
+            var setupTime = localStorage.getItem('setupTime');
+            if (setupTime == null) {
+                localStorage.setItem('setupTime', now)
+            } else {
+                if(now-setupTime > hours*60*60*1000) {
+                    localStorage.removeItem("categories");
+                    localStorage.removeItem("klevu_cat_productIds_" + klevu_search_product_tracking.klevu_categoryName);
+                    localStorage.setItem('setupTime', now);
+                }
+            }
+
+
             function productViewTracking() {
                 try {
                     var category_product_ids = document.querySelectorAll("div[data-product-id]");
@@ -18,7 +33,7 @@
                     if (category_product_ids.length > 0 ) {
 
                         var p = '<?php echo $block->getRequest()->getParam('p'); ?>';
-                        klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;
+
                         klevu_search_product_tracking.klevu_productIds = product_ids.join();
                         if (p) {
                             klevu_pageStartsFrom = (p - 1) * sessionStorage.getItem("product_per_page");
@@ -27,12 +42,18 @@
                             sessionStorage.setItem("product_per_page", product_ids.length);
                         }
                         if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
-							j = 1;
+                            j = 1;
+                            if (already_reported) {
+                                //a = klevu_search_product_tracking.klevu_productIds.split(",");
+                                bb = already_reported.split(",");
+                                klevu_pageStartsFrom = j * bb.length;
+                                j++;
+                            }
+
                             if (already_reported) {
                                 a = already_reported.split(",");
                                 b = klevu_search_product_tracking.klevu_productIds.split(",");
-								klevu_pageStartsFrom = j * a.length;
-								j++;
+
                                 if(b.length > a.length){
                                     if(arrayContainsArray(b,a)){
                                         var array_difference = jQuery(b).not(a).get();
@@ -60,9 +81,16 @@
 
 
                             klevu_search_product_tracking.klevu_pageStartsFrom = klevu_pageStartsFrom;
-                            klevu_search_product_tracking.klevu_shopperIP = klevu_user_ip;
-                            klevu_search_product_tracking.klevu_sessionId = klevu_user_sessionId;
-                            klevu_search_product_tracking.klevu_loginCustomerEmail = klevu_user_loginCustomerEmail;
+
+                            if(document.getElementById('klevu_loginCustomerEmail')) {
+                                klevu_search_product_tracking.klevu_loginCustomerEmail = document.getElementById('klevu_loginCustomerEmail').innerHTML;
+                            }
+
+                            if(document.getElementById('klevu_sessionId')) {
+                                klevu_search_product_tracking.klevu_sessionId = document.getElementById('klevu_sessionId').innerHTML;
+                            }
+
+
                             var param = jQuery.param(klevu_search_product_tracking);
                             if(klevu_search_product_tracking.klevu_productIds.length > 0) {
                                 jQuery.ajax({
@@ -72,8 +100,8 @@
                                     dataType: 'json',
                                     statusCode: {
                                         200: function (data) {
-                                            sessionStorage.setItem("klevu_cat_productIds_" + klevu_search_product_tracking.klevu_categoryName, klevu_search_product_tracking.klevu_productIds);
-                                            sessionStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
+                                            localStorage.setItem("klevu_cat_productIds_" + klevu_search_product_tracking.klevu_categoryName, klevu_search_product_tracking.klevu_productIds);
+                                            localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
                                         }
                                     },
                                     timeout: 3000,
@@ -81,14 +109,20 @@
                                 });
                             }
                         }
-
                     }
                 } catch (e) {
                     console.log(e);
                 }
             }
-
-
+            require(['jquery'], function () {
+                var categories = JSON.parse(localStorage.getItem("categories") || "{}");
+                var catname = klevu_search_product_tracking.klevu_categoryName;
+                var catpath = klevu_search_product_tracking.klevu_categoryPath;
+                var currentUrl = window.location.pathname;
+                var category = {'name': catname,'categoryPath': catpath};
+                categories[currentUrl] = category;
+                localStorage.setItem("categories", JSON.stringify(categories));
+            });
             /**
              * Returns TRUE if the first specified array contains all elements
              * from the second one. FALSE otherwise.

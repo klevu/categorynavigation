@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.21</h3>
+<li>Fix caching issue for product page and change analytics reporting procedure</li>
+
 <h3>Version 2.1.20</h3>
 <li>Improve analytics reporting when using Ajax modules in preserve layout</li>
 

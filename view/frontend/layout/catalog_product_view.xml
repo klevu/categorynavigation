@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <referenceBlock name="before.body.end">
-		<block class="Klevu\Categorynavigation\Block\Product\Tracking" cacheable="false" template="Klevu_Categorynavigation::klevu/categorynavigation/product_tracking.phtml" name="klevu_categorynavigation.catalog.product.tracking" />
+		<block class="Klevu\Categorynavigation\Block\Product\Tracking" template="Klevu_Categorynavigation::klevu/categorynavigation/product_tracking.phtml" name="klevu_categorynavigation.catalog.product.tracking" />
     </referenceBlock>
 </page>
