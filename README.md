@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.22</h3>
+<li>Added support for UTF-8 encoded variables for category navigation tracking</li>
+
 <h3>Version 2.1.21</h3>
 <li>Fix caching issue for product page and change analytics reporting procedure</li>
 

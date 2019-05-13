@@ -4,7 +4,13 @@
         <script type="text/javascript">
             var already_reported;
             var array_difference;
-            var klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;
+            var klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;					
+			if(klevu_search_product_tracking.klevu_categoryName !== null){		 
+				klevu_search_product_tracking.klevu_categoryName= encodeURIComponent(klevu_search_product_tracking.klevu_categoryName);
+			}	
+			if(klevu_search_product_tracking.klevu_categoryPath !== null){		
+				klevu_search_product_tracking.klevu_categoryPath= encodeURIComponent(klevu_search_product_tracking.klevu_categoryPath);
+			}
             var hours = 24; // Reset when storage is more than 24hours
             var now = new Date().getTime();
             var setupTime = localStorage.getItem('setupTime');
@@ -13,7 +19,7 @@
             } else {
                 if(now-setupTime > hours*60*60*1000) {
                     localStorage.removeItem("categories");
-                    localStorage.removeItem("klevu_cat_productIds_" + klevu_search_product_tracking.klevu_categoryName);
+                    localStorage.removeItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName) );
                     localStorage.setItem('setupTime', now);
                 }
             }
@@ -100,7 +106,7 @@
                                     dataType: 'json',
                                     statusCode: {
                                         200: function (data) {
-                                            localStorage.setItem("klevu_cat_productIds_" + klevu_search_product_tracking.klevu_categoryName, klevu_search_product_tracking.klevu_productIds);
+                                            localStorage.setItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName), klevu_search_product_tracking.klevu_productIds);
                                             localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
                                         }
                                     },
@@ -116,8 +122,8 @@
             }
             require(['jquery'], function () {
                 var categories = JSON.parse(localStorage.getItem("categories") || "{}");
-                var catname = klevu_search_product_tracking.klevu_categoryName;
-                var catpath = klevu_search_product_tracking.klevu_categoryPath;
+                var catname = encodeURIComponent(klevu_search_product_tracking.klevu_categoryName);
+                var catpath = encodeURIComponent(klevu_search_product_tracking.klevu_categoryPath);
                 var currentUrl = window.location.pathname;
                 var category = {'name': catname,'categoryPath': catpath};
                 categories[currentUrl] = category;
