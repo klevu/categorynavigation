@@ -181,6 +181,16 @@ class Tracking extends \Magento\Framework\View\Element\Template
     {
         return $this->_klevuhttp->getControllerName();
     }
+	
+	/**
+     * Get current category navigation version
+     * @return string
+     */
+	public function getModuleInfo()
+    {
+        $moduleInfo = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\Module\ModuleList')->getOne('Klevu_Categorynavigation');
+        return $moduleInfo['setup_version'];
+    }
 
 
 }

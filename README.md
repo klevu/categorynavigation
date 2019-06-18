@@ -4,11 +4,16 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.3.0</li>
-<li>EE 2.0.0 to 2.3.0</li>
+<li>CE 2.0.0 to 2.3.1</li>
+<li>EE 2.0.0 to 2.3.1</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.23</h3>
+<li>Don't consider up and down scrolling of third party ajax plugin for same ids in category view product tracking</li>
+<li>Fixed blank URL issue in stats call when js minified in production mode</li>
+<li>Added klevu_cat_current_version js variable to know current klevu category version</li>
+
 <h3>Version 2.1.22</h3>
 <li>Added support for UTF-8 encoded variables for category navigation tracking</li>
 

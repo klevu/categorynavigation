@@ -34,8 +34,10 @@
                     var param = jQuery.param(klevu_search_product_tracking);
 
                     if (klevu_search_product_tracking.klevu_productId != localStorage.getItem("klevu_product_call_sent")) {
+						<?php $isSecure = $block->getRequest()->isSecure();
+						$protocol = ($isSecure) ? 'https://' : 'http://'; ?>
                       jQuery.ajax({
-                        url: '//<?php echo $block->getCategoryNavigationTrackingUrl($block->getStoreId()) ?>/analytics/categoryProductClickTracking',
+                        url: '<?php echo $protocol.$block->getCategoryNavigationTrackingUrl($block->getStoreId()) ?>/analytics/categoryProductClickTracking',
                         type: 'GET',
                         data: param,
                         dataType: 'json',

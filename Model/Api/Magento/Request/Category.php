@@ -193,7 +193,8 @@ class Category implements CategoryInterface
                 'klevuShowOutOfStockProducts' => 'true',
                 'isCategoryNavigationRequest' => 'true',
                 'category' => $category,
-                'categoryIds' => $currentCategory->getId()
+                'categoryIds' => $currentCategory->getId(),
+				'visibility' => 'catalog'
             ];
         }
         return $this->_klevu_parameters;
