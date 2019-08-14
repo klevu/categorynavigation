@@ -1,6 +1,7 @@
 <?php /** @var \Klevu\Categorynavigation\Block\Product\Tracking $block */ ?>
 <?php if ($block->isExtensionConfigured() && !empty($block->getCategoryName()->getName())) { ?>
-    <?php if ($block->checkPreserveLayout()) { ?>
+	<?php $jsonTrackingData = $block->getJsonTrackingData();?>
+    <?php if ($block->checkPreserveLayout() && $jsonTrackingData) { ?>
         <script type="text/javascript">
           require(['jquery','Magento_Customer/js/customer-data'], function ($,customerData) {
             jQuery(document).ready(function () {
@@ -12,7 +13,7 @@
                   const url = (document.referrer !=="")?(new URL(document.referrer)):null;
                   if(url==null || cats==null ) return;
                   if(cats[url.pathname]) {
-                    klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;
+                    klevu_search_product_tracking = <?php echo $jsonTrackingData; ?>;
 					klevu_search_product_tracking.klevu_productName = encodeURIComponent(klevu_search_product_tracking.klevu_productName);
                     klevu_search_product_tracking.klevu_categoryName = encodeURIComponent( cats[url.pathname].name);
                     klevu_search_product_tracking.klevu_categoryPath = encodeURIComponent( cats[url.pathname].categoryPath);

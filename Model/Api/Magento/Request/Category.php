@@ -129,8 +129,8 @@ class Category implements CategoryInterface
                     }
                 }
             }
-
-            $this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
+			$this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
+			$this->_klevu_product_ids = array_values($this->_klevu_product_ids);            
             $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Products count returned: %s", count($this->_klevu_product_ids)));
         }
         return $this->_klevu_product_ids;
@@ -156,48 +156,54 @@ class Category implements CategoryInterface
      */
     public function getSearchFilters()
     {
+		try{
+			$currentCategory = $this->_registry->registry('current_category');
+			if(!$currentCategory instanceof Category_Model) {
+				return false;
+			}
+			foreach ($currentCategory->getParentCategories() as $parent) {
+				$catnames[] = $parent->getName();
+			}
+			$allCategoryNames = implode(";",$catnames);
+			$catnames = array();
+			$pathIds = array();
+			$pathIds = $currentCategory->getPathIds();
+			if(!empty($pathIds)) {
+				unset($pathIds[0]);
+				unset($pathIds[1]);
+				foreach ($pathIds as $key => $value){
+					$_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+					$catnames[] = $_objectManager->create('Magento\Catalog\Model\Category')
+						->load($value)->getName();
+				}
+				$allCategoryNames = implode(";",$catnames);
+			}
 
-        $currentCategory = $this->_registry->registry('current_category');
-        foreach ($currentCategory->getParentCategories() as $parent) {
-            $catnames[] = $parent->getName();
-        }
-        $allCategoryNames = implode(";",$catnames);
-        $catnames = array();
-        $pathIds = array();
-        $pathIds = $currentCategory->getPathIds();
-        if(!empty($pathIds)) {
-            unset($pathIds[0]);
-            unset($pathIds[1]);
-            foreach ($pathIds as $key => $value){
-                $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                $catnames[] = $_objectManager->create('Magento\Catalog\Model\Category')
-                    ->load($value)->getName();
-            }
-            $allCategoryNames = implode(";",$catnames);
-        }
 
-
-        $category = $this->_klevu_type_of_records." ".$allCategoryNames;
-        if($this->_categorynavigationHelperConfig->getNoOfResults()){
-            $noOfResults = $this->_categorynavigationHelperConfig->getNoOfResults();
-        }else{
-            $noOfResults = 2000;
-        }
-        if (empty($this->_klevu_parameters)) {
-            $this->_klevu_parameters = [
-                'ticket' => $this->_searchHelperConfig->getJsApiKey() ,
-                'noOfResults' => $noOfResults,
-                'term' => '*',
-                'paginationStartsFrom' => 0,
-                'enableFilters' => 'false',
-                'klevuShowOutOfStockProducts' => 'true',
-                'isCategoryNavigationRequest' => 'true',
-                'category' => $category,
-                'categoryIds' => $currentCategory->getId(),
-				'visibility' => 'catalog'
-            ];
-        }
-        return $this->_klevu_parameters;
+			$category = $this->_klevu_type_of_records." ".$allCategoryNames;
+			if($this->_categorynavigationHelperConfig->getNoOfResults()){
+				$noOfResults = $this->_categorynavigationHelperConfig->getNoOfResults();
+			}else{
+				$noOfResults = 2000;
+			}
+			if (empty($this->_klevu_parameters)) {
+				$this->_klevu_parameters = [
+					'ticket' => $this->_searchHelperConfig->getJsApiKey() ,
+					'noOfResults' => $noOfResults,
+					'term' => '*',
+					'paginationStartsFrom' => 0,
+					'enableFilters' => 'false',
+					'klevuShowOutOfStockProducts' => 'true',
+					'isCategoryNavigationRequest' => 'true',
+					'category' => $category,
+					'categoryIds' => $currentCategory->getId(),
+					'visibility' => 'catalog'
+				];
+			}
+			return $this->_klevu_parameters;
+		} catch (\Exception $e) {
+            $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+        }   
     }
 
 

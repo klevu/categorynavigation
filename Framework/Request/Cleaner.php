@@ -64,6 +64,30 @@ class Cleaner extends KlevuCoreCleaner
         $this->magentoRegistry->unregister('search_ids');
         $this->magentoRegistry->register('search_ids', $idList);
 
+        $currentEngine = $this->klevuConfig->getCurrentEngine();
+        if( $currentEngine !== "mysql") {
+            if (isset($requestData['sort'])) {
+                if (count($requestData['sort']) > 0) {
+                    foreach ($requestData['sort'] as $key => $value) {
+                        if ($value['field'] == "personalized") {
+                            $this->magentoRegistry->register('current_order', "personalized");
+                        }
+
+                    }
+                }
+            }
+
+            $current_order = $this->magentoRegistry->registry('current_order');
+            if (!empty($current_order)) {
+                if ($current_order == "personalized") {
+                    $this->magentoRegistry->register('from', $requestData['from']);
+                    $this->magentoRegistry->register('size', $requestData['size']);
+                    $requestData['from'] = 0;
+                    $requestData['size'] = count($idList);
+                    $requestData['sort'] = array();
+                }
+            }
+        }
         return $requestData;
     }
 }

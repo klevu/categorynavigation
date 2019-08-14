@@ -7,7 +7,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Session\Generic;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use \Magento\Framework\Registry;
-
+use \Magento\Catalog\Model\Product;
 
 class Tracking extends \Magento\Framework\View\Element\Template
 {
@@ -23,8 +23,8 @@ class Tracking extends \Magento\Framework\View\Element\Template
     protected $configHelper;
     protected $priceHelper;
     protected $searchHelperData;
-    protected $remoteAddress;
-
+    protected $remoteAddress;	
+	
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Registry $registry,
@@ -38,7 +38,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
         \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress,
         \Magento\Catalog\Model\Category $category,
         \Magento\Framework\App\Response\RedirectInterface $redirectInterface,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,		
         array $data = []
     )
     {
@@ -55,7 +55,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
         $this->_category = $category;
         $this->_redirectInterface = $redirectInterface;
         $this->_categoryFactory = $categoryFactory;
-        $this->_requestInterface = $context->getRequest();
+        $this->_requestInterface = $context->getRequest();		
         parent::__construct($context, $data);
     }
 
@@ -66,44 +66,51 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getJsonTrackingData()
     {
-        // Get the product
-        $product = $this->_registry->registry('current_product');
-        $id = $product->getId();
-        $store = $this->_storeManagerInterface->getStore();
-        $js_api_key = $this->_configHelper->getJsApiKey();
+        try{
+			// Get the product
+			$product = $this->_registry->registry('current_product');
+			if (!$product instanceof Product) {
+				return false;
+			}
+			
+			$id = $product->getId();
+			$store = $this->_storeManagerInterface->getStore();
+			$js_api_key = $this->_configHelper->getJsApiKey();
 
-        $name = $product->getName();
-        $product_url = $product->getProductUrl();
-        $product_sku = $product->getSku();
+			$name = $product->getName();
+			$product_url = $product->getProductUrl();
+			$product_sku = $product->getSku();
 
-        if ($product->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-            $parent = $product;
-            $productTypeInstance = $product->getTypeInstance();
-            $usedProducts = $productTypeInstance->getUsedProducts($product);
-            foreach ($usedProducts as $child) {
-                $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $child, $store);
-                $product_sale_price = $product_saleprice['salePrice'];
+			if ($product->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+				$parent = $product;
+				$productTypeInstance = $product->getTypeInstance();
+				$usedProducts = $productTypeInstance->getUsedProducts($product);
+				foreach ($usedProducts as $child) {
+					$product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $child, $store);
+					$product_sale_price = $product_saleprice['salePrice'];
+				}
+			} else {
+				$parent = null;
+				$product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $product, $store);
+				$product_sale_price = $product_saleprice['salePrice'];
+			}
 
-            }
-        } else {
-            $parent = null;
-            $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $product, $store);
-            $product_sale_price = $product_saleprice['salePrice'];
-        }
-
-        $product = [
-            'klevu_apiKey' => $js_api_key,
-            'klevu_productId' => $id,
-            'klevu_productName' => $name,
-            'klevu_productUrl' => $product_url,
-            'klevu_productSku' => $product_sku,
-            'klevu_salePrice' => $product_sale_price,
-			'klevu_productRatings' => $this->convertToRatingStar($product->getRating())
-            //'klevu_shopperIP' => $this->_searchHelperData->getIp(),
-            //'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
-            //'klevu_sessionId' => md5(session_id())
-        ];
-        return json_encode($product);
+			$product = [
+				'klevu_apiKey' => $js_api_key,
+				'klevu_productId' => $id,
+				'klevu_productName' => $name,
+				'klevu_productUrl' => $product_url,
+				'klevu_productSku' => $product_sku,
+				'klevu_salePrice' => $product_sale_price,
+				'klevu_productRatings' => $this->convertToRatingStar($product->getRating())
+				//'klevu_shopperIP' => $this->_searchHelperData->getIp(),
+				//'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
+				//'klevu_sessionId' => md5(session_id())
+			];
+			return json_encode($product);
+		} catch (\Exception $e) {
+            $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+        }        
     }
 
     /**
@@ -192,9 +199,12 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getCategoryNameFromId($categoryId)
     {
-        $category = $this->_category->load($categoryId);
-        $categoryName = $category->getName();
-        return $categoryName;
+        $category = $this->_categoryFactory->create()
+				->getCollection()
+				->addAttributeToFilter('entity_id', (int)$categoryId)
+				->addAttributeToSelect(['name', 'path'])
+				->getFirstItem();
+        return $category->getName();
     }
 
     /**

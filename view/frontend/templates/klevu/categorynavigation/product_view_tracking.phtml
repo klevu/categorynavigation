@@ -1,13 +1,14 @@
 <?php /** @var \Klevu\Categorynavigation\Block\Product\View $block */ ?>
 <?php if ($block->isExtensionConfigured() && $block->getCurrentController() == 'category') { ?>
-    <?php if ($block->checkPreserveLayout()) { ?>
+	<?php $jsonTrackingData = $block->getJsonTrackingData();?>
+    <?php if ($block->checkPreserveLayout() && $jsonTrackingData) { ?>
         <?php $isSecure = $block->getRequest()->isSecure();
         $protocol = ($isSecure) ? 'https://' : 'http://'; ?>
         <script type="text/javascript">
             var already_reported;
             var array_difference;
             var klevu_cat_current_version = '<?php echo $block->getModuleInfo(); ?>';
-            var klevu_search_product_tracking = <?php echo $block->getJsonTrackingData() ?>;					
+            var klevu_search_product_tracking = <?php echo $jsonTrackingData; ?>;					
 			if(klevu_search_product_tracking.klevu_categoryName !== null){		 
 				klevu_search_product_tracking.klevu_categoryName= encodeURIComponent(klevu_search_product_tracking.klevu_categoryName);
 			}	

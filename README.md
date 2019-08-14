@@ -4,11 +4,15 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.3.1</li>
-<li>EE 2.0.0 to 2.3.1</li>
+<li>CE 2.0.0 to 2.3.2</li>
+<li>EE 2.0.0 to 2.3.2</li>
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.24</h3>
+<li>Add support for ElasticSearch on Magento version 2.3.2</li>
+<li>Minor fixes to category tracking</li>
+
 <h3>Version 2.1.23</h3>
 <li>Don't consider up and down scrolling of third party ajax plugin for same ids in category view product tracking</li>
 <li>Fixed blank URL issue in stats call when js minified in production mode</li>
