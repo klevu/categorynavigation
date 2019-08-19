@@ -163,6 +163,32 @@ document.getElementById("searchedKeyword").value= '*';
     klevu_pageCategory = '<?php echo $allCategoryNames; ?>';
     var klevu_setTermInSearchBox = false;
 // ]]></script>
+<?php if($block->isCustomerGroupPriceEnabled()) { ?>
+    <script type="text/javascript">
+        var counter = 0;
+        var klevuMagentoCustomerGroupFlag = false;
+        var timeKlevuUpdate = setInterval(function () {
+            var elem = document.getElementById('klevu_sessionId');
+            if(elem !== null && elem.innerHTML) {
+                // custom code here
+                klevuMagentoCustomerGroupFlag = true;
+                if(typeof klevu_pageLoadEvent == "function"){
+                    klevu_pageLoadEvent() ;
+                }
+                clearInterval(timeKlevuUpdate);
+            } else {
+                counter++;
+                if (counter > 7) {
+                    klevuMagentoCustomerGroupFlag = true;
+                    if(typeof klevu_pageLoadEvent == "function"){
+                        klevu_pageLoadEvent() ;
+                    }
+                    clearInterval(timeKlevuUpdate);
+                }
+            }
+        }, 700);
+    </script>
+<?php } ?>
 
 <style>
 .kuTabs {

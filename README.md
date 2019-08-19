@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.25</h3>
+<li>Customer group price issue fix after login</li>
+
 <h3>Version 2.1.24</h3>
 <li>Add support for ElasticSearch on Magento version 2.3.2</li>
 <li>Minor fixes to category tracking</li>
