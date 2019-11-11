@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Config/etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
   <system>
     <section id="klevu_search" translate="label">
 	    <group id="general" translate="label" type="text" sortOrder="100" showInStore="1">
@@ -12,23 +12,26 @@
             <comment><![CDATA[The Category Navigation Tracking Url is used for getting Klevu's category Search Result.]]></comment>
 			</field>
 		</group>
-      <group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Smart Category Page Navigation</label>
-                <field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="0" showInWebsite="0" showInStore="1">
-                  <label>Smart Category Page Navigation</label>
-				  <comment><![CDATA[When option "Klevu Powered - Preserve Theme Layout" or "Klevu Powered - Based On Klevu Template" is selected, products and their order on the category pages will be decided by the Klevu Search. Use the option "Klevu Powered - Preserve Theme Layout" to preserve your own theme layout; option "Klevu Powered - Based On Klevu Template" for the Klevu template.]]></comment>
-                  <source_model>Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions</source_model>
-                </field>
-                <field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="0" showInWebsite="0" showInStore="1">
-                  <label>Maximum Number Of Products Per Category</label>
-                  <comment><![CDATA[This value can be upto 4000.]]></comment>
-                </field>
-                <field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInStore="1">
-                    <label>Sort by Klevu Relevance</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment><![CDATA[When option "Klevu Powered - Preserve Theme Layout" is selected.]]></comment>
-                </field>
-            </group>
+		<group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
+			<label>Smart Category Page Navigation</label>
+			<field id="enabledcategorynavigation_info" translate="label comment" sortOrder="100" type="label" showInDefault="1" showInWebsite="1">
+				<comment><![CDATA[Switch to store view scope to set.]]></comment>
+			</field>
+			<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+			  <label>Smart Category Page Navigation</label>
+			  <comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> or <strong>Klevu Powered - Based On Klevu Template</strong> is selected, products and their order on the category pages will be decided by the Klevu Search. Use the option <strong>Klevu Powered - Preserve Theme Layout</strong> to preserve your own theme layout; option <strong>Klevu Powered - Based On Klevu Template</strong> for the Klevu template.]]></comment>
+			  <source_model>Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions</source_model>
+			</field>
+			<field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+			  <label>Maximum Number Of Products Per Category</label>
+			  <comment><![CDATA[This value can be upto 4000.]]></comment>
+			</field>
+			<field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInDefault="1" showInStore="1">
+				<label>Sort by Klevu Relevance</label>
+				<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+				<comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> is selected.]]></comment>
+			</field>
+        </group>
     </section>
   </system>
 </config>

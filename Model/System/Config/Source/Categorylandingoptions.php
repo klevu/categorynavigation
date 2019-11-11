@@ -34,8 +34,8 @@ class Categorylandingoptions
                 );
         } else {
                 return array(
-                    array('value' => static::NO, 'label' => __("Magento's Default")),
-                    array('value' => static::CATEGORYLAND, 'label' => __("Klevu Powered - Based On Klevu Template")),
+                    array('value' => static::MAGENTO_DEFAULT, 'label' => __("Magento's Default")),
+                    array('value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu Powered - Based On Klevu Template")),
                 );
         }
     }

@@ -156,6 +156,7 @@ class Category implements CategoryInterface
      */
     public function getSearchFilters()
     {
+		$catnames = [];
 		try{
 			$currentCategory = $this->_registry->registry('current_category');
 			if(!$currentCategory instanceof Category_Model) {
@@ -165,7 +166,7 @@ class Category implements CategoryInterface
 				$catnames[] = $parent->getName();
 			}
 			$allCategoryNames = implode(";",$catnames);
-			$catnames = array();
+			
 			$pathIds = array();
 			$pathIds = $currentCategory->getPathIds();
 			if(!empty($pathIds)) {

@@ -92,7 +92,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     public function getCategoryNavigationTrackingUrl($store = null)
     {
         $url = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-        return ($url) ? $url : \Klevu\Search\Helper\Api::ENDPOINT_DEFAULT_HOSTNAME;
+        return ($url) ? $url : \Klevu\Search\Helper\Api::ENDPOINT_DEFAULT_ANALYTICS_HOSTNAME;
     }
 
 

@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.26</h3>
+<li>Added Support for php 7.3</li>
+
 <h3>Version 2.1.25</h3>
 <li>Customer group price issue fix after login</li>
 
