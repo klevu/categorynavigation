@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.27</h3>
+<li> Fixed issue of Multiple Category Name passing in Preserve Layout Option</li>
+
 <h3>Version 2.1.26</h3>
 <li>Added Support for php 7.3</li>
 

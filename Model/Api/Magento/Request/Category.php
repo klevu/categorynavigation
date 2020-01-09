@@ -156,16 +156,17 @@ class Category implements CategoryInterface
      */
     public function getSearchFilters()
     {
-		$catnames = [];
+		$catnames = array();
+		$parentnames = array();
 		try{
 			$currentCategory = $this->_registry->registry('current_category');
 			if(!$currentCategory instanceof Category_Model) {
 				return false;
 			}
 			foreach ($currentCategory->getParentCategories() as $parent) {
-				$catnames[] = $parent->getName();
+				$parentnames[] = $parent->getName();
 			}
-			$allCategoryNames = implode(";",$catnames);
+			$allCategoryNames = implode(";",$parentnames);
 			
 			$pathIds = array();
 			$pathIds = $currentCategory->getPathIds();
