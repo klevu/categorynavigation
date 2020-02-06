@@ -70,6 +70,7 @@ class Cleaner extends KlevuCoreCleaner
                 if (count($requestData['sort']) > 0) {
                     foreach ($requestData['sort'] as $key => $value) {
                         if ($value['field'] == "personalized") {
+                            $this->magentoRegistry->unregister('current_order');
                             $this->magentoRegistry->register('current_order', "personalized");
                         }
 
@@ -80,6 +81,8 @@ class Cleaner extends KlevuCoreCleaner
             $current_order = $this->magentoRegistry->registry('current_order');
             if (!empty($current_order)) {
                 if ($current_order == "personalized") {
+                    $this->magentoRegistry->unregister('from');
+                    $this->magentoRegistry->unregister('size');
                     $this->magentoRegistry->register('from', $requestData['from']);
                     $this->magentoRegistry->register('size', $requestData['size']);
                     $requestData['from'] = 0;

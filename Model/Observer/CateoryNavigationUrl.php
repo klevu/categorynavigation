@@ -34,17 +34,16 @@ class CateoryNavigationUrl implements ObserverInterface
     }
 
     /**
-     * When products are updated in bulk, update products so that they will be synced.
+     * If Cat Nav feature enabled then Cat Nav URL value will be saved.
      * @param \Magento\Framework\Event\Observer $observer
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
-    {
-	
+    {	
 	   
 		$store = $this->request->getParam("store");
 		if ($store !== null) {
 			$config_state = $this->request->getParam('groups');
-			if(isset($config_state['general'])) {
+			if(isset($config_state['general']['fields']['category_navigation_url']['value'])) {
 				$value_categorylanding = $config_state['general']['fields']['category_navigation_url']['value'];
 				$new_value = $value_categorylanding;
 				if($this->_categorynavigationHelper->getCategoryNavigationUrl() !== $new_value){

@@ -9,6 +9,10 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.1.28</h3>
+<li>Clear magento registry before resetting values</li>
+<li>Improve settings save observer</li>
+
 <h3>Version 2.1.27</h3>
 <li> Fixed issue of Multiple Category Name passing in Preserve Layout Option</li>
 
