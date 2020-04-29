@@ -41,7 +41,7 @@ class Config
             //Remove specific default sorting options
             unset($options['position']);
             //Changing label
-            $customOption['personalized'] = __('Relevance');
+            $customOption['personalized'] = $this->getKlevuCatRelevanceLabel();
             //Merge default sorting options with custom options
             $options = array_merge($customOption, $options);
 
@@ -50,6 +50,15 @@ class Config
             return $options;
         }
         return $options;
+    }
+
+     /** Returns the text label for category pages
+     *
+     * @return \Magento\Framework\Phrase|string
+     */
+    protected function getKlevuCatRelevanceLabel()
+    {
+        return $this->_klevuCatConfig->getCategoryPagesRelevanceLabel($this->_storeManager->getStore());
     }
 }
    

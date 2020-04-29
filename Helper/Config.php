@@ -71,7 +71,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     const XML_PATH_CATEGORY_NAVIGATION_URL = "klevu_search/general/category_navigation_url";
     const XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL = "klevu_search/general/category_navigation_tracking_url";
     const XML_PATH_CATEGORY_RELEVANCE = "klevu_search/categorylanding/klevu_cat_relevance";
-
+    const XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL = "klevu_search/categorylanding/relevance_label";
 
 
 
@@ -191,5 +191,16 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
 
     }
 
+    /**
+     * Return the Relevance label for category pages
+     *
+     * @param null $store
+     * @return string
+     */
+    public function getCategoryPagesRelevanceLabel($store = null)
+    {
+        $sortLabel = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
+        return $sortLabel ? $sortLabel : __('Relevance');
+    }
 
 }
