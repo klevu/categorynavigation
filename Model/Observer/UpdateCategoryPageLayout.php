@@ -1,21 +1,18 @@
 <?php
 
-/**
- * Class \Klevu\Search\Model\Observer
- *
- * @method UpdateCategoryPageLayout($flag)
- *
- */
-
 namespace Klevu\Categorynavigation\Model\Observer;
 
 use Klevu\Categorynavigation\Helper\Data as KlevuCatNavHelper;
 use Magento\Catalog\Model\Category as CategoryModel;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Registry;
 use Magento\Framework\View\LayoutInterface;
 
-
+/**
+ * Class UpdateCategoryPageLayout
+ * @package Klevu\Categorynavigation\Model\Observer
+ */
 class UpdateCategoryPageLayout implements ObserverInterface
 {
     const KLEVU_PRESERVE_LAYOUT = 2;
@@ -38,8 +35,9 @@ class UpdateCategoryPageLayout implements ObserverInterface
      * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
-        \Klevu\Categorynavigation\Helper\Data $searchHelper,
-        \Magento\Framework\Registry $registry
+        KlevuCatNavHelper $searchHelper,
+        Registry $registry
+
     )
     {
         $this->_searchHelper = $searchHelper;
@@ -60,13 +58,12 @@ class UpdateCategoryPageLayout implements ObserverInterface
         $action = $observer->getData('full_action_name');
         $layout = $observer->getData('layout');
         $helper = $this->_searchHelper;
+
         if ($action == "catalog_category_view" && $helper->categoryLandingStatus() == static::KLEVU_TEMPLATE_LAYOUT) {
-            //$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            //$category = $objectManager->get('Magento\Framework\Registry')->registry('current_category');//get current category
 
             //Instance check for current category
             $category = $this->_registry->registry('current_category');
-            if (!$category instanceOf CategoryModel) {
+            if (!$category instanceof CategoryModel) {
                 return false;
             }
 
@@ -91,4 +88,6 @@ class UpdateCategoryPageLayout implements ObserverInterface
         }
     }
 }
+
+
 

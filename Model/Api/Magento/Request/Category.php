@@ -173,10 +173,15 @@ class Category implements CategoryInterface
 			if(!empty($pathIds)) {
 				unset($pathIds[0]);
 				unset($pathIds[1]);
-				foreach ($pathIds as $key => $value){
+				foreach ($pathIds as $key => $value) {
 					$_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-					$catnames[] = $_objectManager->create('Magento\Catalog\Model\Category')
+					$catname = $_objectManager->create('Magento\Catalog\Model\Category')
 						->load($value)->getName();
+					$catnames[] = $catname;
+                    $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Categorory Name %s", $catname));
+
+                    //$catnames[] = $this->_categoryModel->load($value)->getName();
+                    //unset($this->_categoryModel);
 				}
 				$allCategoryNames = implode(";",$catnames);
 			}
@@ -204,7 +209,7 @@ class Category implements CategoryInterface
 			}
 			return $this->_klevu_parameters;
 		} catch (\Exception $e) {
-            $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+            $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Category API Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
         }   
     }
 

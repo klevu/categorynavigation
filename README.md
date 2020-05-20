@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.0</h3>
+<li>Refactoring code for full removal of object manager uses</li>
+
 <h3>Version 2.1.30</h3>
 <li>Improvement for Sort Label from Magento admin</li>
 

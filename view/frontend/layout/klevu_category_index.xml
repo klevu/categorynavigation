@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
-    <body>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
         <referenceBlock name="content">
-          <block class="Klevu\Categorynavigation\Block\Product\Index" template="klevu/categorynavigation/category_display.phtml" name="category_index"/>
+          <block class="Klevu\Categorynavigation\Block\Product\Index" 
+		  template="Klevu_Categorynavigation::klevu/categorynavigation/category_display.phtml" 
+		  name="klevu_categorynavigation.category_index"/>
         </referenceBlock>
     </body>
-</config>
+</page>

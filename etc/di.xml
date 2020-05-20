@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
-
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Klevu\Search\Framework\Request\Cleaner" type="Klevu\Categorynavigation\Framework\Request\Cleaner"/>
     <preference for="Klevu\Search\Model\Context\Extended" type="Klevu\Categorynavigation\Model\Context\Extended"/>
-    <preference for="Klevu\Categorynavigation\Model\Api\Magento\Request\CategoryInterface" type="Klevu\Categorynavigation\Model\Api\Magento\Request\Category" />
-    
+    <preference for="Klevu\Categorynavigation\Model\Api\Magento\Request\CategoryInterface"
+                type="Klevu\Categorynavigation\Model\Api\Magento\Request\Category"/>
+
     <type name="Magento\Catalog\Model\Config">
-        <plugin name="klevu_categorynavigation_config" type="Klevu\Categorynavigation\Plugin\Catalog\Model\Config" />
+        <plugin name="klevu_categorynavigation_config" type="Klevu\Categorynavigation\Plugin\Catalog\Model\Config"/>
     </type>
 </config>

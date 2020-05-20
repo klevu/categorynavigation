@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
-<body>
-    <referenceBlock name="before.body.end">
-        <block class="Klevu\Categorynavigation\Block\Product\View\Tracking" template="Klevu_Categorynavigation::klevu/categorynavigation/product_view_tracking.phtml"  name="klevu_categorynavigation.catalog.product.view.track"/>
-    </referenceBlock>
-</body>
-</config>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">	
+	<body>
+		<referenceBlock name="before.body.end">
+			<block class="Klevu\Categorynavigation\Block\Product\View\Tracking" 
+			template="Klevu_Categorynavigation::klevu/categorynavigation/product_view_tracking.phtml"  
+			name="klevu_categorynavigation.catalog.product.view.track"/>
+		</referenceBlock>
+	</body>
+</page>

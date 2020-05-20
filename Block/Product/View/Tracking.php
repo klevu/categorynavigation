@@ -2,12 +2,7 @@
 
 namespace Klevu\Categorynavigation\Block\Product\View;
 
-use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
-use Magento\Framework\Session\Generic;
-use \Magento\Framework\App\Request\Http;
-use \Magento\Framework\Registry;
-use \Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\Category;
 
 class Tracking extends \Magento\Framework\View\Element\Template
 {
@@ -22,7 +17,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
     protected $configHelper;
     protected $priceHelper;
     protected $searchHelperData;
-    protected $remoteAddress;	
+    protected $remoteAddress;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -35,7 +30,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
         \Magento\Framework\App\Request\Http $klevuhttp,
         \Klevu\Categorynavigation\Helper\Config $navigationConfigHelper,
         \Magento\Framework\App\Response\RedirectInterface $redirectInterface,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,        
+        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         array $data = []
     )
     {
@@ -51,7 +46,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
         $this->_navigationConfigHelper = $navigationConfigHelper;
         $this->_requestInterface = $context->getRequest();
         $this->_redirectInterface = $redirectInterface;
-        $this->_categoryFactory = $categoryFactory;        
+        $this->_categoryFactory = $categoryFactory;
         parent::__construct($context, $data);
     }
 
@@ -62,27 +57,27 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getJsonTrackingData()
     {
-        try{
-			// Get the category
-			$category = $this->_registry->registry('current_category');
-			if (!$category instanceof Category) {
-				return false;
-			}
-			 
-			$store = $this->_storeManagerInterface->getStore();
-			$js_api_key = $this->_configHelper->getJsApiKey();
-			$categoryViewProducts = [
-				'klevu_apiKey' => $js_api_key,
-				'klevu_categoryName' => $category->getName(),
-				'klevu_categoryPath' => $this->getCategoryNameFormPath($category->getPath()),
-				'klevu_shopperIP' => "",
-				'klevu_loginCustomerEmail' => "",
-				'klevu_sessionId' => ""
-			];
-			return json_encode($categoryViewProducts);
-		} catch (\Exception $e) {
+        try {
+            // Get the category
+            $category = $this->_registry->registry('current_category');
+            if (!$category instanceof Category) {
+                return false;
+            }
+
+            $store = $this->_storeManagerInterface->getStore();
+            $js_api_key = $this->_configHelper->getJsApiKey();
+            $categoryViewProducts = [
+                'klevu_apiKey' => $js_api_key,
+                'klevu_categoryName' => $category->getName(),
+                'klevu_categoryPath' => $this->getCategoryNameFormPath($category->getPath()),
+                'klevu_shopperIP' => "",
+                'klevu_loginCustomerEmail' => "",
+                'klevu_sessionId' => ""
+            ];
+            return json_encode($categoryViewProducts);
+        } catch (\Exception $e) {
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
-        }    
+        }
     }
 
     /**
@@ -173,12 +168,12 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getCategoryNameFromId($categoryId)
     {
-		$category = $this->_categoryFactory->create()
-				->getCollection()
-				->addAttributeToFilter('entity_id', (int)$categoryId)
-				->addAttributeToSelect(['name', 'path'])
-				->getFirstItem();
-        return $category->getName();        
+        $category = $this->_categoryFactory->create()
+            ->getCollection()
+            ->addAttributeToFilter('entity_id', (int)$categoryId)
+            ->addAttributeToSelect(['name', 'path'])
+            ->getFirstItem();
+        return $category->getName();
     }
 
     /**
@@ -189,15 +184,14 @@ class Tracking extends \Magento\Framework\View\Element\Template
     {
         return $this->_klevuhttp->getControllerName();
     }
-	
-	/**
+
+    /**
      * Get current category navigation version
      * @return string
      */
-	public function getModuleInfo()
+    public function getModuleInfo()
     {
-        $moduleInfo = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\Module\ModuleList')->getOne('Klevu_Categorynavigation');
-        return $moduleInfo['setup_version'];
+        return $this->_configHelper->getModuleInfoCatNav();
     }
 
 

@@ -5,14 +5,14 @@ namespace Klevu\Categorynavigation\Helper;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
 use \Magento\Framework\UrlInterface;
 use \Magento\Store\Model\StoreManagerInterface;
+use \Magento\Config\Model\ResourceModel\Config as Magento_Config;
 use \Klevu\Search\Model\Product\Sync;
 use \Magento\Framework\Model\Store;
 use \Klevu\Search\Model\Api\Action\Features;
+use \Magento\Framework\App\Config\ReinitableConfigInterface;
 
 class Config extends \Magento\Framework\App\Helper\AbstractHelper
 {
-
-
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
@@ -56,7 +56,9 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface,
         \Magento\Store\Model\Store $frameworkModelStore,
         \Magento\Framework\App\Config\Value $modelConfigData,
-        \Magento\Framework\App\ResourceConnection $frameworkModelResource
+        \Magento\Framework\App\ResourceConnection $frameworkModelResource,
+        Magento_Config $magentoResourceConfig,
+        ReinitableConfigInterface $magentoReinitConfigInterface
     ) {
 
         $this->_appConfigScopeConfigInterface = $appConfigScopeConfigInterface;
@@ -65,6 +67,8 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_frameworkModelStore = $frameworkModelStore;
         $this->_modelConfigData = $modelConfigData;
         $this->_frameworkModelResource = $frameworkModelResource;
+        $this->_magentoResourceConfig = $magentoResourceConfig;
+        $this->_magentoReinitConfigInterface = $magentoReinitConfigInterface;
     }
 
 
@@ -163,11 +167,11 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $config = $this->_appConfigScopeConfigInterface;
 
-        $config = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Config\Model\ResourceModel\Config');
+        //$config = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Config\Model\ResourceModel\Config');
         $scope_id = $this->_storeModelStoreManagerInterface->getStore($store)->getId();
 
         if ($scope_id !== null) {
-            $config->saveConfig($key, $value, "stores", $scope_id);
+            $this->_magentoResourceConfig->saveConfig($key, $value, "stores", $scope_id);
             $this->_resetConfig();
         }
         return $this;
@@ -178,7 +182,8 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected function _resetConfig()
     {
-        \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ReinitableConfigInterface')->reinit();
+       // \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ReinitableConfigInterface')->reinit();
+        $this->_magentoReinitConfigInterface->reinit();
     }
 
     /**
@@ -191,6 +196,34 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
 
     }
 
+
+	/**
+     * Retrieve default per page values
+     *      
+     * @return string (comma separated)
+     */
+	/*
+	 public function getCatalogGridPerPageValues()
+	{
+		return $this->_appConfigScopeConfigInterface->getValue(
+		    'catalog/frontend/grid_per_page_values',
+		    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+		);
+	}*/
+	
+	/**
+     * Retrieve default per page
+     *      
+     * @return int
+     */
+	/*public function getCatalogGridPerPage()
+	{
+		return (int)$this->_appConfigScopeConfigInterface->getValue(
+		    'catalog/frontend/grid_per_page',
+		    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+		);
+	}*/
+
     /**
      * Return the Relevance label for category pages
      *
@@ -202,5 +235,6 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
         $sortLabel = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
         return $sortLabel ? $sortLabel : __('Relevance');
     }
+
 
 }

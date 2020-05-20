@@ -1,4 +1,7 @@
-<?php $config = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Helper\Config'); ?>
+<?php //$config = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Helper\Config'); ?>
+<?php $per_page = $block->getGridPerPageValues(); ?> 
+<?php $grid_per_page = (int)$block->getGridPerPage(); ?>
+
 <link rel="stylesheet" type="text/css" href="<?php echo $block->getViewFileUrl('Klevu_Search::css/klevu-landing-page-style.css')?>">
 <link rel="stylesheet" type="text/css" href="<?php echo $block->getViewFileUrl('Klevu_Search::css/klevu-landing-responsive.css')?>">
 <div class="kuContainer" id="kuMainContainer">
@@ -40,14 +43,13 @@
             
             <div class="kuPerPage">
               <label id="klevuItemsPerPage"><?php echo __('Items per page');?>:</label>
-              <select onchange="klevu_changeItemsPerPage(this.value);" id="noOfRecords1">
-                    <?php  
-							$per_page = explode(",",\Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue("catalog/frontend/grid_per_page_values"));
-                            if(!empty($per_page)){
-                                foreach($per_page as $key => $value) { ?>
-                                    <option> <?php echo $value;?></option>
-                      <?php     } 
-                           }?>
+              <select onchange="klevu_changeItemsPerPage(this.value);" id="noOfRecords1">				
+                    <?php /*$per_page = explode(",",\Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue("catalog/frontend/grid_per_page_values")); */?>
+					<?php if(!empty($per_page)): ?>
+						<?php foreach($per_page as $key => $value): ?>
+							<option> <?php echo $value;?></option>
+						<?php endforeach; ?>
+					<?php endif; ?>
               </select>
             </div>
             
@@ -73,12 +75,11 @@
           <div class="kuPerPage">
             <label id="klevuItemsPerPage" ><?php echo __('Items per page');?>:</label>
             <select onchange="klevu_changeItemsPerPage(this.value);" id="noOfRecords2">
-                    <?php   
-                            if(!empty($per_page)){
-                                foreach($per_page as $key => $value) { ?>
-                                    <option> <?php echo $value;?></option>
-                      <?php     } 
-                           }?>
+			<?php if(!empty($per_page)): ?>
+				<?php foreach($per_page as $key => $value): ?>
+					<option> <?php echo $value;?></option>
+				<?php endforeach; ?>
+			<?php endif; ?>                     
             </select>
           </div>
           
@@ -132,8 +133,9 @@
   </div><!-- End of kuProListing -->
 </div><!-- End of klevu-container -->
 
- <?php $grid_per_page = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue("catalog/frontend/grid_per_page"); ?>                              
-<input id="noOfRecords" type="hidden" name="noOfRecords" value="<?php if(!empty($grid_per_page)){ echo $grid_per_page; } else { echo "24";}?>" />
+ <?php /*$grid_per_page = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue("catalog/frontend/grid_per_page"); */ ?>
+
+<input id="noOfRecords" type="hidden" name="noOfRecords" value="<?php echo $grid_per_page; ?>" />
 <input type="hidden" name="startPos" id="startPos" value="0"/>
 <input type="hidden" name="totalResultsFound" id="totalResultsFound" value="0"/>
 <input type="hidden" name="searchedKeyword" id="searchedKeyword" value=""/>
@@ -141,7 +143,7 @@
 <?php 
 $isSecure = $block->getRequest()->isSecure(); 
 $protocol = ($isSecure) ? 'https://' : 'http://'; 
-$src = $protocol.$config->getJsUrl();
+$src = $protocol.$block->getJsUrl();
 ?>
 <script src="<?php echo $src; ?>/klevu-js-v1/js-1-1/klevu-landing.js"></script>
 <script type="text/javascript">// <![CDATA[
