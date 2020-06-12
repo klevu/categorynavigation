@@ -223,6 +223,5 @@ class Tracking extends \Magento\Framework\View\Element\Template
             return;
         }
     }
-
-
+    
 }

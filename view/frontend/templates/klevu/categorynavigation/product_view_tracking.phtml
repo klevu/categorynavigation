@@ -4,6 +4,7 @@
     <?php if ($block->checkPreserveLayout() && $jsonTrackingData) { ?>
         <?php $isSecure = $block->getRequest()->isSecure();
         $protocol = ($isSecure) ? 'https://' : 'http://'; ?>
+        <?php $p_num = is_numeric($block->getRequest()->getParam('p')) ? intval($block->getRequest()->getParam('p')) : 0; ?>
         <script type="text/javascript">
             var already_reported;
             var array_difference;
@@ -41,7 +42,7 @@
 
                     if (category_product_ids.length > 0 ) {
 
-                        var p = '<?php echo $block->getRequest()->getParam('p'); ?>';
+                        var p = parseInt('<?php echo $p_num;?>');
                         klevu_search_product_tracking.klevu_productIds = product_ids.join();
 
                         if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
