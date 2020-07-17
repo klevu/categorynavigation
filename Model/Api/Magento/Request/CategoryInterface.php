@@ -23,4 +23,11 @@ interface CategoryInterface
      * @return boolean
      */
     public function reset();
+
+    /**
+     * This method will return the parent child ids
+     * @return array
+     */
+    public function getKlevuVariantParentChildIds();
 }
+

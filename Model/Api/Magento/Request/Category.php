@@ -30,6 +30,12 @@ class Category implements CategoryInterface
      */
     protected $_klevu_product_ids = [];
     protected $_klevu_parent_child_ids = [];
+
+    /**
+     * @var array
+     */
+    protected $_klevu_variant_parent_child_ids = array();
+
     /**
      * Klevu Search API Response
      * @var \Klevu\Search\Model\Api\Response
@@ -114,6 +120,7 @@ class Category implements CategoryInterface
                     $this->_klevu_parent_child_ids[] = $item_id;
                     if ($item_id['parent_id'] != 0) {
                         $this->_klevu_product_ids[$item_id['parent_id']] = $item_id['parent_id'];
+                        $this->_klevu_variant_parent_child_ids[$item_id['parent_id']] = $item_id['product_id'];
                     } else {
                         $this->_klevu_product_ids[$item_id['product_id']] = $item_id['product_id'];
                     }
@@ -123,6 +130,7 @@ class Category implements CategoryInterface
                         $this->_klevu_parent_child_ids[] = $item_id;
                         if ($item_id['parent_id'] != 0) {
                             $this->_klevu_product_ids[$item_id['parent_id']] = $item_id['parent_id'];
+                            $this->_klevu_variant_parent_child_ids[$item_id['parent_id']] = $item_id['product_id'];
                         } else {
                             $this->_klevu_product_ids[$item_id['product_id']] = $item_id['product_id'];
                         }
@@ -130,7 +138,7 @@ class Category implements CategoryInterface
                 }
             }
 			$this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
-			$this->_klevu_product_ids = array_values($this->_klevu_product_ids);            
+			$this->_klevu_product_ids = array_values($this->_klevu_product_ids);
             $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Products count returned: %s", count($this->_klevu_product_ids)));
         }
         return $this->_klevu_product_ids;
@@ -167,7 +175,7 @@ class Category implements CategoryInterface
 				$parentnames[] = $parent->getName();
 			}
 			$allCategoryNames = implode(";",$parentnames);
-			
+
 			$pathIds = array();
 			$pathIds = $currentCategory->getPathIds();
 			if(!empty($pathIds)) {
@@ -210,7 +218,7 @@ class Category implements CategoryInterface
 			return $this->_klevu_parameters;
 		} catch (\Exception $e) {
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Category API Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
-        }   
+        }
     }
 
 
@@ -223,4 +231,17 @@ class Category implements CategoryInterface
         $this->_klevu_product_ids = null;
         return true;
     }
+
+    /**
+     * This method will return the parent child ids
+     * @return array
+     */
+    public function getKlevuVariantParentChildIds()
+    {
+        if (!empty($this->_klevu_variant_parent_child_ids)) {
+            return $this->_klevu_variant_parent_child_ids;
+        }
+        return array();
+    }
 }
+
