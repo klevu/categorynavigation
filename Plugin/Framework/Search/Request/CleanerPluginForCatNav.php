@@ -120,6 +120,14 @@ class CleanerPluginForCatNav
     public function klevuQueryCleanupCategory($requestData)
     {
         $catValue = $requestData['filters']['category_filter']['value'];
+        //If multiple category paths requested then return the $requestData
+        if (is_array($catValue) && count($catValue) > 1) {
+            $this->klevuHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Request has multiple category filter values %s", implode(",", $catValue)));
+            return $requestData;
+        } elseif (is_array($catValue) && count($catValue) == 1) {
+            $catValue = $catValue[0];
+        }
+        
         $queryScope = $requestData['dimensions']['scope']['value'];
 
         $idList = $this->sessionObjectHandler->getData('ids_' . $queryScope . '_cat_' . $catValue);

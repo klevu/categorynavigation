@@ -10,6 +10,9 @@ showing Klevu based template in category navigation pages.
 <hr />
 <h2>Change Log</h2>
 <h3>Version 2.2.2</h3>
+<li>Fixed minor issue when unsupported parameters are sent to search engine</li>
+
+<h3>Version 2.2.2</h3>
 <li>Refactored Preserve Layout code to use plugins</li>
 
 <h3>Version 2.2.1</h3>
