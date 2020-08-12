@@ -4,12 +4,15 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Compatible with</h2>
-<li>CE 2.0.0 to 2.3.3</li>
-<li>EE 2.0.0 to 2.3.3</li>
+<li>CE 2.0.0 to 2.4.0</li>
+<li>EE 2.0.0 to 2.4.0</li>
 
 <hr />
 <h2>Change Log</h2>
-<h3>Version 2.2.2</h3>
+<h3>Version 2.2.4</h3>
+<li>Added Magento 2.4.0 support</li>
+
+<h3>Version 2.2.3</h3>
 <li>Fixed minor issue when unsupported parameters are sent to search engine</li>
 
 <h3>Version 2.2.2</h3>

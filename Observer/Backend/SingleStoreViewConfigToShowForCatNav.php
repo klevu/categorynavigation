@@ -15,8 +15,10 @@ class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
     private $_storeManager;
 
     private $_klevuHelperConfig;
+
 	
 	private $_klevuHelperManager;
+
 
     private $_klevuHelperConfigCatNav;
 
@@ -35,12 +37,13 @@ class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
 
     public function execute(EventObserver $observer)
     {
+
 		$klevuDataHelper = $this->_klevuHelperManager->getDataHelper();
+
         try{
             $isSingleStoreMode = $this->_storeManager->isSingleStoreMode();
             $klevuConfigCatNav = $this->_klevuHelperConfigCatNav;
             $klevuConfig = $this->_klevuHelperManager->getConfigHelper();
-            
 
             $actionFlag = FALSE;
             if( $this->_request->getFullActionName() == 'adminhtml_system_config_edit' &&
@@ -62,4 +65,6 @@ class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
             return;
         }
     }
+
 }
+

@@ -31,7 +31,6 @@
 				<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 				<comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> is selected.]]></comment>
 			</field>
-
             <field id="relevance_label" translate="label" type="text" sortOrder="122" showInDefault="1" showInStore="1">
                 <label>Category Pages Relevance Label</label>
                 <validate>required-entry</validate>
