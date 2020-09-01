@@ -9,6 +9,10 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.5</h3>
+<li>Added support for visual merchandiser exclude products</li>
+<li>Minor frontend fixes relating to version and special structures</li>
+
 <h3>Version 2.2.4</h3>
 <li>Added Magento 2.4.0 support</li>
 

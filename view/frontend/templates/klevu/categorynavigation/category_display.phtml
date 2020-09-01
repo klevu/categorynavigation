@@ -146,7 +146,7 @@ $protocol = ($isSecure) ? 'https://' : 'http://';
 $src = $protocol.$block->getJsUrl();
 ?>
 <script src="<?php echo $src; ?>/klevu-js-v1/js-1-1/klevu-landing.js"></script>
-<script type="text/javascript">// <![CDATA[
+<script type="text/javascript">
 document.getElementById("searchedKeyword").value= '*';
     <?php
     $currentCategory = $block->getCurrentCategory();
@@ -164,7 +164,7 @@ document.getElementById("searchedKeyword").value= '*';
     ?>
     klevu_pageCategory = "<?php echo $allCategoryNames; ?>";
     var klevu_setTermInSearchBox = false;
-// ]]></script>
+</script>
 <?php if($block->isCustomerGroupPriceEnabled()) { ?>
     <script type="text/javascript">
         var counter = 0;

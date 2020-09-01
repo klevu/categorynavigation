@@ -16,6 +16,14 @@ interface CategoryInterface
      * @return array
      */
     public function _getKlevuProductIds();
+    
+    
+    /**
+     * This method will returns excluded products ids
+     *
+     * @return array
+     */
+    public function getKlevuProductExcludedIds();    
 
     public function getSearchFilters();
     /**

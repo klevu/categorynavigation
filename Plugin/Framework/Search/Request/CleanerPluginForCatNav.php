@@ -133,7 +133,7 @@ class CleanerPluginForCatNav
         $idList = $this->sessionObjectHandler->getData('ids_' . $queryScope . '_cat_' . $catValue);
         if (!$idList) {
             $idList = $this->klevuCategoryRequest->_getKlevuProductIds();
-            if (empty($idList)) $idList = array();
+            if (empty($idList)) $idList = array(0); //to handle mysql blank IN()
             $this->sessionObjectHandler->setData('ids_' . $queryScope . '_cat_' . $catValue, $idList);
         }
 
@@ -152,6 +152,45 @@ class CleanerPluginForCatNav
         $this->magentoRegistry->unregister('parentChildIDsCatNav');
         $this->magentoRegistry->register('parentChildIDsCatNav', $parentChildIDs);
 
+        //Checking for queryReference
+        if (empty($requestData['queries']['catalog_view_container']['queryReference'])) {
+            $this->klevuHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Cat Nav:: queryReference not found"));
+            return $requestData;
+        }
+        $excludeIds = $this->sessionObjectHandler->getData('exclIds_' . $queryScope . '_cat_' . $catValue);
+        if (!$excludeIds) {
+            //Reading ids from response
+            $excludeIds = $this->klevuCategoryRequest->getKlevuProductExcludedIds();
+            if (empty($excludeIds)) $excludeIds = array();
+            $this->sessionObjectHandler->setData('exclIds_' . $queryScope . '_cat_' . $catValue, $excludeIds);
+        }
+        $this->magentoRegistry->unregister('klevu_exclude_ids');
+        $this->magentoRegistry->register('klevu_exclude_ids', $excludeIds);
+
+        if(!empty($excludeIds)) {
+$requestData['queries']['catalog_view_container']['queryReference'][] = array('clause' => 'not', 'ref' => 'klevu_excl_ids');
+                
+                $requestData['queries']['klevu_excl_ids'] = array(
+                    'name' => 'klevu_excl_ids',
+                    'filterReference' => array(
+                        array(
+                            'clause' => 'not',
+                            'ref' => 'pid',
+                        ),
+                    ),
+                    'type' => 'filteredQuery',
+                );
+                $requestData['filters']['pid'] = array(
+                    'name' => 'pid',
+                    'field' => $this->getProductIdField(),
+                    'value' => $excludeIds,
+                    'type' => 'termFilter',
+                    'is_bind' => 1
+                );
+        }
+        
+        
+        
         $currentEngine = $this->getCurrentSearchEngine();
         if ($currentEngine !== "mysql") {
             if (isset($requestData['sort'])) {
@@ -161,7 +200,6 @@ class CleanerPluginForCatNav
                             $this->magentoRegistry->unregister('current_order');
                             $this->magentoRegistry->register('current_order', "personalized");
                         }
-
                     }
                 }
             }
@@ -192,5 +230,35 @@ class CleanerPluginForCatNav
         return $this->klevuHelperConfig->getCurrentEngine();
     }
 
-
+    /**
+     * Return the product id field
+     * @return string
+     */
+    private function getProductIdField()
+    {
+        $currentEngine = $this->getCurrentSearchEngine();
+        if (strpos($currentEngine, 'elasticsearch') !== false) {
+            $currentEngine = "elasticsearch";
+        }
+        switch ($currentEngine) {
+            case "elasticsearch":
+                return '_id';
+                break;
+            case "elasticsearch5":
+                return '_id';
+                break;
+            case "elasticsearch6":
+                return '_id';
+                break;
+            case "elasticsearch7":
+                return '_id';
+                break;
+            case "solr":
+                return '_id';
+                break;
+            default:
+                return 'entity_id';
+                break;
+        }
+    }
 }

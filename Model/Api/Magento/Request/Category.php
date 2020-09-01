@@ -37,6 +37,16 @@ class Category implements CategoryInterface
     protected $_klevu_variant_parent_child_ids = array();
 
     /**
+     * @var array
+     */
+    protected $_klevu_excluded_ids = array();
+    
+    /**
+     * @var array
+     */
+    protected $_klevu_metaData = array();
+        
+    /**
      * Klevu Search API Response
      * @var \Klevu\Search\Model\Api\Response
      */
@@ -137,12 +147,73 @@ class Category implements CategoryInterface
                     }
                 }
             }
-			$this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
-			$this->_klevu_product_ids = array_values($this->_klevu_product_ids);
+                $this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
+		$this->_klevu_product_ids = array_values($this->_klevu_product_ids);
             $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Products count returned: %s", count($this->_klevu_product_ids)));
+            
+
+
+            //After main getter, checking if excludeids are there
+            $this->_klevu_metaData = $this->getKlevuResponse()->getData('meta');
+            //Based on type we will changing below logic
+            if (empty($this->_klevu_metaData['excludeIds'])) {
+                $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("No excludeIds were specified. Full product collection will be used."));
+                //Returning already settled _klevu_product_ids
+                return $this->_klevu_product_ids;
+            }
+
+            /**
+             * [excludeIds] => Array
+             * (
+             *       [excludeId] => Array
+             *       (
+             *          [key] => id
+             *          [value] => 20
+             *       )
+             *       .....
+             *       .....
+             * )
+             */
+            if(isset($this->_klevu_metaData['excludeIds']['excludeId'])){
+                foreach ($this->_klevu_metaData['excludeIds']['excludeId'] as $key => $result) {
+                    //Multiple items
+                    if (isset($result['value'])) {
+                        $item_id = $this->_searchHelperData->getMagentoProductId((string)$result['value']);
+                        $this->setKlevuExcludedProducts($item_id);
+                    } else {
+                        //Single item
+                        if ($key == "value") {
+                            $item_id = $this->_searchHelperData->getMagentoProductId((string)$result);
+                            $this->setKlevuExcludedProducts($item_id);
+                        }
+                    }
+                    $this->_klevu_excluded_ids = array_unique($this->_klevu_excluded_ids);
+                }
+            }
+            $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Excluded products count returned: %s", count($this->_klevu_excluded_ids)));
+            if (is_array($this->_klevu_excluded_ids) && !empty($this->_klevu_excluded_ids)) {
+                $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Excluded products ids are :: %s", implode(",", $this->_klevu_excluded_ids)));
+            }            
+            
+            
         }
         return $this->_klevu_product_ids;
     }
+
+    /**
+     * Set excluded product ids
+     * 
+     * @param $item_id
+     */
+    private function setKlevuExcludedProducts($item_id)
+    {
+        if ($item_id['parent_id'] != 0) {
+            $this->_klevu_excluded_ids[$item_id['parent_id']] = $item_id['parent_id'];
+        } else {
+            $this->_klevu_excluded_ids[$item_id['product_id']] = $item_id['product_id'];
+        }
+    }
+
 
     /**
      * Send the API Request and return the API Response.
@@ -240,6 +311,18 @@ class Category implements CategoryInterface
     {
         if (!empty($this->_klevu_variant_parent_child_ids)) {
             return $this->_klevu_variant_parent_child_ids;
+        }
+        return array();
+    }
+    
+    /**
+     * This method will return the excluded product ids
+     * @return array
+     */
+    public function getKlevuProductExcludedIds()
+    {
+        if (!empty($this->_klevu_excluded_ids)) {
+            return $this->_klevu_excluded_ids;
         }
         return array();
     }
