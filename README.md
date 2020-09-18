@@ -9,6 +9,9 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.6</h3>
+<li>Fixed issue of loading products not part of Klevu index</li>
+
 <h3>Version 2.2.5</h3>
 <li>Added support for visual merchandiser exclude products</li>
 <li>Minor frontend fixes relating to version and special structures</li>

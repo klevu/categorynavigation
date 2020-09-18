@@ -86,7 +86,7 @@ class Cleaner extends KlevuCoreCleaner
                     $this->magentoRegistry->register('from', $requestData['from']);
                     $this->magentoRegistry->register('size', $requestData['size']);
                     $requestData['from'] = 0;
-                    $requestData['size'] = count($idList);
+                    $requestData['size'] = 4000;
                     $requestData['sort'] = array();
                 }
             }
