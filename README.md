@@ -9,6 +9,10 @@ showing Klevu based template in category navigation pages.
 
 <hr />
 <h2>Change Log</h2>
+<h3>Version 2.2.7</h3>
+<li>Added Smart Category Navigation preview</li>
+<li>Improved loading of category data for Catagory Navigation</li>
+
 <h3>Version 2.2.6</h3>
 <li>Fixed issue of loading products not part of Klevu index</li>
 

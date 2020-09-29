@@ -12,6 +12,7 @@ use \Magento\Framework\App\Request\Http as Magento_Request;
 use \Magento\Catalog\Model\CategoryFactory as Magento_CategoryFactory;
 use \Magento\Catalog\Model\Category as Category_Model;
 use Klevu\Categorynavigation\Helper\Data as KlevuCatNavHelperData;
+use \Magento\Store\Model\StoreManagerInterface as Magento_StoreManager;
 use Zend\Log\Logger as Logger;
 
 class Category implements CategoryInterface
@@ -82,6 +83,10 @@ class Category implements CategoryInterface
      * @var \Klevu\Search\Model\Api\Action\Searchtermtracking
      */
     protected $_apiActionSearchtermtracking;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
 
     public function __construct(
         KlevuHelperConfig $searchHelperConfig,
@@ -92,7 +97,8 @@ class Category implements CategoryInterface
         Magento_Request $magentoRequest,
         Magento_CategoryFactory $magentoCategoryFactory,
         \Magento\Framework\Registry $registry,
-        Category_Model $categoryModel
+        Category_Model $categoryModel,
+        Magento_StoreManager $storeManager
 
     )
     {
@@ -105,6 +111,7 @@ class Category implements CategoryInterface
         $this->_categoryModel = $categoryModel;
         $this->_registry = $registry;
         $this->_categorynavigationHelperConfig = $categorynavigationHelperConfig;
+        $this->_storeManager = $storeManager;
     }
 
     /**
@@ -253,9 +260,7 @@ class Category implements CategoryInterface
 				unset($pathIds[0]);
 				unset($pathIds[1]);
 				foreach ($pathIds as $key => $value) {
-					$_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-					$catname = $_objectManager->create('Magento\Catalog\Model\Category')
-						->load($value)->getName();
+					$catname = $this->_categoryModel->clearInstance()->setStoreId($this->_storeManager->getStore()->getId())->load($value)->getName();
 					$catnames[] = $catname;
                     $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Categorory Name %s", $catname));
 
