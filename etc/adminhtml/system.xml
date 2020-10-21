@@ -15,7 +15,7 @@
 		<group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
 			<label>Smart Category Page Navigation</label>
 			<field id="enabledcategorynavigation_info" translate="label comment" sortOrder="100" type="label" showInDefault="1" showInWebsite="1">
-				<comment><![CDATA[Switch to store view scope to set.]]></comment>
+				<comment><![CDATA[Switch to Store View scope to manage.]]></comment>
 			</field>
 			<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
 			  <label>Smart Category Page Navigation</label>
