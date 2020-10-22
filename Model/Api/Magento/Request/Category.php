@@ -195,6 +195,7 @@ class Category implements CategoryInterface
                         }
                     }
                     $this->_klevu_excluded_ids = array_unique($this->_klevu_excluded_ids);
+                    $this->_klevu_excluded_ids = array_values($this->_klevu_excluded_ids);
                 }
             }
             $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Excluded products count returned: %s", count($this->_klevu_excluded_ids)));
