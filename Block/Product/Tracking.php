@@ -161,7 +161,8 @@ class Tracking extends \Magento\Framework\View\Element\Template
     public function getCategoryName()
     {
         $refUrl = explode("/", $this->_redirectInterface->getRefererUrl());
-        $cat_url = explode(".", end($refUrl));
+        $lastUrlPath = explode("?", end($refUrl));
+        $cat_url = explode(".", $lastUrlPath[0]);
         if (isset($cat_url)) {
             $categorys = $this->_categoryFactory->create()
                 ->getCollection()

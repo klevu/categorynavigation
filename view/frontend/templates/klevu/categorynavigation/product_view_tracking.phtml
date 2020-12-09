@@ -39,8 +39,17 @@
                             product_ids.push(category_product_ids[i].dataset.productId);
                         }
                     }
+                    //Fallback method to grab ids to send cat nav analytics
+                    if (category_product_ids.length == 0) {
+                        let kl_mage_cat_prefix = "product-item-info_";
+                        let kl_mage_cat_ids = document.querySelectorAll("[id^='" + kl_mage_cat_prefix + "']");
 
-                    if (category_product_ids.length > 0 ) {
+                        for (var i = 0; i < kl_mage_cat_ids.length; i++) {
+                            let kl_mage_cat_ele = kl_mage_cat_ids[i].id;
+                            product_ids.push(parseInt(kl_mage_cat_ele.substring(kl_mage_cat_prefix.length, kl_mage_cat_ele.length)));
+                        }
+                    }
+                    if (product_ids.length > 0 ) {
 
                         var p = parseInt('<?php echo $p_num;?>');
                         klevu_search_product_tracking.klevu_productIds = product_ids.join();
