@@ -7,8 +7,8 @@ It is used for powering the results on your category navigation pages using Klev
 
 ## Compatible with:
 
-- Magento Open Source (CE) 2.0.0 to 2.4.1.
-- Magento Commerce (EE) 2.0.0 to 2.4.1.
+- Magento Open Source (CE) 2.0.0 to 2.4.2.
+- Magento Commerce (EE) 2.0.0 to 2.4.2.
 
 ---
 
