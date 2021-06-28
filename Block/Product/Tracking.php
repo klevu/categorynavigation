@@ -66,51 +66,56 @@ class Tracking extends \Magento\Framework\View\Element\Template
      */
     public function getJsonTrackingData()
     {
-        try{
-			// Get the product
-			$product = $this->_registry->registry('current_product');
-			if (!$product instanceof Product) {
-				return false;
-			}
-			
-			$id = $product->getId();
-			$store = $this->_storeManagerInterface->getStore();
-			$js_api_key = $this->_configHelper->getJsApiKey();
+        try {
+            // Get the product
+            $product = $this->_registry->registry('current_product');
+            if (!$product instanceof Product) {
+                return false;
+            }
 
-			$name = $product->getName();
-			$product_url = $product->getProductUrl();
-			$product_sku = $product->getSku();
+            $id = $product->getId();
+            $store = $this->_storeManagerInterface->getStore();
+            $js_api_key = $this->_configHelper->getJsApiKey();
 
-			if ($product->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
-				$parent = $product;
-				$productTypeInstance = $product->getTypeInstance();
-				$usedProducts = $productTypeInstance->getUsedProducts($product);
-				foreach ($usedProducts as $child) {
-					$product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $child, $store);
-					$product_sale_price = $product_saleprice['salePrice'];
-				}
-			} else {
-				$parent = null;
-				$product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $product, $store);
-				$product_sale_price = $product_saleprice['salePrice'];
-			}
+            $name = $product->getName();
+            $product_url = $product->getProductUrl();
+            $product_sku = $product->getSku();
 
-			$product = [
-				'klevu_apiKey' => $js_api_key,
-				'klevu_productId' => $id,
-				'klevu_productName' => $name,
-				'klevu_productUrl' => $product_url,
-				'klevu_productSku' => $product_sku,
-				'klevu_salePrice' => $product_sale_price,
-				'klevu_productRatings' => $this->convertToRatingStar($product->getRating())
-				//'klevu_shopperIP' => $this->_searchHelperData->getIp(),
-				//'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
-				//'klevu_sessionId' => md5(session_id())
-			];
-			return json_encode($product);
-		} catch (\Exception $e) {
+            if ($product->getData("type_id") == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                $parent = $product;
+                $productTypeInstance = $product->getTypeInstance();
+                $usedProducts = $productTypeInstance->getUsedProducts($product);
+                foreach ($usedProducts as $child) {
+                    $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $child, $store);
+                    $product_sale_price = $product_saleprice['salePrice'];
+                }
+            } else {
+                $parent = null;
+                $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $product, $store);
+                $product_sale_price = $product_saleprice['salePrice'];
+            }
+            //Sending the parent or child product id
+            $klevu_productGroupId = $product->getId();
+            $klevu_productVariantId = $product->getId();
+
+            $product = [
+                'klevu_apiKey' => $js_api_key,
+                'klevu_productId' => $id,
+                'klevu_productName' => $name,
+                'klevu_productUrl' => $product_url,
+                'klevu_productSku' => $product_sku,
+                'klevu_salePrice' => $product_sale_price,
+                'klevu_productRatings' => $this->convertToRatingStar($product->getRating()),
+                'klevu_productGroupId' => $klevu_productGroupId,
+                'klevu_productVariantId' => $klevu_productVariantId
+                //'klevu_shopperIP' => $this->_searchHelperData->getIp(),
+                //'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
+                //'klevu_sessionId' => md5(session_id())
+            ];
+            return json_encode($product);
+        } catch (\Exception $e) {
             $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
-        }        
+        }
     }
 
     /**
