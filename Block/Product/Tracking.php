@@ -2,6 +2,7 @@
 
 namespace Klevu\Categorynavigation\Block\Product;
 
+use Klevu\Logger\Constants as LoggerConstants;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Session\Generic;
@@ -114,7 +115,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
             ];
             return json_encode($product);
         } catch (\Exception $e) {
-            $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
         }
     }
 

@@ -8,11 +8,11 @@
 		"magento/module-backend": "*",
 		"magento/module-eav": "*",
 		"magento/framework": "*",
-        "klevu/module-search": "~2.3.0",
-        "zendframework/zend-log": ">=2.5"
+        "klevu/module-search": "^2.3.0",
+        "klevu/module-logger": "^1.0.0"
     },
     "type": "magento-module",
-    "version": "2.2.13",
+    "version": "2.3.0",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

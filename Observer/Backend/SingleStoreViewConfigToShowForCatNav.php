@@ -1,12 +1,13 @@
 <?php
 namespace Klevu\Categorynavigation\Observer\Backend;
 
+use Klevu\Categorynavigation\Helper\Config as Klevu_HelperConfigCatNav;
+use Klevu\Logger\Constants as LoggerConstants;
+use Klevu\Search\Model\Klevu\HelperManager as Klevu_HelperManager;
 use Magento\Framework\App\RequestInterface as RequestInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Store\Model\StoreManagerInterface as StoreManagerInterface;
-use Klevu\Search\Model\Klevu\HelperManager as Klevu_HelperManager;
-use Klevu\Categorynavigation\Helper\Config as Klevu_HelperConfigCatNav;
 
 class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
 {
@@ -61,7 +62,7 @@ class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
             $klevuConfig->setGlobalConfig( $klevuConfigCatNav::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL , $catNavTrackURL );
 
         } catch (\Exception $e) {
-            $klevuDataHelper->log(\Zend\Log\Logger::CRIT, sprintf("Exception thrown for single store view cat nav %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+            $klevuDataHelper->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Exception thrown for single store view cat nav %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
             return;
         }
     }
