@@ -4,6 +4,7 @@
  */
 namespace Klevu\Categorynavigation\Model\Api\Magento\Request;
 
+use Klevu\Logger\Constants as LoggerConstants;
 use Klevu\Search\Helper\Config as KlevuHelperConfig;
 use Klevu\Search\Helper\Data as KlevuHelperData;
 use Klevu\Categorynavigation\Model\Api\Action\CatnavIdsearch as KlevuCatnavApiIdsearch;
@@ -13,7 +14,6 @@ use \Magento\Catalog\Model\CategoryFactory as Magento_CategoryFactory;
 use \Magento\Catalog\Model\Category as Category_Model;
 use Klevu\Categorynavigation\Helper\Data as KlevuCatNavHelperData;
 use \Magento\Store\Model\StoreManagerInterface as Magento_StoreManager;
-use Zend\Log\Logger as Logger;
 
 class Category implements CategoryInterface
 {
@@ -156,7 +156,7 @@ class Category implements CategoryInterface
             }
                 $this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
 		$this->_klevu_product_ids = array_values($this->_klevu_product_ids);
-            $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Products count returned: %s", count($this->_klevu_product_ids)));
+            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Products count returned: %s", count($this->_klevu_product_ids)));
             
 
 
@@ -164,7 +164,7 @@ class Category implements CategoryInterface
             $this->_klevu_metaData = $this->getKlevuResponse()->getData('meta');
             //Based on type we will changing below logic
             if (empty($this->_klevu_metaData['excludeIds'])) {
-                $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("No excludeIds were specified. Full product collection will be used."));
+                $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("No excludeIds were specified. Full product collection will be used."));
                 //Returning already settled _klevu_product_ids
                 return $this->_klevu_product_ids;
             }
@@ -198,9 +198,9 @@ class Category implements CategoryInterface
                     $this->_klevu_excluded_ids = array_values($this->_klevu_excluded_ids);
                 }
             }
-            $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Excluded products count returned: %s", count($this->_klevu_excluded_ids)));
+            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Excluded products count returned: %s", count($this->_klevu_excluded_ids)));
             if (is_array($this->_klevu_excluded_ids) && !empty($this->_klevu_excluded_ids)) {
-                $this->_searchHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Excluded products ids are :: %s", implode(",", $this->_klevu_excluded_ids)));
+                $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Excluded products ids are :: %s", implode(",", $this->_klevu_excluded_ids)));
             }            
             
             
@@ -263,7 +263,7 @@ class Category implements CategoryInterface
 				foreach ($pathIds as $key => $value) {
 					$catname = $this->_categoryModel->clearInstance()->setStoreId($this->_storeManager->getStore()->getId())->load($value)->getName();
 					$catnames[] = $catname;
-                    $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Categorory Name %s", $catname));
+                    $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Categorory Name %s", $catname));
 
                     //$catnames[] = $this->_categoryModel->load($value)->getName();
                     //unset($this->_categoryModel);
@@ -294,7 +294,7 @@ class Category implements CategoryInterface
 			}
 			return $this->_klevu_parameters;
 		} catch (\Exception $e) {
-            $this->_searchHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Category API Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Category API Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
         }
     }
 

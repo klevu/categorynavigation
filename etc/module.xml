@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-  <module name="Klevu_Categorynavigation" setup_version="2.2.11">
-      <sequence>
-        <module name="Klevu_Search"/>
-      </sequence>
-  </module>
+    <module name="Klevu_Categorynavigation" setup_version="2.2.11">
+        <sequence>
+            <module name="Klevu_Search"/>
+            <module name="Klevu_Logger"/>
+        </sequence>
+    </module>
 </config>

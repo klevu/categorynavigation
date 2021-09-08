@@ -4,6 +4,7 @@ namespace Klevu\Categorynavigation\Plugin\Framework\Search\Request;
 
 use Klevu\Categorynavigation\Helper\Data as KlevuHelperDataCatNav;
 use Klevu\Categorynavigation\Model\Api\Magento\Request\CategoryInterface as KlevuCategoryApi;
+use Klevu\Logger\Constants as LoggerConstants;
 use Klevu\Search\Helper\Config as KlevuHelperConfig;
 use Klevu\Search\Helper\Data as KlevuHelperData;
 use Magento\Catalog\Model\SessionFactory;
@@ -57,6 +58,24 @@ class CleanerPluginForCatNav
      */
     protected $klevuHelperDataCatNav;
 
+    /**
+     * @var isKlevuPreserveLogEnabled
+     */
+    protected $isKlevuPreserveLogEnabled = false;
+
+    /**
+     * CleanerPluginForCatNav constructor.
+     *
+     * @param MagentoRegistry $mageRegistry
+     * @param MagentoCleaner $mageCleaner
+     * @param MagentoPageCache $magePageCache
+     * @param MageSessionManager $sessionManager
+     * @param SessionFactory $sessionFactory
+     * @param KlevuCategoryApi $klevuCategoryRequest
+     * @param KlevuHelperData $klevuHelperData
+     * @param KlevuHelperConfig $klevuHelperConfig
+     * @param KlevuHelperDataCatNav $klevuHelperDataCatNav
+     */
     public function __construct(
         MagentoRegistry $mageRegistry,
         MagentoCleaner $mageCleaner,
@@ -102,10 +121,11 @@ class CleanerPluginForCatNav
             if (!$this->klevuHelperConfig->isExtensionConfigured() || $this->klevuHelperDataCatNav->categoryLandingStatus() != static::KLEVU_PRESERVE_LAYOUT) {
             	return $result;
             }
+            $this->isKlevuPreserveLogEnabled = $this->klevuHelperConfig->isPreserveLayoutLogEnabled();
             $klevuRequestData = $this->klevuQueryCleanupCategory($result);
             return $klevuRequestData;
         } catch (\Exception $e) {
-            $this->klevuHelperData->log(\Zend\Log\Logger::CRIT, sprintf("Klevu_CatNav_Cleaner::Cleaner ERROR occured :%s", $e->getMessage()));
+            $this->klevuHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Klevu_CatNav_Cleaner::Cleaner ERROR occured :%s", $e->getMessage()));
             return $result;
         }
         return $result;
@@ -114,20 +134,27 @@ class CleanerPluginForCatNav
     /**
      * Klevu Cleanup for Category Navigation
      *
-     * @param $requestData
+     * @param array $requestData
      * @return mixed
      */
     public function klevuQueryCleanupCategory($requestData)
     {
         $catValue = $requestData['filters']['category_filter']['value'];
+        if ($this->isKlevuPreserveLogEnabled) {
+            $this->writeToPreserveLayoutLog("catNavCleanerPlugin:: klevuQueryCleanupCategory execution started");
+            //Adding this to identify in the logs which cleaner is triggering
+            $this->magentoRegistry->unregister('klReqCleanerType');
+            $this->magentoRegistry->register('klReqCleanerType', 'CategoryNavRequestInitiated');
+        }
+
         //If multiple category paths requested then return the $requestData
         if (is_array($catValue) && count($catValue) > 1) {
-            $this->klevuHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Request has multiple category filter values %s", implode(",", $catValue)));
+            $this->klevuHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Request has multiple category filter values %s", implode(",", $catValue)));
             return $requestData;
         } elseif (is_array($catValue) && count($catValue) == 1) {
             $catValue = $catValue[0];
         }
-        
+
         $queryScope = $requestData['dimensions']['scope']['value'];
 
         $idList = $this->sessionObjectHandler->getData('ids_' . $queryScope . '_cat_' . $catValue);
@@ -154,7 +181,7 @@ class CleanerPluginForCatNav
 
         //Checking for queryReference
         if (empty($requestData['queries']['catalog_view_container']['queryReference'])) {
-            $this->klevuHelperData->log(\Zend\Log\Logger::DEBUG, sprintf("Cat Nav:: queryReference not found"));
+            $this->klevuHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("catNavCleanerPlugin:: queryReference not found"));
             return $requestData;
         }
         $excludeIds = $this->sessionObjectHandler->getData('exclIds_' . $queryScope . '_cat_' . $catValue);
@@ -169,7 +196,7 @@ class CleanerPluginForCatNav
 
         if(!empty($excludeIds)) {
 $requestData['queries']['catalog_view_container']['queryReference'][] = array('clause' => 'not', 'ref' => 'klevu_excl_ids');
-                
+
                 $requestData['queries']['klevu_excl_ids'] = array(
                     'name' => 'klevu_excl_ids',
                     'filterReference' => array(
@@ -188,10 +215,13 @@ $requestData['queries']['catalog_view_container']['queryReference'][] = array('c
                     'is_bind' => 1
                 );
         }
-        
-        
-        
+
         $currentEngine = $this->getCurrentSearchEngine();
+        if ($this->isKlevuPreserveLogEnabled) {
+            $this->writeToPreserveLayoutLog(
+                sprintf("catNavCleanerPlugin:: currentEngine-%s", $currentEngine)
+            );
+        }
         if ($currentEngine !== "mysql") {
             if (isset($requestData['sort'])) {
                 if (count($requestData['sort']) > 0) {
@@ -205,6 +235,11 @@ $requestData['queries']['catalog_view_container']['queryReference'][] = array('c
             }
 
             $current_order = $this->magentoRegistry->registry('current_order');
+            if ($this->isKlevuPreserveLogEnabled) {
+                $this->writeToPreserveLayoutLog(
+                    sprintf("catNavCleanerPlugin:: current_order-%s", $current_order)
+                );
+            }
             if (!empty($current_order)) {
                 if ($current_order == "personalized") {
                     $this->magentoRegistry->unregister('from');
@@ -217,7 +252,24 @@ $requestData['queries']['catalog_view_container']['queryReference'][] = array('c
                 }
             }
         }
+
+        if ($this->isKlevuPreserveLogEnabled) {
+            //convert requestData object into array
+            $requestDataToArray = json_decode(json_encode($requestData), true);
+            $this->writeToPreserveLayoutLog("catNavCleanerPlugin:: Request data:" . PHP_EOL . print_r($requestDataToArray, true));
+        }
         return $requestData;
+    }
+
+    /**
+     * Writes logs to the Klevu_Search_Preserve_Layout.log file
+     *
+     * @param mixed $message
+     * @return void
+     */
+    private function writeToPreserveLayoutLog($message)
+    {
+        $this->klevuHelperData->preserveLayoutLog($message);
     }
 
     /**
@@ -232,6 +284,7 @@ $requestData['queries']['catalog_view_container']['queryReference'][] = array('c
 
     /**
      * Return the product id field
+     *
      * @return string
      */
     private function getProductIdField()
