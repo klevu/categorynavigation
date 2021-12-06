@@ -5,6 +5,9 @@
         <sequence>
             <module name="Klevu_Search"/>
             <module name="Klevu_Logger"/>
+            <module name="Klevu_FrontendJs"/>
+            <module name="Klevu_Metadata"/>
+            <module name="Klevu_Registry"/>
         </sequence>
     </module>
 </config>

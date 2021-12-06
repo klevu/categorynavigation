@@ -20,33 +20,31 @@ class Categorylandingoptions
 
     public function toOptionArray()
     {
-        //$check_preserve = \Magento\Framework\App\ObjectManager::getInstance()->get('Klevu\Search\Model\Product\Sync')->getFeatures();
         $check_preserve = $this->_klevuProductSync->getFeatures();
-        if(!empty($check_preserve['disabled'])) {
-            if(strpos($check_preserve['disabled'],"preserves_layout") !== false) {
-                return array(
-                    array('value' => static::MAGENTO_DEFAULT, 'label' => __("Magento's Default")),
-                    array('value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu Powered - Based On Klevu Template")),
-                );
+        if (!empty($check_preserve['disabled'])) {
+            if (strpos($check_preserve['disabled'],"preserves_layout") !== false) {
+                return [
+                    ['value' => static::MAGENTO_DEFAULT, 'label' => __("Native")],
+                    ['value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu JS Theme (Recommended)")],
+                ];
             } else {
-                return array(
-                        array('value' => static::MAGENTO_DEFAULT, 'label' => __("Magento's Default")),
-                        array('value' => static::KLEVU_PRESERVE_LAYOUT, 'label' => __("Klevu Powered - Preserve Theme Layout")),
-                        array('value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu Powered - Based On Klevu Template"))
-                );
+                return [
+                    ['value' => static::MAGENTO_DEFAULT, 'label' => __("Native")],
+                    ['value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu JS Theme (Recommended)")],
+                    ['value' => static::KLEVU_PRESERVE_LAYOUT, 'label' => __("Preserve your Magento layout")],
+                ];
             }
-        } else if(empty($check_preserve['disabled'])){
-                return array(
-                        array('value' => static::MAGENTO_DEFAULT, 'label' => __("Magento's Default")),
-                        array('value' => static::KLEVU_PRESERVE_LAYOUT, 'label' => __("Klevu Powered - Preserve Theme Layout")),
-                        array('value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu Powered - Based On Klevu Template"))
-                        
-                );
+        } else if (empty($check_preserve['disabled'])) {
+            return [
+                ['value' => static::MAGENTO_DEFAULT, 'label' => __("Native")],
+                ['value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu JS Theme (Recommended)")],
+                ['value' => static::KLEVU_PRESERVE_LAYOUT, 'label' => __("Preserve your Magento layout")],
+            ];
         } else {
-                return array(
-                    array('value' => static::MAGENTO_DEFAULT, 'label' => __("Magento's Default")),
-                    array('value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu Powered - Based On Klevu Template")),
-                );
+            return [
+                ['value' => static::MAGENTO_DEFAULT, 'label' => __("Native")],
+                ['value' => static::KLEVU_TEMPLATE_LAYOUT, 'label' => __("Klevu JS Theme (Recommended)")],
+            ];
         }
     }
 }

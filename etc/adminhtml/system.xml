@@ -1,42 +1,43 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
-  <system>
-    <section id="klevu_search" translate="label">
-	    <group id="general" translate="label" type="text" sortOrder="100" showInStore="1">
-			<field id="category_navigation_url" translate="label comment" sortOrder="129" showInStore="1">
-            <label>Category Navigation Url</label>
-            <comment><![CDATA[The Category Navigation Url is used for getting Klevu's category Search Result.]]></comment>
-			</field>
-			<field id="category_navigation_tracking_url" translate="label comment" sortOrder="129" showInStore="1">
-            <label>Category Navigation Tracking Url</label>
-            <comment><![CDATA[The Category Navigation Tracking Url is used for getting Klevu's category Search Result.]]></comment>
-			</field>
-		</group>
-		<group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
-			<label>Smart Category Page Navigation</label>
-			<field id="enabledcategorynavigation_info" translate="label comment" sortOrder="100" type="label" showInDefault="1" showInWebsite="1">
-				<comment><![CDATA[Switch to Store View scope to manage.]]></comment>
-			</field>
-			<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
-			  <label>Smart Category Page Navigation</label>
-			  <comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> or <strong>Klevu Powered - Based On Klevu Template</strong> is selected, products and their order on the category pages will be decided by the Klevu Search. Use the option <strong>Klevu Powered - Preserve Theme Layout</strong> to preserve your own theme layout; option <strong>Klevu Powered - Based On Klevu Template</strong> for the Klevu template.]]></comment>
-			  <source_model>Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions</source_model>
-			</field>
-			<field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-			  <label>Maximum Number Of Products Per Category</label>
-			  <comment><![CDATA[This value can be upto 4000.]]></comment>
-			</field>
-			<field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInDefault="1" showInStore="1">
-				<label>Sort by Klevu Relevance</label>
-				<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-				<comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> is selected.]]></comment>
-			</field>
-            <field id="relevance_label" translate="label" type="text" sortOrder="122" showInDefault="1" showInStore="1">
-                <label>Category Pages Relevance Label</label>
-                <validate>required-entry</validate>
-                <comment><![CDATA[On the category pages, text label will be shown in the sorting drop-down.</br> Default label will be as <strong>Relevance</strong>.]]></comment>
-            </field>
-        </group>
-    </section>
-  </system>
+	<system>
+		<section id="klevu_search" translate="label">
+			<group id="general" translate="label" type="text" sortOrder="100" showInStore="1">
+				<field id="category_navigation_url" translate="label comment" sortOrder="129" showInStore="1">
+					<label>Category Navigation Url</label>
+					<comment><![CDATA[The Category Navigation Url is used for getting Klevu's category Search Result.]]></comment>
+				</field>
+				<field id="category_navigation_tracking_url" translate="label comment" sortOrder="129" showInStore="1">
+					<label>Category Navigation Tracking Url</label>
+					<comment><![CDATA[The Category Navigation Tracking Url is used for getting Klevu's category Search Result.]]></comment>
+				</field>
+			</group>
+			<group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Smart Category Page Navigation</label>
+				<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Ordering &amp; Rendering</label>
+					<comment><![CDATA[
+<strong>Native:</strong> Klevu will be disabled, and will not power the rendering or result ordering of your category pages.<br />
+<strong>Klevu JS Theme:</strong> Use Klevu's JavaScript Theme to render and order the results of your category pages. Recommended for best results.<br />
+<strong>Preserve your Magento layout:</strong> Klevu will control the ordering of results, but Magento will render your category pages.
+]]></comment>
+					<source_model>Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions</source_model>
+				</field>
+				<field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Maximum Number Of Products Per Category</label>
+					<comment><![CDATA[This value can be upto 4000.]]></comment>
+				</field>
+				<field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInDefault="1" showInStore="1">
+					<label>Sort by Klevu Relevance</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> is selected.]]></comment>
+				</field>
+				<field id="relevance_label" translate="label" type="text" sortOrder="122" showInDefault="1" showInStore="1">
+					<label>Category Pages Relevance Label</label>
+					<validate>required-entry</validate>
+					<comment><![CDATA[On the category pages, text label will be shown in the sorting drop-down.</br> Default label will be as <strong>Relevance</strong>.]]></comment>
+				</field>
+			</group>
+		</section>
+	</system>
 </config>
