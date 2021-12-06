@@ -9,10 +9,45 @@
     <type name="Magento\Catalog\Model\Config">
         <plugin name="klevu_categorynavigation_config" type="Klevu\Categorynavigation\Plugin\Catalog\Model\Config"/>
     </type>
-  
+
     <type name="Magento\Framework\Search\Request\Cleaner">
         <plugin name="Klevu_Categorynavigation::CleanerForCatNav"
                 type="Klevu\Categorynavigation\Plugin\Framework\Search\Request\CleanerPluginForCatNav"
                 disabled="false"/>
+    </type>
+
+    <!-- ThemeV2 -->
+    <type name="Klevu\Categorynavigation\Block\CategoryDisplay\ThemeV2">
+        <arguments>
+            <argument name="isEnabledCondition" xsi:type="object">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</argument>
+        </arguments>
+    </type>
+
+    <type name="Klevu\Categorynavigation\Block\Html\Head\JsAdditional">
+        <arguments>
+            <argument name="isEnabledCondition" xsi:type="object">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</argument>
+        </arguments>
+    </type>
+
+    <type name="Klevu\FrontendJs\Service\IsEnabledDeterminer">
+        <arguments>
+            <argument name="isEnabledConditions" xsi:type="array">
+                <item name="_klevu_themev2_catnav" xsi:type="object">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Klevu\Categorynavigation\Service\ThemeV2\InteractiveOptionsProvider" type="Klevu\Search\Service\ThemeV2\InteractiveOptionsProvider">
+        <arguments>
+            <argument name="isEnabledCondition" xsi:type="object">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Klevu\FrontendJs\Service\InteractiveOptionsGenerator">
+        <arguments>
+            <argument name="interactiveOptionsProviders" xsi:type="array">
+                <item name="_klevu_themev2_catnav" xsi:type="object">Klevu\Categorynavigation\Service\ThemeV2\InteractiveOptionsProvider</item>
+            </argument>
+        </arguments>
     </type>
 </config>

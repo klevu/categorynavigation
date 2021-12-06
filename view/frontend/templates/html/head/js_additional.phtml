@@ -1,0 +1,5 @@
+<?php /** @var Klevu\Categorynavigation\Block\Html\Head\JsAdditional $block */ ?>
+<script type="text/javascript">
+    var klevu_pageCategory = '<?php echo $block->escapeJsQuote($block->getFullCategoryPath()); ?>';
+    sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);
+</script>
