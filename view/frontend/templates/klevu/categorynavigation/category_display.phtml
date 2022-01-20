@@ -162,7 +162,7 @@ document.getElementById("searchedKeyword").value= '*';
         $allCategoryNames = implode(";",$catnames);
     }
     ?>
-    klevu_pageCategory = "<?php echo $allCategoryNames; ?>";
+    klevu_pageCategory = '<?php echo $block->escapeJsQuote($allCategoryNames); ?>';
     var klevu_setTermInSearchBox = false;
 </script>
 <?php if($block->isCustomerGroupPriceEnabled()) { ?>
