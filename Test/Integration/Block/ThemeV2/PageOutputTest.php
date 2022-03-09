@@ -51,23 +51,23 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringContainsString')) {
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="//js.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertContains(
-                '<script type="text/javascript" src="//js.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertContains(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
@@ -99,13 +99,13 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertNotContains(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
@@ -137,13 +137,13 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertNotContains(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
@@ -175,13 +175,13 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertNotContains(
-                '<script type="text/javascript" src="//js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
