@@ -263,7 +263,7 @@ class Category implements CategoryInterface
 				foreach ($pathIds as $key => $value) {
 					$catname = $this->_categoryModel->clearInstance()->setStoreId($this->_storeManager->getStore()->getId())->load($value)->getName();
 					$catnames[] = $catname;
-                    $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Categorory Name %s", $catname));
+                    $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Category Name %s", $catname));
 
                     //$catnames[] = $this->_categoryModel->load($value)->getName();
                     //unset($this->_categoryModel);
