@@ -2,20 +2,20 @@
     "name": "klevu/module-categorynavigation",
     "description": "Search that learns, generates sales. Fastest, most advanced cloud-based search, autocomplete, instant search",
     "require": {
-		"php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0|~7.2.0|~7.3.0|~7.4.0",
+        "php": "~5.6.0|~7.0.0|~7.1.0|~7.2.0|~7.3.0|~7.4.0|~8.0.0|~8.1.0",
 		"magento/module-store": "*",
 		"magento/module-catalog": "*",
 		"magento/module-backend": "*",
 		"magento/module-eav": "*",
 		"magento/framework": "*",
         "klevu/module-search": "^2.5.0",
-        "klevu/module-logger": "^1.0.0",
+        "klevu/module-logger": "^1.0.0|^2.0.0",
         "klevu/module-frontend-js": "^1.2.0",
         "klevu/module-metadata": "^1.1.0",
         "klevu/module-registry": "^1.0.0"
     },
     "type": "magento-module",
-    "version": "2.4.3",
+    "version": "2.5.0",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
