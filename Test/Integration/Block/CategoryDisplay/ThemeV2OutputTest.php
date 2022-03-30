@@ -51,7 +51,11 @@ class ThemeV2OutputTest extends AbstractControllerTestCase
         $responseBody = $response->getBody();
         $this->assertSame(200, $response->getHttpResponseCode());
 
-        $this->assertRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        } else {
+            $this->assertRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        }
     }
 
     /**
@@ -77,7 +81,11 @@ class ThemeV2OutputTest extends AbstractControllerTestCase
         $responseBody = $response->getBody();
         $this->assertSame(200, $response->getHttpResponseCode());
 
-        $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        } else {
+            $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        }
     }
 
     /**
@@ -103,7 +111,11 @@ class ThemeV2OutputTest extends AbstractControllerTestCase
         $responseBody = $response->getBody();
         $this->assertSame(200, $response->getHttpResponseCode());
 
-        $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        } else {
+            $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        }
     }
 
     /**
@@ -129,7 +141,11 @@ class ThemeV2OutputTest extends AbstractControllerTestCase
         $responseBody = $response->getBody();
         $this->assertSame(200, $response->getHttpResponseCode());
 
-        $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        } else {
+            $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        }
     }
 
     /**
