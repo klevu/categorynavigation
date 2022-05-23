@@ -8,12 +8,6 @@
                 <argument name="js_includes" xsi:type="array">
                     <item name="klevu_themev2_categorynavigation" xsi:type="array">
                         <item name="if_config" xsi:type="array">
-                            <item name="catnav_enabled" xsi:type="array">
-                                <item name="path" xsi:type="const">Klevu\Categorynavigation\Helper\Data::XML_PATH_CATEGORY_LANDING_STATUS</item>
-                                <item name="conditions" xsi:type="array">
-                                    <item name="eq" xsi:type="const">Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions::KLEVU_TEMPLATE_LAYOUT</item>
-                                </item>
-                            </item>
                             <item name="themev2" xsi:type="array">
                                 <item name="path" xsi:type="const">Klevu\Search\Helper\Config::XML_PATH_THEME_VERSION</item>
                                 <item name="conditions" xsi:type="array">
@@ -22,7 +16,7 @@
                             </item>
                         </item>
                         <item name="after" xsi:type="string">lib</item>
-                        <item name="url" xsi:type="string"><![CDATA[https://js.klevu.com/theme/default/v2/catnav-theme.js]]></item>
+                        <item name="url" xsi:type="string"><![CDATA[https://{{ klevu_search/general/js_url }}/theme/default/v2/catnav-theme.js]]></item>
                     </item>
                 </argument>
             </arguments>

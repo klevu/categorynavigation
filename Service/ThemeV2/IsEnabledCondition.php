@@ -10,6 +10,7 @@ use Klevu\Search\Helper\Config as SearchConfigHelper;
 use Klevu\Search\Model\Source\ThemeVersion;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\App\RequestInterface;
 
 class IsEnabledCondition implements
     FrontendJsIsEnabledConditionInterface,
@@ -21,12 +22,19 @@ class IsEnabledCondition implements
     private $scopeConfig;
 
     /**
+     * @var RequestInterface
+     */
+    private $request;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+		RequestInterface $request = null
     ) {
         $this->scopeConfig = $scopeConfig;
+		$this->request = $request;
     }
 
     /**
@@ -35,11 +43,13 @@ class IsEnabledCondition implements
      */
     public function execute($storeId = null)
     {
-        $isEnabled = (int)$this->scopeConfig->getValue(
+        $klevu_templ_preview = $this->request ? $this->request->getParam('klevu_templ_preview') : null;
+		
+		$isEnabled = (int)$this->scopeConfig->getValue(
             CategorynavigationHelper::XML_PATH_CATEGORY_LANDING_STATUS,
             ScopeInterface::SCOPE_STORES,
             $storeId
-        ) === Categorylandingoptions::KLEVU_TEMPLATE_LAYOUT;
+        ) === Categorylandingoptions::KLEVU_TEMPLATE_LAYOUT || $klevu_templ_preview == "klevu-template";
 
         $themeVersion = $this->scopeConfig->getValue(
             SearchConfigHelper::XML_PATH_THEME_VERSION,

@@ -16,6 +16,12 @@
                 disabled="false"/>
     </type>
 
+    <type name="Klevu\Categorynavigation\Model\Observer\CateoryNavigationUrl">
+        <arguments>
+            <argument name="logger" xsi:type="object">Klevu\Search\Logger\Logger\Search</argument>
+        </arguments>
+    </type>
+
     <!-- ThemeV2 -->
     <type name="Klevu\Categorynavigation\Block\CategoryDisplay\ThemeV2">
         <arguments>
