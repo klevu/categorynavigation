@@ -248,23 +248,23 @@ class TrackingOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString(
+            $this->assertStringContainsString(
                 'function categoryAnaylticsProductClickKlevu()',
                 $responseBody,
                 'categoryAnaylticsProductClickKlevu JavaScript function definition'
             );
-            $this->assertStringNotContainsString(
+            $this->assertStringContainsString(
                 "//stats.klevu.com/analytics/categoryProductClickTracking'",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
         } else {
-            $this->assertNotContains(
+            $this->assertContains(
                 'function categoryAnaylticsProductClickKlevu()',
                 $responseBody,
                 'categoryAnaylticsProductClickKlevu JavaScript function definition'
             );
-            $this->assertNotContains(
+            $this->assertContains(
                 "//stats.klevu.com/analytics/categoryProductClickTracking'",
                 $responseBody,
                 'Response contains category product click tracking URL'
@@ -612,23 +612,23 @@ class TrackingOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString(
+            $this->assertStringContainsString(
                 'function categoryAnaylticsProductClickKlevu()',
                 $responseBody,
                 'categoryAnaylticsProductClickKlevu JavaScript function definition'
             );
-            $this->assertStringNotContainsString(
+            $this->assertStringContainsString(
                 "//stats.klevu.com/analytics/categoryProductClickTracking'",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
         } else {
-            $this->assertNotContains(
+            $this->assertContains(
                 'function categoryAnaylticsProductClickKlevu()',
                 $responseBody,
                 'categoryAnaylticsProductClickKlevu JavaScript function definition'
             );
-            $this->assertNotContains(
+            $this->assertContains(
                 "//stats.klevu.com/analytics/categoryProductClickTracking'",
                 $responseBody,
                 'Response contains category product click tracking URL'

@@ -1,5 +1,5 @@
 <?php /** @var \Klevu\Categorynavigation\Block\Product\Tracking $block */ ?>
-<?php if ($block->isExtensionConfigured() && !empty($block->getCategoryName()->getName())) { ?>
+<?php if ($block->isExtensionConfigured()) { ?>
 	<?php $jsonTrackingData = $block->getJsonTrackingData();?>
     <?php if ($block->checkPreserveLayout() && $jsonTrackingData) { ?>
         <script type="text/javascript">

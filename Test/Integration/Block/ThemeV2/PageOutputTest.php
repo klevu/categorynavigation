@@ -79,6 +79,79 @@ class PageOutputTest extends AbstractControllerTestCase
      * @magentoAppIsolation enabled
      * @magentoDbIsolation disabled
      * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js-test.klevu.com
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testThemeV2JavaScriptOutputToCategory_Enabled_SpecifiedJsHost()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        if (method_exists($this, 'assertStringNotContainsString')) {
+            $this->assertStringNotContainsString(
+                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                $responseBody,
+                'CatNav JS include is present in response body'
+            );
+        } else {
+            $this->assertNotContains(
+                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                $responseBody,
+                'CatNav JS include is present in response body'
+            );
+        }
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString(
+                '<script type="text/javascript" src="https://js-test.klevu.com/core/v2/klevu.js"></script>',
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertStringContainsString(
+                '<script type="text/javascript" src="https://js-test.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                $responseBody,
+                'CatNav JS include is present in response body'
+            );
+        } else {
+            $this->assertContains(
+                '<script type="text/javascript" src="https://js-test.klevu.com/core/v2/klevu.js"></script>',
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertContains(
+                '<script type="text/javascript" src="https://js-test.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                $responseBody,
+                'CatNav JS include is present in response body'
+            );
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
      * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 2
      * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 2
      * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
