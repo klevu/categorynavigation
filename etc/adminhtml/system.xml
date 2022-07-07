@@ -1,17 +1,29 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
 	<system>
-		<section id="klevu_search" translate="label">
-			<group id="general" translate="label" type="text" sortOrder="100" showInStore="1">
-				<field id="category_navigation_url" translate="label comment" sortOrder="129" showInStore="1">
-					<label>Category Navigation Url</label>
-					<comment><![CDATA[The Category Navigation Url is used for getting Klevu's category Search Result.]]></comment>
-				</field>
-				<field id="category_navigation_tracking_url" translate="label comment" sortOrder="129" showInStore="1">
-					<label>Category Navigation Tracking Url</label>
-					<comment><![CDATA[The Category Navigation Tracking Url is used for getting Klevu's category Search Result.]]></comment>
-				</field>
-			</group>
+        <section id="klevu_integration">
+            <group id="next_steps">
+                <field id="enabledcategorynavigation" translate="label" sortOrder="20" type="select" showInDefault="1"
+                       showInWebsite="1" showInStore="1" extends="klevu_search/categorylanding/enabledcategorynavigation">
+                    <label>Enable Smart Category Merchandising</label>
+                    <config_path>klevu_search/categorylanding/enabledcategorynavigation</config_path>
+                    <frontend_model>Klevu\Categorynavigation\Block\Adminhtml\Form\Nextsteps\CatNavEnabled</frontend_model>
+                </field>
+            </group>
+            <group id="endpoints">
+                <field id="category_navigation_url" translate="label comment" sortOrder="60" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Category Navigation URL</label>
+                    <config_path>klevu_search/general/category_navigation_url</config_path>
+                    <comment><![CDATA[The Category Navigation URL is used for getting Klevu's category Search Result.]]></comment>
+                </field>
+                <field id="category_navigation_tracking_url" translate="label comment" sortOrder="70" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Category Navigation Tracking URL</label>
+                    <config_path>klevu_search/general/category_navigation_tracking_url</config_path>
+                    <comment><![CDATA[The Category Navigation Tracking URL is used for getting Klevu's category Search Result.]]></comment>
+                </field>
+            </group>
+        </section>
+        <section id="klevu_search" translate="label">
 			<group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Smart Category Page Navigation</label>
 				<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -23,11 +35,11 @@
 ]]></comment>
 					<source_model>Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions</source_model>
 				</field>
-				<field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+				<field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="0" showInWebsite="0" showInStore="1">
 					<label>Maximum Number Of Products Per Category</label>
 					<comment><![CDATA[This value can be upto 4000.]]></comment>
 				</field>
-				<field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInDefault="1" showInStore="1">
+				<field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInDefault="0" showInWebsite="0" showInStore="1">
 					<label>Sort by Klevu Relevance</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 					<comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> is selected.]]></comment>
