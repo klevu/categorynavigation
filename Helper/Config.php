@@ -2,6 +2,7 @@
 
 namespace Klevu\Categorynavigation\Helper;
 
+use Klevu\Search\Service\Account\UpdateEndpoints;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
 use \Magento\Framework\UrlInterface;
 use \Magento\Store\Model\StoreManagerInterface;
@@ -71,13 +72,10 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_magentoReinitConfigInterface = $magentoReinitConfigInterface;
     }
 
-
-    const XML_PATH_CATEGORY_NAVIGATION_URL = "klevu_search/general/category_navigation_url";
-    const XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL = "klevu_search/general/category_navigation_tracking_url";
+    const XML_PATH_CATEGORY_NAVIGATION_URL = UpdateEndpoints::XML_PATH_CATEGORY_NAVIGATION_URL;
+    const XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL = UpdateEndpoints::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL;
     const XML_PATH_CATEGORY_RELEVANCE = "klevu_search/categorylanding/klevu_cat_relevance";
     const XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL = "klevu_search/categorylanding/relevance_label";
-
-
 
     /**
      * @param null $store
