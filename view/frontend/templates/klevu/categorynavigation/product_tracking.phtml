@@ -1,10 +1,9 @@
 <?php /** @var \Klevu\Categorynavigation\Block\Product\Tracking $block */ ?>
 <?php if ($block->isExtensionConfigured()) { ?>
-	<?php $jsonTrackingData = $block->getJsonTrackingData();?>
+    <?php $jsonTrackingData = $block->getJsonTrackingData();?>
     <?php if ($block->checkPreserveLayout() && $jsonTrackingData) { ?>
         <script type="text/javascript">
-          require(['jquery','Magento_Customer/js/customer-data'], function ($,customerData) {
-            jQuery(document).ready(function () {
+            document.addEventListener("DOMContentLoaded", function() {
                 try {
                     var counter = 0;
                     var timeKlevuUpdate = setInterval(function () {
@@ -21,57 +20,65 @@
                         }
                     }, 700);
                 } catch (e) {
-                  console.log(e);
+                    console.log(e);
                 }
-              });
             });
 
-          function categoryAnaylticsProductClickKlevu() {
-              var cats = jQuery.parseJSON(localStorage.getItem("categories"));
+            function categoryAnaylticsProductClickKlevu() {
+                let cats;
+                try {
+                    cats = JSON.parse(localStorage.getItem("categories"));
+                } catch (e) {
+                    cats = null;
+                }
+                const url = (document.referrer !== "") ? (new URL(document.referrer)) : null;
+                if (url === null || cats === null) {
+                    return;
+                }
+                if (cats[url.pathname]) {
+                    klevu_search_product_tracking = <?= $jsonTrackingData ?>;
+                    klevu_search_product_tracking.klevu_categoryName = cats[url.pathname].name;
+                    klevu_search_product_tracking.klevu_categoryPath = cats[url.pathname].categoryPath;
+                    if(document.getElementById('klevu_loginCustomerEmail')) {
+                        klevu_search_product_tracking.klevu_loginCustomerEmail = document.getElementById('klevu_loginCustomerEmail').innerHTML;
+                    }
+                    if(document.getElementById('klevu_sessionId')) {
+                        klevu_search_product_tracking.klevu_sessionId = document.getElementById('klevu_sessionId').innerHTML;
+                    }
 
-              const url = (document.referrer !=="")?(new URL(document.referrer)):null;
-              if(url==null || cats==null ) return;
-              if(cats[url.pathname]) {
-                  klevu_search_product_tracking = <?php echo $jsonTrackingData; ?>;
-                  klevu_search_product_tracking.klevu_productName = encodeURIComponent(klevu_search_product_tracking.klevu_productName);
-                  klevu_search_product_tracking.klevu_categoryName = encodeURIComponent( cats[url.pathname].name);
-                  klevu_search_product_tracking.klevu_categoryPath = encodeURIComponent( cats[url.pathname].categoryPath);
-                  if(document.getElementById('klevu_loginCustomerEmail')) {
-                      klevu_search_product_tracking.klevu_loginCustomerEmail = document.getElementById('klevu_loginCustomerEmail').innerHTML;
-                  }
+                    var klevu_cat_productIds = localStorage.getItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
+                    var klevu_page_startsfrom = localStorage.getItem("klevu_page_startsfrom");
+                    var ids = (klevu_cat_productIds == null) ? [] : klevu_cat_productIds.split(",");
+                    var product_position = ids.indexOf(klevu_search_product_tracking.klevu_productId) + 1;
+                    product_position += parseInt(klevu_page_startsfrom);
 
-                  if(document.getElementById('klevu_sessionId')) {
-                      klevu_search_product_tracking.klevu_sessionId = document.getElementById('klevu_sessionId').innerHTML;
-                  }
+                    klevu_search_product_tracking.klevu_productPosition = product_position;
 
-                  var klevu_cat_productIds = localStorage.getItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName) );
-                  var klevu_page_startsfrom = localStorage.getItem("klevu_page_startsfrom");
-                  var ids = ( klevu_cat_productIds == null )? [] : klevu_cat_productIds.split(",");
-                  var product_position = ids.indexOf(klevu_search_product_tracking.klevu_productId) + 1;
-                  product_position = product_position = product_position + parseInt(klevu_page_startsfrom);
+                    if (klevu_search_product_tracking.klevu_productId !== localStorage.getItem("klevu_product_call_sent")) {
+                        const fetchUrl = '<?= $block->escapeUrl(
+                                $block->getCategoryNavigationTrackingUrl($block->getStoreId())
+                            ) ?>' + '?' + convertDataToUrlParams(klevu_search_product_tracking);
 
-                  klevu_search_product_tracking.klevu_productPosition = product_position;
-                  var param = jQuery.param(klevu_search_product_tracking);
+                        fetch(fetchUrl, {
+                            method: 'GET',
+                            crossDomain: true
+                        }).then(response => {
+                            localStorage.setItem("klevu_product_call_sent", klevu_search_product_tracking.klevu_productId);
+                        });
 
-                  if (klevu_search_product_tracking.klevu_productId != localStorage.getItem("klevu_product_call_sent")) {
-                      <?php $isSecure = $block->getRequest()->isSecure();
-                      $protocol = ($isSecure) ? 'https://' : 'http://'; ?>
-                      jQuery.ajax({
-                          url: '<?php echo $protocol.$block->getCategoryNavigationTrackingUrl($block->getStoreId()) ?>/analytics/categoryProductClickTracking',
-                          type: 'GET',
-                          data: param,
-                          dataType: 'json',
-                          statusCode: {
-                              200: function (data) {
-                                  localStorage.setItem("klevu_product_call_sent", klevu_search_product_tracking.klevu_productId);
-                              }
-                          },
-                          timeout: 3000,
-                          crossDomain: true
-                      });
-                  }
-              }
-          }
+                        function convertDataToUrlParams(data) {
+                            let params = [];
+                            for (let key in data) {
+                                if (data.hasOwnProperty(key)) {
+                                    params.push(key + '=' + encodeURIComponent(data[key]));
+                                }
+                            }
+                            params = params.join('&');
+                            return params;
+                        }
+                    }
+                }
+            }
         </script>
     <?php } ?>
 <?php } ?>

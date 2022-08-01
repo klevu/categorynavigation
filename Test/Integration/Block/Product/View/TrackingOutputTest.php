@@ -64,7 +64,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -120,7 +120,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -176,7 +176,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -232,7 +232,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -288,7 +288,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -344,7 +344,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -400,7 +400,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -456,7 +456,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -512,7 +512,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );
@@ -568,7 +568,7 @@ class TrackingOutputTest extends AbstractControllerTestCase
                 'Product Tracking JS variable defined'
             );
             $this->assertStringNotContainsString(
-                "//stats.klevu.com/analytics/categoryProductViewTracking'",
+                "//stats.klevu.com/analytics/categoryProductViewTracking",
                 $responseBody,
                 'Response contains category product click tracking URL'
             );

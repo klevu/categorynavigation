@@ -2,66 +2,92 @@
 
 namespace Klevu\Categorynavigation\Helper;
 
+use Klevu\Search\Helper\Api as ApiHelper;
+use Klevu\Search\Helper\Data as SearchHelper;
+use Klevu\Search\Model\Api\Action\Features as ApiActionFeatures;
 use Klevu\Search\Service\Account\UpdateEndpoints;
-use \Magento\Framework\App\Config\ScopeConfigInterface;
-use \Magento\Framework\UrlInterface;
-use \Magento\Store\Model\StoreManagerInterface;
-use \Magento\Config\Model\ResourceModel\Config as Magento_Config;
-use \Klevu\Search\Model\Product\Sync;
-use \Magento\Framework\Model\Store;
-use \Klevu\Search\Model\Api\Action\Features;
-use \Magento\Framework\App\Config\ReinitableConfigInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Value as ConfigValue;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Config\Model\ResourceModel\Config as Magento_Config;
+use Magento\Framework\App\Config\ReinitableConfigInterface;
 
-class Config extends \Magento\Framework\App\Helper\AbstractHelper
+class Config extends AbstractHelper
 {
+    const XML_PATH_CATEGORY_NAVIGATION_URL = UpdateEndpoints::XML_PATH_CATEGORY_NAVIGATION_URL;
+    const XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL = UpdateEndpoints::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL;
+    const XML_PATH_CATEGORY_RELEVANCE = "klevu_search/categorylanding/klevu_cat_relevance";
+    const XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL = "klevu_search/categorylanding/relevance_label";
+    const XML_PATH_CATEGORY_LAZYLOAD = "klevu_search/developer/lazyload_js_catnav";
+    const XML_PATH_CATEGORY_CONTENT_MIN_HEIGHT = "klevu_search/developer/content_min_height_catnav";
+
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     protected $_appConfigScopeConfigInterface;
 
     /**
-     * @var \Klevu\Search\Helper\Data
+     * @var SearchHelper
      */
     protected $_searchHelperData;
 
     /**
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     protected $_magentoFrameworkUrlInterface;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $_storeModelStoreManagerInterface;
 
     /**
-     * @var \Magento\Store\Model\Store
+     * @var Store
      */
     protected $_frameworkModelStore;
 
     /**
-     * @var \Klevu\Search\Model\Api\Action\Features
+     * @var ApiActionFeatures
+     * @deprecated Not used
      */
     protected $_apiActionFeatures;
 
+    /**
+     * @var null
+     * @deprecated Not used
+     */
     protected $_klevu_features_response;
 
     /**
-     * @var \Magento\Framework\Config\Data
+     * @var ConfigValue
      */
     protected $_modelConfigData;
 
+    /**
+     * @param ScopeConfigInterface $appConfigScopeConfigInterface
+     * @param UrlInterface $magentoFrameworkUrlInterface
+     * @param StoreManagerInterface $storeModelStoreManagerInterface
+     * @param Store $frameworkModelStore
+     * @param ConfigValue $modelConfigData
+     * @param ResourceConnection $frameworkModelResource
+     * @param Magento_Config $magentoResourceConfig
+     * @param ReinitableConfigInterface $magentoReinitConfigInterface
+     */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $appConfigScopeConfigInterface,
-        \Magento\Framework\UrlInterface $magentoFrameworkUrlInterface,
-        \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface,
-        \Magento\Store\Model\Store $frameworkModelStore,
-        \Magento\Framework\App\Config\Value $modelConfigData,
-        \Magento\Framework\App\ResourceConnection $frameworkModelResource,
+        ScopeConfigInterface $appConfigScopeConfigInterface,
+        UrlInterface $magentoFrameworkUrlInterface,
+        StoreManagerInterface $storeModelStoreManagerInterface,
+        Store $frameworkModelStore,
+        ConfigValue $modelConfigData,
+        ResourceConnection $frameworkModelResource,
         Magento_Config $magentoResourceConfig,
         ReinitableConfigInterface $magentoReinitConfigInterface
     ) {
-
         $this->_appConfigScopeConfigInterface = $appConfigScopeConfigInterface;
         $this->_magentoFrameworkUrlInterface = $magentoFrameworkUrlInterface;
         $this->_storeModelStoreManagerInterface = $storeModelStoreManagerInterface;
@@ -72,19 +98,18 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_magentoReinitConfigInterface = $magentoReinitConfigInterface;
     }
 
-    const XML_PATH_CATEGORY_NAVIGATION_URL = UpdateEndpoints::XML_PATH_CATEGORY_NAVIGATION_URL;
-    const XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL = UpdateEndpoints::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL;
-    const XML_PATH_CATEGORY_RELEVANCE = "klevu_search/categorylanding/klevu_cat_relevance";
-    const XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL = "klevu_search/categorylanding/relevance_label";
-
     /**
      * @param null $store
      * @return string
      */
     public function getCategoryNavigationUrl($store = null)
     {
-        $url = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_NAVIGATION_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-        return ($url) ? $url : \Klevu\Search\Helper\Api::ENDPOINT_DEFAULT_HOSTNAME;
+        $url = $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_NAVIGATION_URL,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+        return $url ?: ApiHelper::ENDPOINT_DEFAULT_HOSTNAME;
     }
 
     /**
@@ -93,10 +118,14 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getCategoryNavigationTrackingUrl($store = null)
     {
-        $url = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-        return ($url) ? $url : \Klevu\Search\Helper\Api::ENDPOINT_DEFAULT_ANALYTICS_HOSTNAME;
-    }
+        $url = $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
 
+        return $url ?: ApiHelper::ENDPOINT_DEFAULT_ANALYTICS_HOSTNAME;
+    }
 
     /**
      * @param $url
@@ -105,7 +134,6 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function setCategoryNavigationTrackingUrl($url, $store = null)
     {
-
         $path = static::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL;
         $this->setStoreConfig($path, $url, $store);
         return $this;
@@ -118,20 +146,18 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function setCategoryNavigationUrl($url, $store = null)
     {
-
         $path = static::XML_PATH_CATEGORY_NAVIGATION_URL;
         $this->setStoreConfig($path, $url, $store);
         return $this;
     }
 
-
     /**
      * Set category navigation url using sql.
      *
-     * @param url|string
-     * @param \Magento\Framework\Model\Store|int|null $store
+     * @param string $url
+     * @param Store|int|null $store
      *
-     * @return $this
+     * @return void
      */
     public function setCategoryNavigationUrlSQL($url, $store = null)
     {
@@ -151,13 +177,12 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
         $write->query($query, $binds);
     }
 
-
     /**
      * Set the store scope System Configuration value for the given key.
      *
-     * @param string                         $key
-     * @param string                         $value
-     * @param \Magento\Framework\Model\Store|int|null $store If not given, current store will be used.
+     * @param string $key
+     * @param string $value
+     * @param Store|int|null $store If not given, current store will be used.
      *
      * @return $this
      */
@@ -165,7 +190,6 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $config = $this->_appConfigScopeConfigInterface;
 
-        //$config = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Config\Model\ResourceModel\Config');
         $scope_id = $this->_storeModelStoreManagerInterface->getStore($store)->getId();
 
         if ($scope_id !== null) {
@@ -180,59 +204,35 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected function _resetConfig()
     {
-       // \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\Config\ReinitableConfigInterface')->reinit();
         $this->_magentoReinitConfigInterface->reinit();
     }
 
     /**
-     * @param null $store
+     * @param Store|int|null $store
      * @return string
      */
     public function getCategoryNavigationRelevance($store = null)
     {
-        return $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_RELEVANCE, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-
+        return $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_RELEVANCE,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
     }
-
-
-	/**
-     * Retrieve default per page values
-     *      
-     * @return string (comma separated)
-     */
-	/*
-	 public function getCatalogGridPerPageValues()
-	{
-		return $this->_appConfigScopeConfigInterface->getValue(
-		    'catalog/frontend/grid_per_page_values',
-		    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-		);
-	}*/
-	
-	/**
-     * Retrieve default per page
-     *      
-     * @return int
-     */
-	/*public function getCatalogGridPerPage()
-	{
-		return (int)$this->_appConfigScopeConfigInterface->getValue(
-		    'catalog/frontend/grid_per_page',
-		    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-		);
-	}*/
 
     /**
      * Return the Relevance label for category pages
      *
-     * @param null $store
+     * @param Store|int|null $store
      * @return string
      */
     public function getCategoryPagesRelevanceLabel($store = null)
     {
-        $sortLabel = $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-        return $sortLabel ? $sortLabel : __('Relevance');
+        $sortLabel = $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_KLEVU_RELEVANCE_LABEL,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+        return $sortLabel ?: __('Relevance');
     }
-
-
 }

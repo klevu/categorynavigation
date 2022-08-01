@@ -15,6 +15,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
     const KLEVU_PRESERVE_LAYOUT = 2;
     const MAGENTO_DEFAULT = 1;
     const KLEVU_TEMPLATE_LAYOUT = 3;
+    const TRACKING_URL = '/analytics/categoryProductClickTracking';
 
     protected $registry;
     protected $storeManagerInterface;
@@ -144,11 +145,15 @@ class Tracking extends \Magento\Framework\View\Element\Template
 
     /**
      * Get Store wise category navigation url
-     * @return boolean
+     * @return string
      */
     public function getCategoryNavigationTrackingUrl($store = null)
     {
-        return $this->_navigationConfigHelper->getCategoryNavigationTrackingUrl($store);
+        $protocol = $this->getRequest()->isSecure() ? 'https://' : 'http://';
+
+        return $protocol .
+            $this->_navigationConfigHelper->getCategoryNavigationTrackingUrl($store) .
+            static::TRACKING_URL;
     }
 
     /**
@@ -230,5 +235,5 @@ class Tracking extends \Magento\Framework\View\Element\Template
             return;
         }
     }
-    
+
 }

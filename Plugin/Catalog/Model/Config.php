@@ -5,8 +5,11 @@ namespace Klevu\Categorynavigation\Plugin\Catalog\Model;
 use Klevu\Categorynavigation\Helper\Config as KlevuCatConfig;
 use Klevu\Categorynavigation\Helper\Data as KlevuCatData;
 use Klevu\Search\Helper\Config as Klevu_SearchConfigHelper;
+use Magento\Catalog\Helper\Product\ProductList;
 use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\Config as CatalogConfig;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template as TemplateOverride;
@@ -80,20 +83,27 @@ class Config
     /**
      * Adding custom options and changing labels
      *
-     * @param \Magento\Catalog\Model\Config $catalogConfig
-     * @param [] $options
-     * @return []
+     * @param CatalogConfig $catalogConfig
+     * @param array $options
+     *
+     * @return array
      */
-    public function afterGetAttributeUsedForSortByArray(\Magento\Catalog\Model\Config $catalogConfig, $options)
+    public function afterGetAttributeUsedForSortByArray(CatalogConfig $catalogConfig, $options)
     {
-        $block = $this->_templateOverride->getLayout()->getBlock('category.products.list');
+        try {
+            $layout = $this->_templateOverride->getLayout();
+            $block = $layout->getBlock('category.products.list');
+        } catch (LocalizedException $e) {
+            return $options;
+        }
         $currentStoreId = $this->getCurrentStoreId();
         if (!$this->klevuSearchConfigHelper->isExtensionConfigured($currentStoreId)) {
             return $options;
         }
 
         if ($block && $this->_klevuCatConfig->getCategoryNavigationRelevance($currentStoreId) &&
-            $this->_searchHelper->categoryLandingStatus() == Constants::KLEVU_PRESERVE_LAYOUT) {
+            (int)$this->_searchHelper->categoryLandingStatus() === Constants::KLEVU_PRESERVE_LAYOUT
+        ) {
             //Remove specific default sorting options
             unset($options['position']);
             //Changing label
@@ -104,9 +114,10 @@ class Config
             /** @var Category $currentCategory */
             $currentCategory = $this->registry->registry('current_category');
             if (!$currentCategory || !$currentCategory->getData('default_sort_by')) {
-                $block->setDefaultDirection('desc');
+                $block->setDefaultDirection(ProductList::DEFAULT_SORT_DIRECTION);
             }
         }
+
         return $options;
     }
 
