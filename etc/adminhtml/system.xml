@@ -3,8 +3,8 @@
 	<system>
         <section id="klevu_integration">
             <group id="next_steps">
-                <field id="enabledcategorynavigation" translate="label" sortOrder="20" type="select" showInDefault="1"
-                       showInWebsite="1" showInStore="1" extends="klevu_search/categorylanding/enabledcategorynavigation">
+                <field id="enabledcategorynavigation" translate="label" sortOrder="20" type="select" showInDefault="0"
+                       showInWebsite="0" showInStore="1" extends="klevu_search/categorylanding/enabledcategorynavigation">
                     <label>Enable Smart Category Merchandising</label>
                     <config_path>klevu_search/categorylanding/enabledcategorynavigation</config_path>
                     <frontend_model>Klevu\Categorynavigation\Block\Adminhtml\Form\Nextsteps\CatNavEnabled</frontend_model>
@@ -26,7 +26,10 @@
         <section id="klevu_search" translate="label">
 			<group id="categorylanding" translate="label" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
 				<label>Smart Category Page Navigation</label>
-				<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+				<field id="enabledcategorynavigation_info" translate="label comment" sortOrder="100" type="label" showInDefault="1" showInWebsite="1">
+					<comment><![CDATA[Switch to Store View scope to manage.]]></comment>
+				</field>
+				<field id="enabledcategorynavigation" translate="label" sortOrder="100" type="select" showInDefault="0" showInWebsite="0" showInStore="1">
 					<label>Ordering &amp; Rendering</label>
 					<comment><![CDATA[
 <strong>Native:</strong> Klevu will be disabled, and will not power the rendering or result ordering of your category pages.<br />
