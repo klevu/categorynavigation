@@ -37,6 +37,8 @@ class PageOutputTest extends AbstractControllerTestCase
      * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
      * @magentoConfigFixture default/klevu_search/developer/theme_version v2
      * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default/klevu_search/developer/lazyload_js_catnav 0
+     * @magentoConfigFixture default_store klevu_search/developer/lazyload_js_catnav 0
      * @magentoDataFixture loadCategoryFixtures
      */
     public function testThemeV2JavaScriptOutputToCategory_Enabled()
@@ -85,8 +87,60 @@ class PageOutputTest extends AbstractControllerTestCase
      * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
      * @magentoConfigFixture default/klevu_search/developer/theme_version v2
      * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default/klevu_search/developer/lazyload_js_catnav 1
+     * @magentoConfigFixture default_store klevu_search/developer/lazyload_js_catnav 1
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testThemeV2JavaScriptOutputToCategory_EnabledViaLazyLoad()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringNotContainsString(
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                $responseBody,
+                'CatNav JS include is not present in response body'
+            );
+            $this->assertStringContainsString(
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.lazyload.js"></script>',
+                $responseBody,
+                'Lazyload CatNav JS include is present in response body'
+            );
+        } else {
+            $this->assertNotContains(
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                $responseBody,
+                'CatNav JS include is not present in response body'
+           );
+            $this->assertContains(
+                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.lazyload.js"></script>',
+                $responseBody,
+                'Lazyload CatNav JS include is present in response body'
+            );
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
      * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
      * @magentoConfigFixture default_store klevu_search/general/js_url js-test.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/lazyload_js_catnav 0
+     * @magentoConfigFixture default_store klevu_search/developer/lazyload_js_catnav 0
      * @magentoDataFixture loadCategoryFixtures
      */
     public function testThemeV2JavaScriptOutputToCategory_Enabled_SpecifiedJsHost()
@@ -280,6 +334,7 @@ class PageOutputTest extends AbstractControllerTestCase
      *
      * @param string $urlKey
      * @param bool $addSuffix
+     *
      * @return string
      */
     private function prepareUrl($urlKey, $addSuffix = true)
