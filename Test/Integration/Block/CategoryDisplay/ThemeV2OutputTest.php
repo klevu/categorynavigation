@@ -12,6 +12,8 @@ use Magento\TestFramework\TestCase\AbstractController as AbstractControllerTestC
 class ThemeV2OutputTest extends AbstractControllerTestCase
 {
     const KLEVU_LANDING_ELEMENT_REGEX = '#<div +([a-zA-Z-_="\']+ +)*class=(\'|") *((-?[_a-zA-Z]+[_a-zA-Z0-9-]*) +)*klevuLanding( +(-?[_a-zA-Z]+[_a-zA-Z0-9-]*))* *(\'|")( +[a-zA-Z-_="\']+)* *></div>#';
+    const STYLE_MIN_HEIGHT_REGEX_PREPEND = '#<style.*>.*\.klevuLanding\s*\{.*min-height:\s*';
+    const STYLE_MIN_HEIGHT_REGEX_APPEND = 'px;.*</style>#';
 
     /**
      * @var ObjectManager
@@ -145,6 +147,142 @@ class ThemeV2OutputTest extends AbstractControllerTestCase
             $this->assertDoesNotMatchRegularExpression(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
         } else {
             $this->assertNotRegExp(static::KLEVU_LANDING_ELEMENT_REGEX, $responseBody);
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/content_min_height_catnav
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testOutputContentMinHeight_Empty()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        $regex = static::STYLE_MIN_HEIGHT_REGEX_PREPEND
+            . '.*'
+            . static::STYLE_MIN_HEIGHT_REGEX_APPEND;
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression($regex, $responseBody);
+        } else {
+            $this->assertNotRegExp($regex, $responseBody);
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/content_min_height_catnav -960
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testOutputContentMinHeight_Negative()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        $regex = static::STYLE_MIN_HEIGHT_REGEX_PREPEND
+            . '.*'
+            . static::STYLE_MIN_HEIGHT_REGEX_APPEND;
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression($regex, $responseBody);
+        } else {
+            $this->assertNotRegExp($regex, $responseBody);
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/content_min_height_catnav 960
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testOutputContentMinHeight_Valid()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        $regex = static::STYLE_MIN_HEIGHT_REGEX_PREPEND
+            . '960'
+            . static::STYLE_MIN_HEIGHT_REGEX_APPEND;
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($regex, $responseBody);
+        } else {
+            $this->assertRegExp($regex, $responseBody);
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v1
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v1
+     * @magentoConfigFixture default_store klevu_search/developer/content_min_height_catnav 960
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testOutputContentMinHeight_ThemeV1()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        $regex = static::STYLE_MIN_HEIGHT_REGEX_PREPEND
+            . '.*'
+            . static::STYLE_MIN_HEIGHT_REGEX_APPEND;
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression($regex, $responseBody);
+        } else {
+            $this->assertNotRegExp($regex, $responseBody);
         }
     }
 

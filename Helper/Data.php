@@ -1,16 +1,28 @@
 <?php
+
 namespace Klevu\Categorynavigation\Helper;
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper
-{
-    const XML_PATH_CATEGORY_LANDING_STATUS   = "klevu_search/categorylanding/enabledcategorynavigation";
-    const XML_PATH_CATEGORY_RESULT_COUNT   = "klevu_search/categorylanding/max_no_of_products";
-	const XML_PATH_CATEGORY_NAVIGATION_URL   = "klevu_search/general/category_navigation_url";
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\ScopeInterface;
 
+class Data extends AbstractHelper
+{
+    const XML_PATH_CATEGORY_LANDING_STATUS = "klevu_search/categorylanding/enabledcategorynavigation";
+    const XML_PATH_CATEGORY_RESULT_COUNT = "klevu_search/categorylanding/max_no_of_products";
+    const XML_PATH_CATEGORY_NAVIGATION_URL = "klevu_search/general/category_navigation_url";
+
+    /**
+     * @var ScopeConfigInterface
+     */
     protected $_appConfigScopeConfigInterface;
-    
+
+    /**
+     * @param ScopeConfigInterface $appConfigScopeConfigInterface
+     */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $appConfigScopeConfigInterface
+        ScopeConfigInterface $appConfigScopeConfigInterface
     ) {
         $this->_appConfigScopeConfigInterface = $appConfigScopeConfigInterface;
     }
@@ -18,19 +30,44 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Check if the Category Listing page is enabled in the system configuration for the current store.
      *
-     * @param $store_id
+     * @param StoreInterface|string|int|null $store
      *
-     * @return bool
+     * @return mixed
      */
-    public function categoryLandingStatus($store = null) {
-        return $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_LANDING_STATUS, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-    }
-    public function getNoOfResults($store = null) {
-    	return $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_RESULT_COUNT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-    }
-
-	public function getCategoryNavigationUrl($store = null) {
-    	return $this->_appConfigScopeConfigInterface->getValue(static::XML_PATH_CATEGORY_NAVIGATION_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
+    public function categoryLandingStatus($store = null)
+    {
+        return $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_LANDING_STATUS,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
     }
 
+    /**
+     * @param StoreInterface|string|int|null $store
+     *
+     * @return mixed
+     */
+    public function getNoOfResults($store = null)
+    {
+        return $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_RESULT_COUNT,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    /**
+     * @param StoreInterface|string|int|null $store
+     *
+     * @return mixed
+     */
+    public function getCategoryNavigationUrl($store = null)
+    {
+        return $this->_appConfigScopeConfigInterface->getValue(
+            static::XML_PATH_CATEGORY_NAVIGATION_URL,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
 }

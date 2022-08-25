@@ -12,6 +12,10 @@
                 <klevu_cat_relevance>1</klevu_cat_relevance>
                 <relevance_label>Relevance</relevance_label>
             </categorylanding>
+            <developer>
+                <lazyload_js_catnav>0</lazyload_js_catnav>
+                <content_min_height_catnav/>
+            </developer>
         </klevu_search>
     </default>
 </config>
