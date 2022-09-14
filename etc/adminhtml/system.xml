@@ -34,22 +34,32 @@
 					<comment><![CDATA[
 <strong>Native:</strong> Klevu will be disabled, and will not power the rendering or result ordering of your category pages.<br />
 <strong>Klevu JS Theme:</strong> Use Klevu's JavaScript Theme to render and order the results of your category pages. Recommended for best results.<br />
-<strong>Preserve your Magento layout:</strong> Klevu will control the ordering of results, but Magento will render your category pages.
+<span class="preserve-layout-comment"><strong>Preserve your Magento layout:</strong> Klevu will control the ordering of results, but Magento will render your category pages.</span>
 ]]></comment>
+                    <config_path>klevu_search/categorylanding/enabledcategorynavigation</config_path>
 					<source_model>Klevu\Categorynavigation\Model\System\Config\Source\Categorylandingoptions</source_model>
 				</field>
 				<field id="max_no_of_products" translate="label comment" sortOrder="101" showInDefault="0" showInWebsite="0" showInStore="1">
 					<label>Maximum Number Of Products Per Category</label>
+                    <depends>
+                        <field id="enabledcategorynavigation">2</field>
+                    </depends>
 					<comment><![CDATA[This value can be upto 4000.]]></comment>
 				</field>
 				<field id="klevu_cat_relevance" translate="label" type="select" sortOrder="121" showInDefault="0" showInWebsite="0" showInStore="1">
 					<label>Sort by Klevu Relevance</label>
 					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabledcategorynavigation">2</field>
+                    </depends>
 					<comment><![CDATA[When option <strong>Klevu Powered - Preserve Theme Layout</strong> is selected.]]></comment>
 				</field>
-				<field id="relevance_label" translate="label" type="text" sortOrder="122" showInDefault="1" showInStore="1">
+				<field id="relevance_label" translate="label" type="text" sortOrder="122" showInDefault="0" showInWebsite="0" showInStore="1">
 					<label>Category Pages Relevance Label</label>
 					<validate>required-entry</validate>
+                    <depends>
+                        <field id="enabledcategorynavigation">2</field>
+                    </depends>
 					<comment><![CDATA[On the category pages, text label will be shown in the sorting drop-down.<br /> Default label will be as <strong>Relevance</strong>.]]></comment>
 				</field>
 			</group>
