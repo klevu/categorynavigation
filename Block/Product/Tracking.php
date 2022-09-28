@@ -110,9 +110,6 @@ class Tracking extends \Magento\Framework\View\Element\Template
                 'klevu_productRatings' => $this->convertToRatingStar($product->getRating()),
                 'klevu_productGroupId' => $klevu_productGroupId,
                 'klevu_productVariantId' => $klevu_productVariantId
-                //'klevu_shopperIP' => $this->_searchHelperData->getIp(),
-                //'klevu_loginCustomerEmail' => $this->_customerSession->getCustomer()->getEmail(),
-                //'klevu_sessionId' => md5(session_id())
             ];
             return json_encode($product);
         } catch (\Exception $e) {
