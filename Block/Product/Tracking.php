@@ -3,6 +3,7 @@
 namespace Klevu\Categorynavigation\Block\Product;
 
 use Klevu\Logger\Constants as LoggerConstants;
+use Klevu\Search\Model\Attribute\Rating;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Session\Generic;
@@ -100,6 +101,7 @@ class Tracking extends \Magento\Framework\View\Element\Template
             $klevu_productGroupId = $product->getId();
             $klevu_productVariantId = $product->getId();
 
+            $rating = $product->getDataUsingMethod(Rating::ATTRIBUTE_CODE);
             $product = [
                 'klevu_apiKey' => $js_api_key,
                 'klevu_productId' => $id,
@@ -107,7 +109,9 @@ class Tracking extends \Magento\Framework\View\Element\Template
                 'klevu_productUrl' => $product_url,
                 'klevu_productSku' => $product_sku,
                 'klevu_salePrice' => $product_sale_price,
-                'klevu_productRatings' => $this->convertToRatingStar($product->getRating()),
+                'klevu_productRatings' => is_numeric($rating)
+                    ? $this->convertToRatingStar((float)$rating)
+                    : null,
                 'klevu_productGroupId' => $klevu_productGroupId,
                 'klevu_productVariantId' => $klevu_productVariantId
             ];
