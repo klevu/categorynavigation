@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="klevu_frontendjs.js_modules">
             <arguments>
@@ -8,5 +9,19 @@
                 </argument>
             </arguments>
         </referenceBlock>
+        <referenceBlock name="head.additional">
+            <block class="Klevu\Categorynavigation\Block\Html\Head\ThemeV2\InlineCurrencyTranslation"
+                   after="klevu_frontendjs.js_modules"
+                   template="Klevu_Categorynavigation::html/head/themev2/inline_currency_translation.phtml"
+                   name="klevu_categorynavigation.html_head.themev2.inline_currency_translation">
+                <arguments>
+                    <argument name="output_quick_script" xsi:type="boolean">true</argument>
+                    <argument name="output_landing_script" xsi:type="boolean">false</argument>
+                    <argument name="is_enabled_conditions_fqcn" xsi:type="array">
+                        <item name="_klevu_themev2_catnav" xsi:type="string">Klevu\Categorynavigation\Service\ThemeV2\IsEnabledCondition</item>
+                    </argument>
+                </arguments>
+            </block>
+            </referenceBlock>
     </body>
 </page>
