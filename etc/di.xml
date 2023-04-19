@@ -9,6 +9,10 @@
     <type name="Magento\Catalog\Model\Config">
         <plugin name="klevu_categorynavigation_config" type="Klevu\Categorynavigation\Plugin\Catalog\Model\Config"/>
     </type>
+    
+    <type name="Magento\Catalog\Model\Category">
+        <plugin name="klevu_categorynavigation_category" type="Klevu\Categorynavigation\Plugin\Catalog\Model\Category"/>
+    </type>
 
     <type name="Magento\Framework\Search\Request\Cleaner">
         <plugin name="Klevu_Categorynavigation::CleanerForCatNav"
