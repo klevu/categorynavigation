@@ -1,84 +1,120 @@
 <?php
-/**
- * Copyright © 2015 Dd . All rights reserved.
- */
+
 namespace Klevu\Categorynavigation\Block\Product;
-use \Klevu\Search\Helper\Config;
+
+use Klevu\Categorynavigation\Helper\Config as CatNavConfigHelper;
 use Klevu\Search\Helper\Config as KlevuConfig;
 use Klevu\Search\Model\Source\ThemeVersion;
+use Magento\Backend\Block\Template\Context;
+use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Catalog\Model\CategoryFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Element\Template;
 use Magento\Store\Model\ScopeInterface;
 
-class Index extends \Magento\Framework\View\Element\Template
+class Index extends Template
 {
+    /**
+     * @var Registry
+     */
     protected $_registry;
+    /**
+     * @var CatNavConfigHelper
+     */
+    protected $_categorynavigationHelper;
+    /**
+     * @var KlevuConfig
+     */
+    protected $_klevuConfig;
+    /**
+     * @var mixed
+     */
+    protected $_category;
+    /**
+     * @var CategoryFactory
+     */
+    protected $_categoryFactory;
 
-	protected $_categorynavigationHelper;
-
-    protected  $_klevuConfig;
-
-	protected $_category;
-
-
-
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param CategoryFactory $categoryFactory
+     * @param CatNavConfigHelper $categorynavigationHelper
+     * @param KlevuConfig $klevuConfig
+     * @param array $data
+     */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-		\Magento\Catalog\Model\CategoryFactory $categoryFactory,
-		\Klevu\Categorynavigation\Helper\Config $categorynavigationHelper,
-        \Klevu\Search\Helper\Config $klevuConfig,
+        Context $context,
+        Registry $registry,
+        CategoryFactory $categoryFactory,
+        CatNavConfigHelper $categorynavigationHelper,
+        KlevuConfig $klevuConfig,
         array $data = []
-    )
-    {
+    ) {
         $this->_registry = $registry;
-		$this->_categoryFactory = $categoryFactory;
-		$this->_categorynavigationHelper = $categorynavigationHelper;
+        $this->_categoryFactory = $categoryFactory;
+        $this->_categorynavigationHelper = $categorynavigationHelper;
         $this->_klevuConfig = $klevuConfig;
         parent::__construct($context, $data);
     }
 
+    /**
+     * @return CategoryInterface|null
+     */
     public function getCurrentCategory()
     {
         return $this->_registry->registry('current_category');
     }
 
+    /**
+     * @param string|int $categoryId
+     *
+     * @return string
+     */
     public function getCategoryName($categoryId)
     {
-        return $this->_categoryFactory->create()->load((int)$categoryId)->getName();
+        $category = $this->_categoryFactory->create();
+        $category->load((int)$categoryId);
+
+        return $category->getName();
     }
 
-    public function  isCustomerGroupPriceEnabled()
+    /**
+     * @return bool
+     */
+    public function isCustomerGroupPriceEnabled()
     {
-        return  $this->_klevuConfig->isCustomerGroupPriceEnabled();
+        return $this->_klevuConfig->isCustomerGroupPriceEnabled();
     }
 
-	public function getJsUrl()
-	{
-		return $this->_klevuConfig->getJsUrl();
-	}
+    /**
+     * @return string
+     */
+    public function getJsUrl()
+    {
+        return $this->_klevuConfig->getJsUrl();
+    }
 
-	/**
+    /**
      * Retrieve default per page values
      *
-     * @return array
+     * @return string[]
      */
-	public function getGridPerPageValues()
-	{
-		//return explode(",",$this->_categorynavigationHelper->getCatalogGridPerPageValues());
-        return explode(",",$this->_klevuConfig->getCatalogGridPerPageValues());
-	}
+    public function getGridPerPageValues()
+    {
+        return explode(",", $this->_klevuConfig->getCatalogGridPerPageValues());
+    }
 
-	/**
+    /**
      * Retrieve default per page on empty it will return 24
      *
      * @return int
      */
-	public function getGridPerPage()
-	{
-		//return (int)$this->_categorynavigationHelper->getCatalogGridPerPage();
-        return (int) $this->_klevuConfig->getCatalogGridPerPage() ?
-            $this->_klevuConfig->getCatalogGridPerPage() : 24;
-	}
+    public function getGridPerPage()
+    {
+        return $this->_klevuConfig->getCatalogGridPerPage() ?: 24;
+    }
 
     /**
      * {@inheritdoc}
@@ -94,13 +130,11 @@ class Index extends \Magento\Framework\View\Element\Template
 
             return '';
         }
-
         $themeVersion = $this->_scopeConfig->getValue(
             KlevuConfig::XML_PATH_THEME_VERSION,
             ScopeInterface::SCOPE_STORES,
             $storeId
         );
-
         if (ThemeVersion::V2 === $themeVersion) {
             return '';
         }

@@ -10,10 +10,6 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\View\LayoutInterface;
 
-/**
- * Class UpdateCategoryPageLayout
- * @package Klevu\Categorynavigation\Model\Observer
- */
 class UpdateCategoryPageLayout implements ObserverInterface
 {
     const KLEVU_PRESERVE_LAYOUT = 2;
@@ -24,24 +20,25 @@ class UpdateCategoryPageLayout implements ObserverInterface
      * @var Registry
      */
     private $_registry;
-
     /**
      * @var KlevuCatNavHelper
      */
     private $_searchHelper;
+    /**
+     * @var RequestInterface
+     */
+    protected $_request;
 
     /**
-     * UpdateCategoryPageLayout constructor.
      * @param KlevuCatNavHelper $searchHelper
      * @param Registry $registry
+     * @param RequestInterface $request
      */
     public function __construct(
         KlevuCatNavHelper $searchHelper,
         Registry $registry,
         RequestInterface $request
-
-    )
-    {
+    ) {
         $this->_searchHelper = $searchHelper;
         $this->_registry = $registry;
         $this->_request = $request;
@@ -51,6 +48,7 @@ class UpdateCategoryPageLayout implements ObserverInterface
      * Add handles to the page.
      *
      * @param Observer $observer
+     *
      * @event layout_load_before
      *
      * @return void
@@ -66,46 +64,44 @@ class UpdateCategoryPageLayout implements ObserverInterface
         if ($action !== "catalog_category_view") {
             return;
         }
-        if ($helper->categoryLandingStatus() == static::KLEVU_TEMPLATE_LAYOUT) {
+        if ((int)$helper->categoryLandingStatus() === static::KLEVU_TEMPLATE_LAYOUT) {
             $this->addHandleCatNav($layout);
 
-        } else if ($helper->categoryLandingStatus() !== static::KLEVU_TEMPLATE_LAYOUT &&
-            $klevuPreviewReqParam == 'klevu-template') {
+            return;
+        }
+        if ($klevuPreviewReqParam === 'klevu-template'
+            && $helper->categoryLandingStatus() !== static::KLEVU_TEMPLATE_LAYOUT
+        ) {
             $this->addHandleCatNav($layout);
         }
     }
 
     /**
-     * @param $layout
-     * @return false
+     * @param LayoutInterface $layout
+     *
+     * @return void
      */
     private function addHandleCatNav($layout)
     {
         //Instance check for current category
         $category = $this->_registry->registry('current_category');
         if (!$category instanceof CategoryModel) {
-            return false;
+            return;
         }
-
-        $categoryDisplayMode = $category->getData('display_mode');
-        if ($categoryDisplayMode != "PAGE") {
-
-            $layout->unsetElement('category.products');
-            $layout->unsetElement('category.products.list');
-            $layout->unsetElement('category.product.type.details.renderers');
-            $layout->unsetElement('category.product.addto');
-            $layout->unsetElement('category.product.addto.compare');
-            $layout->unsetElement('product_list_toolbar');
-            $layout->unsetElement('product_list_toolbar_pager');
-            $layout->unsetElement('category.product.addto.wishlist');
-            $layout->unsetElement('catalog.leftnav');
-            $layout->unsetElement('catalog.navigation.state');
-            $layout->unsetElement('catalog.navigation.renderer');
-            $layout->getUpdate()->addHandle('klevu_category_index');
+        if ($category->getData('display_mode') === "PAGE") {
+            return;
         }
+        $layout->unsetElement('category.products');
+        $layout->unsetElement('category.products.list');
+        $layout->unsetElement('category.product.type.details.renderers');
+        $layout->unsetElement('category.product.addto');
+        $layout->unsetElement('category.product.addto.compare');
+        $layout->unsetElement('product_list_toolbar');
+        $layout->unsetElement('product_list_toolbar_pager');
+        $layout->unsetElement('category.product.addto.wishlist');
+        $layout->unsetElement('catalog.leftnav');
+        $layout->unsetElement('catalog.navigation.state');
+        $layout->unsetElement('catalog.navigation.renderer');
+        $layout->getUpdate()->addHandle('klevu_category_index');
     }
 }
-
-
-
-
