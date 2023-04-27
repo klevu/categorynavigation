@@ -10,7 +10,9 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value as ConfigValue;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
@@ -30,43 +32,50 @@ class Config extends AbstractHelper
      * @var ScopeConfigInterface
      */
     protected $_appConfigScopeConfigInterface;
-
     /**
      * @var SearchHelper
      */
     protected $_searchHelperData;
-
     /**
      * @var UrlInterface
      */
     protected $_magentoFrameworkUrlInterface;
-
     /**
      * @var StoreManagerInterface
      */
     protected $_storeModelStoreManagerInterface;
-
     /**
      * @var Store
      */
     protected $_frameworkModelStore;
-
     /**
      * @var ApiActionFeatures
      * @deprecated Not used
+     * @see nothing
      */
     protected $_apiActionFeatures;
-
     /**
      * @var null
      * @deprecated Not used
+     * @see nothing
      */
     protected $_klevu_features_response;
-
     /**
      * @var ConfigValue
      */
     protected $_modelConfigData;
+    /**
+     * @var ResourceConnection
+     */
+    protected $_frameworkModelResource;
+    /**
+     * @var Magento_Config
+     */
+    protected $_magentoResourceConfig;
+    /**
+     * @var ReinitableConfigInterface
+     */
+    protected $_magentoReinitConfigInterface;
 
     /**
      * @param ScopeConfigInterface $appConfigScopeConfigInterface
@@ -99,7 +108,8 @@ class Config extends AbstractHelper
     }
 
     /**
-     * @param null $store
+     * @param StoreInterface|string|int|null $store
+     *
      * @return string
      */
     public function getCategoryNavigationUrl($store = null)
@@ -109,11 +119,13 @@ class Config extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $store
         );
+
         return $url ?: ApiHelper::ENDPOINT_DEFAULT_HOSTNAME;
     }
 
     /**
-     * @param null $store
+     * @param StoreInterface|string|int|null $store
+     *
      * @return string
      */
     public function getCategoryNavigationTrackingUrl($store = null)
@@ -128,26 +140,32 @@ class Config extends AbstractHelper
     }
 
     /**
-     * @param $url
-     * @param null $store
+     * @param string $url
+     * @param StoreInterface|string|int|null $store
+     *
      * @return $this
+     * @throws NoSuchEntityException
      */
     public function setCategoryNavigationTrackingUrl($url, $store = null)
     {
         $path = static::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL;
         $this->setStoreConfig($path, $url, $store);
+
         return $this;
     }
 
     /**
-     * @param $url
-     * @param null $store
+     * @param string $url
+     * @param StoreInterface|string|int|null $store
+     *
      * @return $this
+     * @throws NoSuchEntityException
      */
     public function setCategoryNavigationUrl($url, $store = null)
     {
         $path = static::XML_PATH_CATEGORY_NAVIGATION_URL;
         $this->setStoreConfig($path, $url, $store);
+
         return $this;
     }
 
@@ -162,8 +180,8 @@ class Config extends AbstractHelper
     public function setCategoryNavigationUrlSQL($url, $store = null)
     {
         $path = static::XML_PATH_CATEGORY_NAVIGATION_URL;
-        $write =  $this->_frameworkModelResource->getConnection("core_write");
-        $query = "replace into ".$this->_frameworkModelResource->getTableName('core_config_data')
+        $write = $this->_frameworkModelResource->getConnection("core_write");
+        $query = "replace into " . $this->_frameworkModelResource->getTableName('core_config_data')
             . "(scope, scope_id, path, value) values "
             . "(:scope, :scope_id, :path, :value)";
 
@@ -172,7 +190,7 @@ class Config extends AbstractHelper
                 'scope' => "stores",
                 'scope_id' => $store,
                 'path' => $path,
-                'value'  => $url
+                'value' => $url,
             ];
         $write->query($query, $binds);
     }
@@ -185,17 +203,16 @@ class Config extends AbstractHelper
      * @param Store|int|null $store If not given, current store will be used.
      *
      * @return $this
+     * @throws NoSuchEntityException
      */
     public function setStoreConfig($key, $value, $store = null)
     {
-        $config = $this->_appConfigScopeConfigInterface;
-
         $scope_id = $this->_storeModelStoreManagerInterface->getStore($store)->getId();
-
         if ($scope_id !== null) {
             $this->_magentoResourceConfig->saveConfig($key, $value, "stores", $scope_id);
             $this->_resetConfig();
         }
+
         return $this;
     }
 
@@ -209,6 +226,7 @@ class Config extends AbstractHelper
 
     /**
      * @param Store|int|null $store
+     *
      * @return string
      */
     public function getCategoryNavigationRelevance($store = null)
@@ -224,6 +242,7 @@ class Config extends AbstractHelper
      * Return the Relevance label for category pages
      *
      * @param Store|int|null $store
+     *
      * @return string
      */
     public function getCategoryPagesRelevanceLabel($store = null)
@@ -233,6 +252,7 @@ class Config extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $store
         );
+
         return $sortLabel ?: __('Relevance');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 
 namespace Klevu\Categorynavigation\Test\Integration\Controller\Adminhtml\System\Config\Edit\SearchConfiguration;
 
@@ -92,7 +93,11 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         }
 
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches);
         $cmsContentRow = current($matches);
         if (method_exists($this, 'assertStringContainsString')) {
@@ -101,11 +106,23 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('Switch to Store View scope to manage', $cmsContentRow);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody);
-            $this->assertDoesNotMatchRegularExpression('#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+                $responseBody
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody);
-            $this->assertNotRegexp('#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+                $responseBody
+            );
+            $this->assertNotRegexp(
+                '#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s',
+                $responseBody
+            );
         }
     }
 
@@ -151,7 +168,11 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         }
 
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches);
         $cmsContentRow = current($matches);
         if (method_exists($this, 'assertStringContainsString')) {
@@ -160,11 +181,23 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('Switch to Store View scope to manage', $cmsContentRow);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody);
-            $this->assertDoesNotMatchRegularExpression('#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+                $responseBody
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody);
-            $this->assertNotRegexp('#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+                $responseBody
+            );
+            $this->assertNotRegexp(
+                '#<(input|select).*?id="klevu_search_categorylanding_enabledcategorynavigation"#s',
+                $responseBody
+            );
         }
     }
 
@@ -192,13 +225,15 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
                 switch ($feature) {
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
-                        return true;
+                        $return = true;
                         break;
 
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -222,18 +257,31 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('Switch to Store View scope to manage', $catNavOrderingRow);
-            $this->assertStringNotContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringNotContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
             $this->assertNotContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
@@ -241,7 +289,11 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -250,16 +302,34 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
         }
@@ -281,19 +351,34 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
 
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertMatchesRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertMatchesRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertMatchesRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
             $this->assertRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
@@ -323,14 +408,16 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             static function ($feature, $strict = false) {
                 switch ($feature) {
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
-                        return true;
+                        $return = true;
                         break;
 
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -354,26 +441,43 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('Switch to Store View scope to manage', $catNavOrderingRow);
-            $this->assertStringNotContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringNotContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
             $this->assertNotContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -382,18 +486,36 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
             $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertNotRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertNotRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertNotRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
 
         $matches = [];
@@ -410,29 +532,50 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         }
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
+            $this->assertStringNotContainsString(
+                '<strong>Preserve your Magento layout:</strong>',
+                $catNavOrderingComment
+            );
         } else {
             $this->assertNotContains('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
         }
 
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertDoesNotMatchRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertNotRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         }
     }
 
@@ -459,14 +602,16 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             static function ($feature, $strict = false) {
                 switch ($feature) {
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
-                        return true;
+                        $return = true;
                         break;
 
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -490,14 +635,24 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -506,13 +661,20 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
         }
         if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringContainsString')) {
@@ -521,16 +683,37 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertRegExp(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
         }
@@ -552,19 +735,34 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
 
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertMatchesRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertMatchesRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertMatchesRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
             $this->assertRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
@@ -596,9 +794,11 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -619,17 +819,30 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         } else {
-            $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
+            $this->assertRegExp(
+                '#<fieldset[^>]+id="klevu_search_categorylanding"#',
+                $responseBody
+            );
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -638,13 +851,20 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
         }
         if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringContainsString')) {
@@ -653,18 +873,42 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertRegExp(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertNotRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertNotRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertNotRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
 
         $matches = [];
@@ -680,29 +924,50 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('<strong>Klevu JS Theme:</strong>', $catNavOrderingComment);
         }
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
+            $this->assertStringNotContainsString(
+                '<strong>Preserve your Magento layout:</strong>',
+                $catNavOrderingComment
+            );
         } else {
             $this->assertNotContains('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
         }
 
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertDoesNotMatchRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertNotRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         }
     }
 
@@ -735,14 +1000,16 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             static function ($feature, $strict = false) {
                 switch ($feature) {
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
-                        return true;
+                        $return = true;
                         break;
 
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -766,26 +1033,43 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('Switch to Store View scope to manage', $catNavOrderingRow);
-            $this->assertStringNotContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringNotContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
             $this->assertNotContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -794,18 +1078,36 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
             $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertNotRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertNotRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertNotRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
 
         $matches = [];
@@ -822,29 +1124,50 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         }
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
+            $this->assertStringNotContainsString(
+                '<strong>Preserve your Magento layout:</strong>',
+                $catNavOrderingComment
+            );
         } else {
             $this->assertNotContains('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
         }
 
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertDoesNotMatchRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertNotRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         }
     }
 
@@ -871,14 +1194,16 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             static function ($feature, $strict = false) {
                 switch ($feature) {
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
-                        return true;
+                        $return = true;
                         break;
 
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -902,26 +1227,43 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('Switch to Store View scope to manage', $catNavOrderingRow);
-            $this->assertStringNotContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringNotContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
             $this->assertNotContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -930,18 +1272,39 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1".*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3"[^>]+selected.*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1".*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3"[^>]+selected.*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertRegExp('#<option[^>]+value="1".*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="3"[^>]+selected.*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertRegExp(
+                '#<option[^>]+value="3"[^>]+selected.*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertNotRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertNotRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertNotRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
 
         $matches = [];
@@ -958,29 +1321,50 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         }
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
+            $this->assertStringNotContainsString(
+                '<strong>Preserve your Magento layout:</strong>',
+                $catNavOrderingComment
+            );
         } else {
             $this->assertNotContains('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
         }
 
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertDoesNotMatchRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertNotRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         }
     }
 
@@ -1013,14 +1397,16 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             static function ($feature, $strict = false) {
                 switch ($feature) {
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
-                        return true;
+                        $return = true;
                         break;
 
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -1044,14 +1430,24 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -1060,13 +1456,20 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
         }
         if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringContainsString')) {
@@ -1075,18 +1478,42 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertRegExp(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertNotRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         }
 
         $matches = [];
@@ -1106,19 +1533,34 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
 
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertMatchesRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertMatchesRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertMatchesRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertMatchesRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
             $this->assertRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
@@ -1136,7 +1578,7 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
      * @magentoConfigFixture default/klevu_search/add_to_cart/enabledaddtocartfront 0
      * @magentoConfigFixture default_store klevu_search/add_to_cart/enabledaddtocartfront 0
      */
-    public function testRender_StoreScope_CategoryNavigationUnavailable_PreserveLayoutUnavailable_ThemeSelectedInConfig()
+    public function testRender_StoreScope_CategoryNavigationUnavailable_PreserveLayoutUnavailable_ThemeSelectedInConfig() // phpcs:ignore Generic.Files.LineLength.TooLong
     {
         $this->setupPhp5();
         $defaultStore = $this->storeManager->getDefaultStoreView();
@@ -1156,9 +1598,11 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
                     case AccountFeatures::PM_FEATUREFLAG_PRESERVES_LAYOUT:
                     case AccountFeatures::PM_FEATUREFLAG_CATEGORY_NAVIGATION:
                     default:
-                        return false;
+                        $return = false;
                         break;
                 }
+
+                return $return;
             }
         );
 
@@ -1182,14 +1626,24 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         } else {
-            $this->assertNotRegExp('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation_info".*?</tr>#s',
+                $responseBody
+            );
         }
 
         // Ordering and Rendering
         $matches = [];
-        preg_match('#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s', $responseBody, $matches);
+        preg_match(
+            '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering row');
         $catNavOrderingRow = current($matches);
         if (method_exists($this, 'assertStringNotContainsString')) {
@@ -1198,13 +1652,20 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertNotContains('Switch to Store View scope to manage', $catNavOrderingRow);
         }
         if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
+            $this->assertStringContainsString(
+                '<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>',
+                $catNavOrderingRow
+            );
         } else {
             $this->assertContains('<div class="klevu-upgrade-block">TEST UPGRADE MESSAGE</div>', $catNavOrderingRow);
         }
 
         $matches = [];
-        preg_match('#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s', $responseBody, $matches);
+        preg_match(
+            '#<select[^>]+id="klevu_search_categorylanding_enabledcategorynavigation".*?>.*?</select>#s',
+            $responseBody,
+            $matches
+        );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
         if (method_exists($this, 'assertStringContainsString')) {
@@ -1213,18 +1674,36 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('disabled', $catNavOrderingField);
         }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
-            $this->assertMatchesRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertMatchesRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
             $this->assertRegExp('#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s', $catNavOrderingField);
             $this->assertRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme\s*</option>#s', $catNavOrderingField);
         }
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertDoesNotMatchRegularExpression('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         } else {
-            $this->assertNotRegExp('#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s', $catNavOrderingField);
-            $this->assertNotRegExp('#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s', $catNavOrderingField);
+            $this->assertNotRegExp(
+                '#<option[^>]+value="3".*?>\s*Klevu JS Theme \(Recommended\)\s*</option>#s',
+                $catNavOrderingField
+            );
+            $this->assertNotRegExp(
+                '#<option[^>]+value="2".*?>\s*Preserve your Magento layout\s*</option>#s',
+                $catNavOrderingField
+            );
         }
 
         $matches = [];
@@ -1240,29 +1719,50 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $this->assertContains('<strong>Klevu JS Theme:</strong>', $catNavOrderingComment);
         }
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
+            $this->assertStringNotContainsString(
+                '<strong>Preserve your Magento layout:</strong>',
+                $catNavOrderingComment
+            );
         } else {
             $this->assertNotContains('<strong>Preserve your Magento layout:</strong>', $catNavOrderingComment);
         }
 
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             // Maximum Number of Products Per Category
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertDoesNotMatchRegularExpression('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertDoesNotMatchRegularExpression('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertDoesNotMatchRegularExpression(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         } else {
             // Maximum Number of Products Per Category
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_max_no_of_products".*?/>#s',
+                $responseBody
+            );
 
             // Sort by Klevu Relevance
-            $this->assertNotRegExp('#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<select[^>]+id="klevu_search_categorylanding_klevu_cat_relevance".*?>.*?</select>#s',
+                $responseBody
+            );
 
             // Relevance Label
-            $this->assertNotRegExp('#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s', $responseBody);
+            $this->assertNotRegExp(
+                '#<input[^>]+id="klevu_search_categorylanding_relevance_label".*?/>#s',
+                $responseBody
+            );
         }
     }
 
@@ -1343,7 +1843,7 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         }
         $this->_objectManager->get(\Magento\Framework\Acl\Builder::class)
             ->getAcl()
-            ->deny(null, $this->resource);
+            ->deny($this->_auth->getUser()->getRoles(), $this->resource);
         $this->dispatch($this->uri);
         $this->assertSame($this->expectedNoAccessResponseCode, $this->getResponse()->getHttpResponseCode());
     }

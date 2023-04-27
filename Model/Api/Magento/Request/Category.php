@@ -2,6 +2,7 @@
 /**
  * Klevu Product API model for preserve layout
  */
+
 namespace Klevu\Categorynavigation\Model\Api\Magento\Request;
 
 use Klevu\Logger\Constants as LoggerConstants;
@@ -13,40 +14,47 @@ use \Magento\Framework\App\Request\Http as Magento_Request;
 use \Magento\Catalog\Model\CategoryFactory as Magento_CategoryFactory;
 use \Magento\Catalog\Model\Category as Category_Model;
 use Klevu\Categorynavigation\Helper\Data as KlevuCatNavHelperData;
+use Magento\Framework\Registry;
 use \Magento\Store\Model\StoreManagerInterface as Magento_StoreManager;
 
 class Category implements CategoryInterface
 {
-
     /**
      * Klevu Search API Parameters
      * @var array
      */
     protected $_klevu_parameters;
+    /**
+     * Unused property retained for backward compatibility
+     *
+     * @var null
+     */
     protected $_klevu_tracking_parameters;
+    /**
+     * @var string
+     */
     protected $_klevu_type_of_records = 'KLEVU_PRODUCT';
     /**
      * Klevu Search API Product IDs
      * @var array
      */
     protected $_klevu_product_ids = [];
+    /**
+     * @var array
+     */
     protected $_klevu_parent_child_ids = [];
-
     /**
      * @var array
      */
-    protected $_klevu_variant_parent_child_ids = array();
-
+    protected $_klevu_variant_parent_child_ids = [];
     /**
      * @var array
      */
-    protected $_klevu_excluded_ids = array();
-    
+    protected $_klevu_excluded_ids = [];
     /**
      * @var array
      */
-    protected $_klevu_metaData = array();
-        
+    protected $_klevu_metaData = [];
     /**
      * Klevu Search API Response
      * @var \Klevu\Search\Model\Api\Response
@@ -84,10 +92,42 @@ class Category implements CategoryInterface
      */
     protected $_apiActionSearchtermtracking;
     /**
+     * @var Magento_Request
+     */
+    protected $_magentoRequest;
+    /**
+     * @var Magento_CategoryFactory
+     */
+    protected $_magentoCategoryFactory;
+    /**
+     * @var Category_Model
+     */
+    protected $_categoryModel;
+    /**
+     * @var Registry
+     */
+    protected $_registry;
+    /**
+     * @var KlevuCatNavHelperData
+     */
+    protected $_categorynavigationHelperConfig;
+    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
 
+    /**
+     * @param KlevuHelperConfig $searchHelperConfig
+     * @param KlevuCatNavHelperData $categorynavigationHelperConfig
+     * @param KlevuHelperData $searchHelperData
+     * @param KlevuCatnavApiIdsearch $apiActionIdsearch
+     * @param KlevuApiSearchtermtracking $apiActionSearchtermtracking
+     * @param Magento_Request $magentoRequest
+     * @param Magento_CategoryFactory $magentoCategoryFactory
+     * @param Registry $registry
+     * @param Category_Model $categoryModel
+     * @param Magento_StoreManager $storeManager
+     */
     public function __construct(
         KlevuHelperConfig $searchHelperConfig,
         KlevuCatNavHelperData $categorynavigationHelperConfig,
@@ -96,12 +136,10 @@ class Category implements CategoryInterface
         KlevuApiSearchtermtracking $apiActionSearchtermtracking,
         Magento_Request $magentoRequest,
         Magento_CategoryFactory $magentoCategoryFactory,
-        \Magento\Framework\Registry $registry,
+        Registry $registry,
         Category_Model $categoryModel,
         Magento_StoreManager $storeManager
-
-    )
-    {
+    ) {
         $this->_searchHelperConfig = $searchHelperConfig;
         $this->_searchHelperData = $searchHelperData;
         $this->_apiActionIdsearch = $apiActionIdsearch;
@@ -115,22 +153,20 @@ class Category implements CategoryInterface
     }
 
     /**
-     * This method executes the the Klevu API request if it has not already been called, and takes the result
-     * with the result we get all the item IDs, pass into our helper which returns the child and parent id's.
+     * This method executes the Klevu API request if it has not already been called, and takes the result
+     * with the result we get all the item IDs, pass into our helper which returns the child and parent ids.
      * We then add all these values to our class variable $_klevu_product_ids.
      *
      * @return array
      */
     public function _getKlevuProductIds()
     {
-
         if (empty($this->_klevu_product_ids)) {
             // If no results, return an empty array
 
             if (!$this->getKlevuResponse()->hasData('result')) {
                 return [];
             }
-            //print_r($this->getKlevuResponse()->getData('result')); exit;
             foreach ($this->getKlevuResponse()->getData('result') as $key => $result) {
                 if (isset($result['id'])) {
                     $item_id = $this->_searchHelperData->getMagentoProductId((string)$result['id']);
@@ -154,17 +190,21 @@ class Category implements CategoryInterface
                     }
                 }
             }
-                $this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
-		$this->_klevu_product_ids = array_values($this->_klevu_product_ids);
-            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Products count returned: %s", count($this->_klevu_product_ids)));
-            
-
+            $this->_klevu_product_ids = array_unique($this->_klevu_product_ids);
+            $this->_klevu_product_ids = array_values($this->_klevu_product_ids);
+            $this->_searchHelperData->log(
+                LoggerConstants::ZEND_LOG_DEBUG,
+                sprintf("Products count returned: %s", count($this->_klevu_product_ids))
+            );
 
             //After main getter, checking if excludeids are there
             $this->_klevu_metaData = $this->getKlevuResponse()->getData('meta');
             //Based on type we will changing below logic
             if (empty($this->_klevu_metaData['excludeIds'])) {
-                $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("No excludeIds were specified. Full product collection will be used."));
+                $this->_searchHelperData->log(
+                    LoggerConstants::ZEND_LOG_DEBUG,
+                    "No excludeIds were specified. Full product collection will be used."
+                );
                 //Returning already settled _klevu_product_ids
                 return $this->_klevu_product_ids;
             }
@@ -181,7 +221,7 @@ class Category implements CategoryInterface
              *       .....
              * )
              */
-            if(isset($this->_klevu_metaData['excludeIds']['excludeId'])){
+            if (isset($this->_klevu_metaData['excludeIds']['excludeId'])) {
                 foreach ($this->_klevu_metaData['excludeIds']['excludeId'] as $key => $result) {
                     //Multiple items
                     if (isset($result['value'])) {
@@ -198,20 +238,24 @@ class Category implements CategoryInterface
                     $this->_klevu_excluded_ids = array_values($this->_klevu_excluded_ids);
                 }
             }
-            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Excluded products count returned: %s", count($this->_klevu_excluded_ids)));
+            $this->_searchHelperData->log(
+                LoggerConstants::ZEND_LOG_DEBUG,
+                sprintf("Excluded products count returned: %s", count($this->_klevu_excluded_ids))
+            );
             if (is_array($this->_klevu_excluded_ids) && !empty($this->_klevu_excluded_ids)) {
-                $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_DEBUG, sprintf("Excluded products ids are :: %s", implode(",", $this->_klevu_excluded_ids)));
-            }            
-            
-            
+                $this->_searchHelperData->log(
+                    LoggerConstants::ZEND_LOG_DEBUG,
+                    sprintf("Excluded products ids are :: %s", implode(",", $this->_klevu_excluded_ids))
+                );
+            }
         }
         return $this->_klevu_product_ids;
     }
 
     /**
      * Set excluded product ids
-     * 
-     * @param $item_id
+     *
+     * @param mixed[] $item_id
      */
     private function setKlevuExcludedProducts($item_id)
     {
@@ -221,7 +265,6 @@ class Category implements CategoryInterface
             $this->_klevu_excluded_ids[$item_id['product_id']] = $item_id['product_id'];
         }
     }
-
 
     /**
      * Send the API Request and return the API Response.
@@ -243,61 +286,67 @@ class Category implements CategoryInterface
      */
     public function getSearchFilters()
     {
-		$catnames = array();
-		$parentnames = array();
-		try{
-			$currentCategory = $this->_registry->registry('current_category');
-			if(!$currentCategory instanceof Category_Model) {
-				return false;
-			}
-			foreach ($currentCategory->getParentCategories() as $parent) {
-				$parentnames[] = $parent->getName();
-			}
-			$allCategoryNames = implode(";",$parentnames);
+        $catnames = [];
+        $parentnames = [];
+        try {
+            $currentCategory = $this->_registry->registry('current_category');
+            if (!$currentCategory instanceof Category_Model) {
+                return false;
+            }
+            foreach ($currentCategory->getParentCategories() as $parent) {
+                $parentnames[] = $parent->getName();
+            }
+            $allCategoryNames = implode(";", $parentnames);
 
-			$pathIds = array();
-			$pathIds = $currentCategory->getPathIds();
-			if(!empty($pathIds)) {
-				unset($pathIds[0]);
-				unset($pathIds[1]);
-				foreach ($pathIds as $key => $value) {
-					$catname = $this->_categoryModel->clearInstance()->setStoreId($this->_storeManager->getStore()->getId())->load($value)->getName();
-					$catnames[] = $catname;
-                    $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Category Name %s", $catname));
+            $pathIds = [];
+            $pathIds = $currentCategory->getPathIds();
+            if (!empty($pathIds)) {
+                unset($pathIds[0]);
+                unset($pathIds[1]);
+                foreach ($pathIds as $key => $value) {
+                    $catname = $this->_categoryModel
+                        ->clearInstance()
+                        ->setStoreId(
+                            $this->_storeManager->getStore()->getId()
+                        )->load($value)
+                        ->getName();
+                    $catnames[] = $catname;
+                    $this->_searchHelperData->log(
+                        LoggerConstants::ZEND_LOG_CRIT,
+                        sprintf("Category Name %s", $catname)
+                    );
+                }
+                $allCategoryNames = implode(";", $catnames);
+            }
 
-                    //$catnames[] = $this->_categoryModel->load($value)->getName();
-                    //unset($this->_categoryModel);
-				}
-				$allCategoryNames = implode(";",$catnames);
-			}
-
-
-			$category = $this->_klevu_type_of_records." ".$allCategoryNames;
-			if($this->_categorynavigationHelperConfig->getNoOfResults()){
-				$noOfResults = $this->_categorynavigationHelperConfig->getNoOfResults();
-			}else{
-				$noOfResults = 2000;
-			}
-			if (empty($this->_klevu_parameters)) {
-				$this->_klevu_parameters = [
-					'ticket' => $this->_searchHelperConfig->getJsApiKey() ,
-					'noOfResults' => $noOfResults,
-					'term' => '*',
-					'paginationStartsFrom' => 0,
-					'enableFilters' => 'false',
-					'klevuShowOutOfStockProducts' => 'true',
-					'isCategoryNavigationRequest' => 'true',
-					'category' => $category,
-					'categoryIds' => $currentCategory->getId(),
-					'visibility' => 'catalog'
-				];
-			}
-			return $this->_klevu_parameters;
-		} catch (\Exception $e) {
-            $this->_searchHelperData->log(LoggerConstants::ZEND_LOG_CRIT, sprintf("Category API Exception thrown in %s::%s - %s", __CLASS__, __METHOD__, $e->getMessage()));
+            $category = $this->_klevu_type_of_records . " " . $allCategoryNames;
+            if ($this->_categorynavigationHelperConfig->getNoOfResults()) {
+                $noOfResults = $this->_categorynavigationHelperConfig->getNoOfResults();
+            } else {
+                $noOfResults = 2000;
+            }
+            if (empty($this->_klevu_parameters)) {
+                $this->_klevu_parameters = [
+                    'ticket' => $this->_searchHelperConfig->getJsApiKey(),
+                    'noOfResults' => $noOfResults,
+                    'term' => '*',
+                    'paginationStartsFrom' => 0,
+                    'enableFilters' => 'false',
+                    'klevuShowOutOfStockProducts' => 'true',
+                    'isCategoryNavigationRequest' => 'true',
+                    'category' => $category,
+                    'categoryIds' => $currentCategory->getId(),
+                    'visibility' => 'catalog'
+                ];
+            }
+            return $this->_klevu_parameters;
+        } catch (\Exception $e) {
+            $this->_searchHelperData->log(
+                LoggerConstants::ZEND_LOG_CRIT,
+                sprintf("Category API Exception thrown in %s - %s", __METHOD__, $e->getMessage())
+            );
         }
     }
-
 
     /**
      * This method resets the saved $_klevu_product_ids.
@@ -318,9 +367,9 @@ class Category implements CategoryInterface
         if (!empty($this->_klevu_variant_parent_child_ids)) {
             return $this->_klevu_variant_parent_child_ids;
         }
-        return array();
+        return [];
     }
-    
+
     /**
      * This method will return the excluded product ids
      * @return array
@@ -330,7 +379,6 @@ class Category implements CategoryInterface
         if (!empty($this->_klevu_excluded_ids)) {
             return $this->_klevu_excluded_ids;
         }
-        return array();
+        return [];
     }
 }
-
