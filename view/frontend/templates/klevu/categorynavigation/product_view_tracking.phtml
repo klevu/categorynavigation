@@ -39,6 +39,8 @@
                             product_ids.push(parseInt(kl_mage_cat_ele.substring(kl_mage_cat_prefix.length, kl_mage_cat_ele.length)));
                         }
                     }
+                    //Apply uniqueness on final list of products
+                    product_ids = Array.from(new Set(product_ids));
                     if (product_ids.length > 0) {
                         var p = parseInt('<?= $p_num ?>');
                         let klevu_pageStartsFrom;
