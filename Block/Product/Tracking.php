@@ -215,13 +215,14 @@ class Tracking extends Template
             $name = $product->getName();
             $product_url = $product->getProductUrl();
             $product_sku = $product->getSku();
+            $product_sale_price = '0.00';
 
             if ($product->getData("type_id") === Configurable::TYPE_CODE) {
                 $parent = $product;
                 $productTypeInstance = $product->getTypeInstance();
                 $usedProducts = $productTypeInstance->getUsedProducts($product);
-                foreach ($usedProducts as $child) {
-                    $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $child, $store);
+                if (isset($usedProducts[0])) {
+                    $product_saleprice = $this->_priceHelper->getKlevuSalePrice($parent, $usedProducts[0], $store);
                     $product_sale_price = $product_saleprice['salePrice'];
                 }
             } else {
@@ -240,7 +241,7 @@ class Tracking extends Template
                 'klevu_productName' => $name,
                 'klevu_productUrl' => $product_url,
                 'klevu_productSku' => $product_sku,
-                'klevu_salePrice' => $product_sale_price,
+                'klevu_salePrice' => $product_sale_price ?: '0.00',
                 'klevu_productRatings' => is_numeric($rating)
                     ? $this->convertToRatingStar((float)$rating)
                     : null,

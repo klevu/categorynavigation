@@ -311,12 +311,15 @@ class Category implements CategoryInterface
                         )->load($value)
                         ->getName();
                     $catnames[] = $catname;
-                    $this->_searchHelperData->log(
-                        LoggerConstants::ZEND_LOG_CRIT,
-                        sprintf("Category Name %s", $catname)
-                    );
                 }
                 $allCategoryNames = implode(";", $catnames);
+            }
+            $logLevel = $this->_searchHelperConfig->getLogLevel();
+            if ($logLevel >= LoggerConstants::ZEND_LOG_DEBUG) {
+                $this->_searchHelperData->log(
+                    LoggerConstants::ZEND_LOG_DEBUG,
+                    sprintf("Category Name(s): %s", $allCategoryNames)
+                );
             }
 
             $category = $this->_klevu_type_of_records . " " . $allCategoryNames;
