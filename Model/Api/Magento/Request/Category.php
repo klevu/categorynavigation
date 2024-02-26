@@ -84,7 +84,7 @@ class Category implements CategoryInterface
      */
     protected $_searchHelperData;
     /**
-     * @var \Klevu\Search\Model\Api\Action\Idsearch
+     * @var KlevuCatnavApiIdsearch
      */
     protected $_apiActionIdsearch;
     /**
