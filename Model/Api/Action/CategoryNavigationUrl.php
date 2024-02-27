@@ -2,37 +2,75 @@
 
 namespace Klevu\Categorynavigation\Model\Api\Action;
 
-class CategoryNavigationUrl extends \Klevu\Search\Model\Api\Actionall
+use Klevu\Search\Helper\Api as ApiHelper;
+use Klevu\Search\Helper\Config as ConfigHelper;
+use Klevu\Search\Helper\Data as SearchHelper;
+use Klevu\Search\Model\Api\Actionall;
+use Klevu\Search\Model\Api\Request\Post as ApiPostRequest;
+use Klevu\Search\Model\Api\Response;
+use Klevu\Search\Model\Api\Response\Data as ApiResponseData;
+use Klevu\Search\Model\Api\Response\Invalid as InvalidResponse;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManagerInterface;
+
+class CategoryNavigationUrl extends Actionall
 {
+    const ENDPOINT = "/n-search/getCategoryNavigationURL";
+    const METHOD   = "POST";
+    const DEFAULT_REQUEST_MODEL = ApiPostRequest::class;
+    const DEFAULT_RESPONSE_MODEL = ApiResponseData::class;
+
     /**
-     * @var \Klevu\Search\Model\Api\Response\Invalid
+     * @var InvalidResponse
      */
     protected $_apiResponseInvalid;
-
     /**
-     * @var \Magento\Store\Model\Store
+     * @var Store
      */
     protected $_frameworkModelStore;
-
     /**
-     * @var \Klevu\Search\Helper\Api
+     * @var ApiHelper
      */
     protected $_searchHelperApi;
-
     /**
-     * @var \Klevu\Search\Helper\Config
+     * @var ConfigHelper
      */
     protected $_searchHelperConfig;
+    /**
+     * @var SearchHelper
+     */
+    protected $_searchHelperData;
 
+    /**
+     * @param InvalidResponse $apiResponseInvalid
+     * @param ApiHelper $searchHelperApi
+     * @param ConfigHelper $searchHelperConfig
+     * @param StoreManagerInterface $storeModelStoreManagerInterface
+     * @param SearchHelper $searchHelperData
+     * @param Store $frameworkModelStore
+     * @param string|null $requestModel
+     * @param string|null $responseModel
+     */
     public function __construct(
-        \Klevu\Search\Model\Api\Response\Invalid $apiResponseInvalid,
-        \Klevu\Search\Helper\Api $searchHelperApi,
-        \Klevu\Search\Helper\Config $searchHelperConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeModelStoreManagerInterface,
-        \Klevu\Search\Helper\Data $searchHelperData,
-        \Magento\Store\Model\Store $frameworkModelStore
+        InvalidResponse $apiResponseInvalid,
+        ApiHelper $searchHelperApi,
+        ConfigHelper $searchHelperConfig,
+        StoreManagerInterface $storeModelStoreManagerInterface,
+        SearchHelper $searchHelperData,
+        Store $frameworkModelStore,
+        $requestModel = null,
+        $responseModel = null
     ) {
-    
+        parent::__construct(
+            $apiResponseInvalid,
+            $searchHelperConfig,
+            $storeModelStoreManagerInterface,
+            $requestModel ?: static::DEFAULT_REQUEST_MODEL,
+            $responseModel ?: static::DEFAULT_RESPONSE_MODEL
+        );
+
         $this->_apiResponseInvalid = $apiResponseInvalid;
         $this->_searchHelperApi = $searchHelperApi;
         $this->_searchHelperConfig = $searchHelperConfig;
@@ -41,31 +79,31 @@ class CategoryNavigationUrl extends \Klevu\Search\Model\Api\Actionall
         $this->_frameworkModelStore = $frameworkModelStore;
     }
 
-    const ENDPOINT = "/n-search/getCategoryNavigationURL";
-    const METHOD   = "POST";
-    const DEFAULT_REQUEST_MODEL = "Klevu\Search\Model\Api\Request\Post";
-    const DEFAULT_RESPONSE_MODEL = "Klevu\Search\Model\Api\Response\Data";
-    
+    /**
+     * @param array $parameters
+     *
+     * @return array|true
+     */
     protected function validate($parameters)
     {
-
         $errors = [];
-       
-        if (!isset($parameters["restApiKey"]) || empty($parameters["restApiKey"])) {
+        if (empty($parameters["restApiKey"])) {
             $errors["restApiKey"] = "Missing Rest API key.";
         }
-          
-        if (count($errors) == 0) {
+        if (!count($errors)) {
             return true;
         }
+
         return $errors;
     }
+
     /**
      * Execute the API action with the given parameters.
      *
      * @param array $parameters
      *
-     * @return \Klevu\Search\Model\Api\Response
+     * @return Response
+     * @throws LocalizedException
      */
     public function execute($parameters = [])
     {
@@ -73,21 +111,32 @@ class CategoryNavigationUrl extends \Klevu\Search\Model\Api\Actionall
         if ($validation_result !== true) {
             return $this->_apiResponseInvalid->setErrors($validation_result);
         }
-
-        $request = $this->getRequest();
         $store = $this->_frameworkModelStore->load($parameters['store']);
-        $endpoint = $this->buildEndpoint(static::ENDPOINT, $store, $this->_searchHelperConfig->getHostname($store));
-        $request
-            ->setResponseModel($this->getResponse())
-            ->setEndpoint($endpoint)
-            ->setMethod(static::METHOD)
-            ->setData($parameters);
+        $endpoint = $this->buildEndpoint(
+            static::ENDPOINT,
+            $store,
+            $this->_searchHelperConfig->getHostname($store)
+        );
+        $request = $this->getRequest();
+        $request->setResponseModel($this->getResponse());
+        $request->setEndpoint($endpoint);
+        $request->setMethod(static::METHOD);
+        $request->setData($parameters);
+
         return $request->send();
     }
-    
+
+    /**
+     * @param string $endpoint
+     * @param StoreInterface|string|int|null $store
+     * @param string $hostname
+     *
+     * @return string
+     */
     public function buildEndpoint($endpoint, $store = null, $hostname = null)
     {
-       
-        return static::ENDPOINT_PROTOCOL . (($hostname) ? $hostname : $this->_searchHelperConfig->getHostname($store)) . $endpoint;
+        return static::ENDPOINT_PROTOCOL
+            . ($hostname ?: $this->_searchHelperConfig->getHostname($store))
+            . $endpoint;
     }
 }
