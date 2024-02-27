@@ -155,8 +155,8 @@ class CatnavIdsearch extends Actionall
      */
     public function buildEndpoint($endpoint, $store = null, $hostname = null)
     {
-        return static::ENDPOINT_PROTOCOL .
-            ($hostname) ?: $this->_searchHelperConfig->getHostname($store)
+        return static::ENDPOINT_PROTOCOL
+            . ($hostname ?: $this->_searchHelperConfig->getHostname($store))
             . $endpoint;
     }
 }
