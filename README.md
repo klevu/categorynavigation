@@ -25,7 +25,7 @@ to see the latest changes and download previous versions.
 
 We recommend installation via Composer.
 Please review the <a href="https://help.klevu.com/support/solutions/articles/5000871301-integration-steps-for-magento-2" target="_blank">integration steps</a>
-on our support website for the most up to date information.
+on our support website for the most up-to-date information.
 
 ---
 
