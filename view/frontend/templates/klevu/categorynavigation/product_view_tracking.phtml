@@ -1,179 +1,202 @@
-<?php /** @var \Klevu\Categorynavigation\Block\Product\View\Tracking $block */ ?>
-<?php if ($block->isExtensionConfigured() && $block->getCurrentController() === 'category') { ?>
+<?php
+/**
+ * @var \Klevu\Categorynavigation\Block\Product\View\Tracking $block
+ * @var Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+
+<?php if (
+    $block->isExtensionConfigured()
+    && $block->getCurrentController() === 'category'
+    && $block->checkPreserveLayout()
+) { ?>
     <?php $jsonTrackingData = $block->getJsonTrackingData(); ?>
-    <?php if ($block->checkPreserveLayout() && $jsonTrackingData) { ?>
+    <?php if ($jsonTrackingData) { ?>
+        <?php
+        $p_num = is_numeric($block->getRequest()->getParam('p'))
+            ? (int)$block->getRequest()->getParam('p')
+            : 0;
+        ?>
 
-        <?php $p_num = is_numeric($block->getRequest()->getParam('p')) ? (int)$block->getRequest()->getParam('p') : 0; ?>
-        <script type="text/javascript">
-            var already_reported;
-            var array_difference;
-            var klevu_cat_current_version = '<?= $block->getModuleInfo(); ?>';
-            var klevu_search_product_tracking = <?= $jsonTrackingData; ?>;
-            var hours = 24; // Reset when storage is more than 24hours
-            var now = new Date().getTime();
-            var setupTime = localStorage.getItem('setupTime');
-            if (setupTime == null) {
-                localStorage.setItem('setupTime', now)
-            } else if (now - setupTime > hours * 60 * 60 * 1000) {
-                localStorage.removeItem("categories");
-                localStorage.removeItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
-                localStorage.setItem('setupTime', now);
+        <?php
+        $scriptString = <<<script
+
+    var already_reported;
+    var array_difference;
+    var klevu_cat_current_version = '{$block->getModuleInfo()}';
+    var klevu_search_product_tracking = {$jsonTrackingData};
+    var hours = 24; // Reset when storage is more than 24hours
+    var now = new Date().getTime();
+    var setupTime = localStorage.getItem('setupTime');
+    if (setupTime == null) {
+        localStorage.setItem('setupTime', now)
+    } else if (now - setupTime > hours * 60 * 60 * 1000) {
+        localStorage.removeItem("categories");
+        localStorage.removeItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
+        localStorage.setItem('setupTime', now);
+    }
+
+    function productViewTracking() {
+        try {
+            var category_product_ids = document.querySelectorAll("div[data-product-id]");
+            let product_ids = [];
+            for (let i = 0; i < category_product_ids.length; i++) {
+                if (category_product_ids[i].dataset) {
+                    product_ids.push(category_product_ids[i].dataset.productId);
+                }
             }
+            //Fallback method to grab ids to send cat nav analytics
+            if (category_product_ids.length === 0) {
+                let kl_mage_cat_prefix = "product-item-info_";
+                let kl_mage_cat_ids = document.querySelectorAll("[id^='" + kl_mage_cat_prefix + "']");
 
-            function productViewTracking() {
-                try {
-                    var category_product_ids = document.querySelectorAll("div[data-product-id]");
-                    let product_ids = [];
-                    for (let i = 0; i < category_product_ids.length; i++) {
-                        if (category_product_ids[i].dataset) {
-                            product_ids.push(category_product_ids[i].dataset.productId);
-                        }
+                for (let i = 0; i < kl_mage_cat_ids.length; i++) {
+                    let kl_mage_cat_ele = kl_mage_cat_ids[i].id;
+                    product_ids.push(parseInt(kl_mage_cat_ele.substring(kl_mage_cat_prefix.length, kl_mage_cat_ele.length)));
+                }
+            }
+            //Apply uniqueness on final list of products
+            product_ids = Array.from(new Set(product_ids));
+            if (product_ids.length > 0) {
+                var p = parseInt('{$p_num}');
+                let klevu_pageStartsFrom;
+                klevu_search_product_tracking.klevu_productIds = product_ids.join();
+
+                if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
+                    if ('undefined' === typeof already_reported) {
+                        klevu_pageStartsFrom = 0;
+                        sessionStorage.setItem("product_per_page", product_ids.length);
+                    } else if (already_reported) {
+                        const bb = already_reported.split(",");
+                        klevu_pageStartsFrom = bb.length;
                     }
-                    //Fallback method to grab ids to send cat nav analytics
-                    if (category_product_ids.length === 0) {
-                        let kl_mage_cat_prefix = "product-item-info_";
-                        let kl_mage_cat_ids = document.querySelectorAll("[id^='" + kl_mage_cat_prefix + "']");
 
-                        for (let i = 0; i < kl_mage_cat_ids.length; i++) {
-                            let kl_mage_cat_ele = kl_mage_cat_ids[i].id;
-                            product_ids.push(parseInt(kl_mage_cat_ele.substring(kl_mage_cat_prefix.length, kl_mage_cat_ele.length)));
-                        }
+                    if (p) {
+                        klevu_pageStartsFrom = (p - 1) * sessionStorage.getItem("product_per_page");
                     }
-                    //Apply uniqueness on final list of products
-                    product_ids = Array.from(new Set(product_ids));
-                    if (product_ids.length > 0) {
-                        var p = parseInt('<?= $p_num ?>');
-                        let klevu_pageStartsFrom;
-                        klevu_search_product_tracking.klevu_productIds = product_ids.join();
+                    if (already_reported) {
+                        let a = already_reported.split(",");
+                        let b = klevu_search_product_tracking.klevu_productIds.split(",");
 
-                        if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
-                            if ('undefined' === typeof already_reported) {
-                                klevu_pageStartsFrom = 0;
-                                sessionStorage.setItem("product_per_page", product_ids.length);
-                            } else if (already_reported) {
-                                const bb = already_reported.split(",");
-                                klevu_pageStartsFrom = bb.length;
+                        if (b.length > a.length) {
+                            if (arrayContainsArray(b, a)) {
+                                var array_difference = b.filter(x => !a.includes(x));
+                                klevu_search_product_tracking.klevu_productIds = array_difference.join();
+                                a = a.concat(b);
+                            } else {
+                                klevu_search_product_tracking.klevu_productIds = b.join();
+                                a = b;
                             }
-
-                            if (p) {
-                                klevu_pageStartsFrom = (p - 1) * sessionStorage.getItem("product_per_page");
-                            }
-                            if (already_reported) {
-                                let a = already_reported.split(",");
-                                let b = klevu_search_product_tracking.klevu_productIds.split(",");
-
-                                if (b.length > a.length) {
-                                    if (arrayContainsArray(b, a)) {
-                                        var array_difference = b.filter(x => !a.includes(x));
-                                        klevu_search_product_tracking.klevu_productIds = array_difference.join();
-                                        a = a.concat(b);
-                                    } else {
-                                        klevu_search_product_tracking.klevu_productIds = b.join();
-                                        a = b;
-                                    }
-                                    // newly added to fix multiple call
-                                    already_reported = b.join();
-                                } else {
-                                    if (a.join() === b.join()) {
-                                        //dont send anything
-                                        klevu_search_product_tracking.klevu_productIds = '';
-                                    } else {
-                                        klevu_search_product_tracking.klevu_productIds = b.join();
-                                        a = b;
-                                        // newly added to fix multiple call
-                                        already_reported = b.join();
-                                    }
-                                }
-                            }
-
                             // newly added to fix multiple call
-                            if ('undefined' === typeof already_reported) {
-                                already_reported = klevu_search_product_tracking.klevu_productIds;
-                            }
-                            klevu_search_product_tracking.klevu_pageStartsFrom = klevu_pageStartsFrom;
-
-                            if (document.getElementById('klevu_loginCustomerEmail')) {
-                                klevu_search_product_tracking.klevu_loginCustomerEmail = document.getElementById('klevu_loginCustomerEmail').innerHTML;
-                            }
-                            if (document.getElementById('klevu_sessionId')) {
-                                klevu_search_product_tracking.klevu_sessionId = document.getElementById('klevu_sessionId').innerHTML;
-                            }
-
-                            if (klevu_search_product_tracking.klevu_productIds.length > 0) {
-                                const url = '<?= $block->escapeUrl(
-                                        $block->getCategoryNavigationTrackingUrl($block->getStoreId())
-                                    ) ?>' + '?' + convertDataToUrlParams(klevu_search_product_tracking);
-
-                                fetch(url, {
-                                    method: 'GET',
-                                    crossDomain: true
-                                }).then(response => {
-                                    localStorage.setItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName), klevu_search_product_tracking.klevu_productIds);
-                                    localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
-                                });
-
-                                function convertDataToUrlParams(data) {
-                                    let params = [];
-                                    for (let key in data) {
-                                        if (data.hasOwnProperty(key)) {
-                                            params.push(key + '=' + encodeURIComponent(data[key]));
-                                        }
-                                    }
-                                    params = params.join('&');
-                                    return params;
-                                }
+                            already_reported = b.join();
+                        } else {
+                            if (a.join() === b.join()) {
+                                //dont send anything
+                                klevu_search_product_tracking.klevu_productIds = '';
+                            } else {
+                                klevu_search_product_tracking.klevu_productIds = b.join();
+                                a = b;
+                                // newly added to fix multiple call
+                                already_reported = b.join();
                             }
                         }
                     }
-                } catch (e) {
-                    console.log(e);
+
+                    // newly added to fix multiple call
+                    if ('undefined' === typeof already_reported) {
+                        already_reported = klevu_search_product_tracking.klevu_productIds;
+                    }
+                    klevu_search_product_tracking.klevu_pageStartsFrom = klevu_pageStartsFrom;
+
+                    if (document.getElementById('klevu_loginCustomerEmail')) {
+                        klevu_search_product_tracking.klevu_loginCustomerEmail = document.getElementById('klevu_loginCustomerEmail').innerHTML;
+                    }
+                    if (document.getElementById('klevu_sessionId')) {
+                        klevu_search_product_tracking.klevu_sessionId = document.getElementById('klevu_sessionId').innerHTML;
+                    }
+
+                    if (klevu_search_product_tracking.klevu_productIds.length > 0) {
+                        const url = '{$block->escapeUrl( $block->getCategoryNavigationTrackingUrl($block->getStoreId()))}'
+                            + '?' + convertDataToUrlParams(klevu_search_product_tracking);
+
+                        fetch(url, {
+                            method: 'GET',
+                            crossDomain: true
+                        }).then(response => {
+                            localStorage.setItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName), klevu_search_product_tracking.klevu_productIds);
+                            localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
+                        });
+
+                        function convertDataToUrlParams(data) {
+                            let params = [];
+                            for (let key in data) {
+                                if (data.hasOwnProperty(key)) {
+                                    params.push(key + '=' + encodeURIComponent(data[key]));
+                                }
+                            }
+                            params = params.join('&');
+                            return params;
+                        }
+                    }
                 }
             }
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
-            let categories;
-            try {
-                categories = JSON.parse(localStorage.getItem("categories") || "{}");
-            } catch (e) {
-                categories = "{}";
-            }
+    let categories;
+    try {
+        categories = JSON.parse(localStorage.getItem("categories") || "{}");
+    } catch (e) {
+        categories = "{}";
+    }
 
-            const currentUrl = window.location.pathname;
-            categories[currentUrl] = {
-                'name': encodeURIComponent(klevu_search_product_tracking.klevu_categoryName),
-                'categoryPath': encodeURIComponent(klevu_search_product_tracking.klevu_categoryPath)
-            };
-            localStorage.setItem("categories", JSON.stringify(categories));
+    const currentUrl = window.location.pathname;
+    categories[currentUrl] = {
+        'name': encodeURIComponent(klevu_search_product_tracking.klevu_categoryName),
+        'categoryPath': encodeURIComponent(klevu_search_product_tracking.klevu_categoryPath)
+    };
+    localStorage.setItem("categories", JSON.stringify(categories));
 
-            /**
-             * Returns TRUE if the first specified array contains all elements
-             * from the second one. FALSE otherwise.
-             *
-             * @param {array} superset
-             * @param {array} subset
-             *
-             * @returns {boolean}
-             */
-            function arrayContainsArray(superset, subset) {
-                if (0 === subset.length) {
-                    return false;
-                }
-                return subset.every(function (value) {
-                    return (superset.indexOf(value) >= 0);
-                });
-            }
+    /**
+     * Returns TRUE if the first specified array contains all elements
+     * from the second one. FALSE otherwise.
+     *
+     * @param {array} superset
+     * @param {array} subset
+     *
+     * @returns {boolean}
+     */
+    function arrayContainsArray(superset, subset) {
+        if (0 === subset.length) {
+            return false;
+        }
+        return subset.every(function (value) {
+            return (superset.indexOf(value) >= 0);
+        });
+    }
 
-            var klevuTimeOut = null;
+    var klevuTimeOut = null;
 
-            function handleDOMModification() {
-                window.clearTimeout(klevuTimeOut);
-                klevuTimeOut = window.setTimeout(productViewTracking, 700);
-            }
-            if (typeof addEventListener === 'undefined') {
-                document.getElementsByTagName("body")[0].attachEvent("DOMSubtreeModified", handleDOMModification);
-            } else {
-                document.getElementsByTagName("body")[0].addEventListener("DOMSubtreeModified", handleDOMModification);
-            }
-            sessionStorage.setItem("klevu_product_call_sent", '');
-        </script>
+    function handleDOMModification() {
+        window.clearTimeout(klevuTimeOut);
+        klevuTimeOut = window.setTimeout(productViewTracking, 700);
+    }
+    if (typeof addEventListener === 'undefined') {
+        document.getElementsByTagName("body")[0].attachEvent("DOMSubtreeModified", handleDOMModification);
+    } else {
+        document.getElementsByTagName("body")[0].addEventListener("DOMSubtreeModified", handleDOMModification);
+    }
+    sessionStorage.setItem("klevu_product_call_sent", '');
+
+script;
+        ?>
+        <?= $secureRenderer->renderTag(
+            'script',
+            ['type' => 'text/javascript'],
+            $scriptString,
+            false
+        ) ?>
     <?php } ?>
 <?php } ?>
