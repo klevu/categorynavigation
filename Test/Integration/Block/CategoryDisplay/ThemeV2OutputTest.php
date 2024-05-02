@@ -2,6 +2,8 @@
 
 namespace Klevu\Categorynavigation\Test\Integration\Block\CategoryDisplay;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 use Magento\CatalogUrlRewrite\Model\CategoryUrlPathGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
@@ -11,9 +13,15 @@ use Magento\TestFramework\TestCase\AbstractController as AbstractControllerTestC
 
 class ThemeV2OutputTest extends AbstractControllerTestCase
 {
-    const KLEVU_LANDING_ELEMENT_REGEX = '#<div +([a-zA-Z-_="\']+ +)*class=(\'|") *((-?[_a-zA-Z]+[_a-zA-Z0-9-]*) +)*klevuLanding( +(-?[_a-zA-Z]+[_a-zA-Z0-9-]*))* *(\'|")( +[a-zA-Z-_="\']+)* *></div>#';
-    const STYLE_MIN_HEIGHT_REGEX_PREPEND = '#<style.*>.*\.klevuLanding\s*\{.*min-height:\s*';
-    const STYLE_MIN_HEIGHT_REGEX_APPEND = 'px;.*</style>#';
+    const KLEVU_LANDING_ELEMENT_REGEX = '#<div +([a-zA-Z-_="\']+ +)*class=(\'|") *((-?[_a-zA-Z]+[_a-zA-Z0-9-]*) +)'
+        . '*klevuLanding( +(-?[_a-zA-Z]+[_a-zA-Z0-9-]*))* *(\'|")( +[a-zA-Z-_="\']+)* *></div>#';
+    const STYLE_MIN_HEIGHT_REGEX_PREPEND = "#<script.*>"
+        . "\s*var elem.*Array = document\.querySelectorAll\('\.klevuLanding'\);"
+        . "\s*if\(elem.*Array.length !== 'undefined'\){"
+        . "\s*elem.*Array\.forEach\(function\(element\) {"
+        . "\s*if \(element\) {"
+        . "\s*element\.style\.minHeight = '";
+    const STYLE_MIN_HEIGHT_REGEX_APPEND = "px';\s*}\s*}\);\s*}</script>#";
 
     /**
      * @var ObjectManager

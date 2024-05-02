@@ -2,6 +2,8 @@
 
 namespace Klevu\Categorynavigation\Test\Integration\Block\Product;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 use Magento\CatalogUrlRewrite\Model\CategoryUrlPathGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
@@ -52,12 +54,18 @@ class IndexOutputTest extends AbstractControllerTestCase
         if (method_exists($this, 'assertStringContainsString')) {
             $this->assertStringContainsString('css/klevu-landing-page-style.css', $responseBody);
             $this->assertStringContainsString('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertStringContainsString('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertStringContainsString(
+                '&#x2F;&#x2F;js.klevu.com&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             $this->assertStringContainsString("klevu_pageCategory = '", $responseBody);
         } else {
             $this->assertContains('css/klevu-landing-page-style.css', $responseBody);
             $this->assertContains('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertContains('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertContains(
+                '&#x2F;&#x2F;js.klevu.com&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             $this->assertContains("klevu_pageCategory = '", $responseBody);
         }
     }
@@ -88,12 +96,18 @@ class IndexOutputTest extends AbstractControllerTestCase
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('css/klevu-landing-page-style.css', $responseBody);
             $this->assertStringNotContainsString('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertStringNotContainsString('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertStringNotContainsString(
+                '&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             $this->assertStringNotContainsString("klevu_pageCategory = '", $responseBody);
         } else {
             $this->assertNotContains('css/klevu-landing-page-style.css', $responseBody);
             $this->assertNotContains('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertNotContains('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertNotContains(
+                '&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             $this->assertNotContains("klevu_pageCategory = '", $responseBody);
         }
     }
@@ -124,12 +138,18 @@ class IndexOutputTest extends AbstractControllerTestCase
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('css/klevu-landing-page-style.css', $responseBody);
             $this->assertStringNotContainsString('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertStringNotContainsString('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertStringNotContainsString(
+                '&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             $this->assertStringNotContainsString("klevu_pageCategory = '", $responseBody);
         } else {
             $this->assertNotContains('css/klevu-landing-page-style.css', $responseBody);
             $this->assertNotContains('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertNotContains('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertNotContains(
+                '&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             $this->assertNotContains("klevu_pageCategory = '", $responseBody);
         }
     }
@@ -160,12 +180,18 @@ class IndexOutputTest extends AbstractControllerTestCase
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString('css/klevu-landing-page-style.css', $responseBody);
             $this->assertStringNotContainsString('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertStringNotContainsString('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertStringNotContainsString(
+                '&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             // We don't check whether klevu_pageCategpry exists as these are identical in v1 and v2
         } else {
             $this->assertNotContains('css/klevu-landing-page-style.css', $responseBody);
             $this->assertNotContains('css/klevu-landing-responsive.css', $responseBody);
-            $this->assertNotContains('//js.klevu.com/klevu-js-v1/js-1-1/klevu-landing.js"></script>', $responseBody);
+            $this->assertNotContains(
+                '&#x2F;klevu-js-v1&#x2F;js-1-1&#x2F;klevu-landing.js"></script>',
+                $responseBody
+            );
             // We don't check whether klevu_pageCategpry exists as these are identical in v1 and v2
         }
     }

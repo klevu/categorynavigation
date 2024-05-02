@@ -2,6 +2,8 @@
 
 namespace Klevu\Categorynavigation\Test\Integration\Block\ThemeV2;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 use Magento\CatalogUrlRewrite\Model\CategoryUrlPathGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
@@ -53,23 +55,23 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringContainsString')) {
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertContains(
-                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertContains(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>',  // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
@@ -103,23 +105,23 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringContainsString')) {
             $this->assertStringNotContainsString(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is not present in response body'
             );
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.lazyload.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Lazyload CatNav JS include is present in response body'
             );
         } else {
             $this->assertNotContains(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is not present in response body'
-           );
+            );
             $this->assertContains(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.lazyload.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Lazyload CatNav JS include is present in response body'
             );
@@ -155,46 +157,46 @@ class PageOutputTest extends AbstractControllerTestCase
 
         if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString(
-                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertStringNotContainsString(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertNotContains(
-                '<script type="text/javascript" src="https://js.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertNotContains(
-                '<script type="text/javascript" src="https://js.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         }
         if (method_exists($this, 'assertStringContainsString')) {
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="https://js-test.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js-test.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertStringContainsString(
-                '<script type="text/javascript" src="https://js-test.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js-test.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
             );
         } else {
             $this->assertContains(
-                '<script type="text/javascript" src="https://js-test.klevu.com/core/v2/klevu.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js-test.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Library JS include is present in response body'
             );
             $this->assertContains(
-                '<script type="text/javascript" src="https://js-test.klevu.com/theme/default/v2/catnav-theme.js"></script>',
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js-test.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
             );

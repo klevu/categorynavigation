@@ -1,5 +1,13 @@
-<?php /** @var Klevu\Categorynavigation\Block\Html\Head\ThemeV2\AddPriceSuffixToQuery $block */ ?>
-<script type="text/javascript">
+<?php
+/**
+ * @var Klevu\Categorynavigation\Block\Html\Head\ThemeV2\AddPriceSuffixToQuery $block
+ * @var Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+
+<?php
+$scriptString = <<<script
+
     klevu.settings.chains.initChain.add({
         name: "addPriceSuffixToCatNavQuery",
         fire: function (data) {
@@ -13,10 +21,10 @@
         }
     });
 
-    document.addEventListener('<?php /** @noEscape */ echo $block->getCustomerDataLoadErrorEventName(); ?>', function () {
+    document.addEventListener('{$block->getCustomerDataLoadErrorEventName()}', function () {
         klevu({ powerUp: { catnav: true }});
     });
-    document.addEventListener('<?php /** @noEscape */ echo $block->getCustomerDataLoadedEventName(); ?>', function () {
+    document.addEventListener('{$block->getCustomerDataLoadedEventName()}', function () {
         klevu({
             powerUp: {
                 catnav: true
@@ -28,4 +36,12 @@
             }
         });
     });
-</script>
+
+script;
+?>
+<?= $secureRenderer->renderTag(
+    'script',
+    ['type' => 'text/javascript'],
+    $scriptString,
+    false
+) ?>
