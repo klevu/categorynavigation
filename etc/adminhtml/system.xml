@@ -72,7 +72,8 @@
                             Lazy-loads JavaScript for Smart Category Merchandising pages to prevent render blocking
                             scripts on page load.
                             Please do not modify this unless you have read and understood the following guide:
-                            <a href="https://help.klevu.com/support/solutions/articles/5000877463-lazy-load-jsv2-theme-scripts" target="_blank">Lazy-Load JSv2 Theme Scripts</a>.
+                            <a href="https://help.klevu.com/support/solutions/articles/5000877463-lazy-load-jsv2-theme-scripts" target="_blank">Lazy-Load JSv2 Theme Scripts</a>.<br />
+                            <strong>Note: this is not compatible with CSP.</strong>
                         ]]>
                     </comment>
 					<depends>
