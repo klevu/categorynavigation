@@ -7,7 +7,6 @@
 
 <?php
 $scriptString = <<<script
-
     klevu.settings.chains.initChain.add({
         name: "addCurrencyTranslationToCatnav",
         fire: function (data) {
@@ -34,9 +33,23 @@ $scriptString = <<<script
 
 script;
 ?>
+<?php
+$script = $block->isDeferJs()
+    ? <<<script
+        window._klvReady = window._klvReady || [];
+        window._klvReady.push(function() {
+            {$scriptString}
+        });
+
+script
+    : $scriptString;
+?>
 <?= $secureRenderer->renderTag(
     'script',
-    ['type' => 'text/javascript'],
-    $scriptString,
+    [
+        'type' => 'text/javascript',
+        'id' => 'klevu_catnav_currencytranslation',
+    ],
+    $script,
     false
 ) ?>

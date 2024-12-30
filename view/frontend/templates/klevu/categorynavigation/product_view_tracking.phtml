@@ -181,13 +181,22 @@
 
     function handleDOMModification() {
         window.clearTimeout(klevuTimeOut);
+        klevuProductViewTrackingObserver.disconnect();
         klevuTimeOut = window.setTimeout(productViewTracking, 700);
     }
-    if (typeof addEventListener === 'undefined') {
-        document.getElementsByTagName("body")[0].attachEvent("DOMSubtreeModified", handleDOMModification);
-    } else {
-        document.getElementsByTagName("body")[0].addEventListener("DOMSubtreeModified", handleDOMModification);
-    }
+    
+    const klevuProductViewTrackingObserver = new MutationObserver(
+        mutationList => mutationList.filter(m => m.type === 'childList').forEach(
+            m => {
+                m.addedNodes.forEach(handleDOMModification);
+            }
+        )
+    );
+    klevuProductViewTrackingObserver.observe(document.getElementsByTagName("body")[0], {
+        childList: true,
+        subtree: true
+    });
+    
     sessionStorage.setItem("klevu_product_call_sent", '');
 
 script;

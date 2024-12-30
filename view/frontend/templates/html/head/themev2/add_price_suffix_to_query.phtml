@@ -6,8 +6,7 @@
 ?>
 
 <?php
-$scriptString = <<<script
-
+$scriptStringChains = <<<script
     klevu.settings.chains.initChain.add({
         name: "addPriceSuffixToCatNavQuery",
         fire: function (data) {
@@ -21,27 +20,91 @@ $scriptString = <<<script
         }
     });
 
+script;
+?>
+
+<?php
+$catNavPowerUp = <<<script
+klevu({ powerUp: { catnav: true }});
+script;
+
+$catNavPowerUpWithSuffix = <<<script
+klevu({
+    powerUp: { catnav: true },
+    flags: {
+        addPriceSuffixToQuery: {
+            catnav: true
+        }
+    }
+});
+script;
+?>
+
+<?php if ($block->isDeferJs()): ?>
+    <?php
+    $scriptString = <<<script
+        window._klvReady = window._klvReady || [];
+        window._klvReady.push(function() {
+            {$scriptStringChains}
+        });
+
+        var klevuPowerUpCatNav = function() {
+            window._klvReady = window._klvReady || [];
+            window._klvReady.push(function() {
+               {$catNavPowerUp}
+            });
+
+            return true;
+        };
+        var klevuPowerUpCatNavWithSuffix = function () {
+            window._klvReady = window._klvReady || [];
+            window._klvReady.push(function() {
+               {$catNavPowerUpWithSuffix}
+            });
+
+            return true;
+        };
+
+script;
+    ?>
+<?php else: ?>
+    <?php
+    $scriptString = <<<script
+        {$scriptStringChains}
+
+        var klevuPowerUpCatNav = function() {
+            {$catNavPowerUp}
+
+            return true;
+        };
+        var klevuPowerUpCatNavWithSuffix = function () {
+            {$catNavPowerUpWithSuffix}
+
+            return true;
+        };
+
+script;
+    ?>
+<?php endif; ?>
+
+<?php
+$scriptString .= <<<script
     document.addEventListener('{$block->getCustomerDataLoadErrorEventName()}', function () {
-        klevu({ powerUp: { catnav: true }});
+        klevuPowerUpCatNav();
     });
     document.addEventListener('{$block->getCustomerDataLoadedEventName()}', function () {
-        klevu({
-            powerUp: {
-                catnav: true
-            },
-            flags: {
-                addPriceSuffixToQuery: {
-                    catnav: true
-                }
-            }
-        });
+        klevuPowerUpCatNavWithSuffix();
     });
 
 script;
 ?>
+
 <?= $secureRenderer->renderTag(
     'script',
-    ['type' => 'text/javascript'],
+    [
+        'type' => 'text/javascript',
+        'id' => 'klevu_catnav_pricesuffix',
+    ],
     $scriptString,
     false
 ) ?>
