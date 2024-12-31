@@ -15,13 +15,8 @@ class ThemeV2OutputTest extends AbstractControllerTestCase
 {
     const KLEVU_LANDING_ELEMENT_REGEX = '#<div +([a-zA-Z-_="\']+ +)*class=(\'|") *((-?[_a-zA-Z]+[_a-zA-Z0-9-]*) +)'
         . '*klevuLanding( +(-?[_a-zA-Z]+[_a-zA-Z0-9-]*))* *(\'|")( +[a-zA-Z-_="\']+)* *></div>#';
-    const STYLE_MIN_HEIGHT_REGEX_PREPEND = "#<script.*>"
-        . "\s*var elem.*Array = document\.querySelectorAll\('\.klevuLanding'\);"
-        . "\s*if\(elem.*Array.length !== 'undefined'\){"
-        . "\s*elem.*Array\.forEach\(function\(element\) {"
-        . "\s*if \(element\) {"
-        . "\s*element\.style\.minHeight = '";
-    const STYLE_MIN_HEIGHT_REGEX_APPEND = "px';\s*}\s*}\);\s*}</script>#";
+    const STYLE_MIN_HEIGHT_REGEX_PREPEND = '#<style type="text&\#x2F;css".*>\s*\.klevuLanding\s*{\s*min-height:\s*';
+    const STYLE_MIN_HEIGHT_REGEX_APPEND = "px;\s*}\s*</style>#";
 
     /**
      * @var ObjectManager

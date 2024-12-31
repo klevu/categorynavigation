@@ -59,10 +59,31 @@ class PageOutputTest extends AbstractControllerTestCase
                 $responseBody,
                 'Library JS include is present in response body'
             );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is not present in response body'
+            );
+
             $this->assertStringContainsString(
                 '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Lazyload CatNav JS include is not present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is not present in response body'
             );
         } else {
             $this->assertContains(
@@ -70,10 +91,124 @@ class PageOutputTest extends AbstractControllerTestCase
                 $responseBody,
                 'Library JS include is present in response body'
             );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is present in response body'
+            );
+
             $this->assertContains(
                 '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>',  // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>',  // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is not present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Lazyload CatNav JS include is not present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is not present in response body'
+            );
+        }
+    }
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default/klevu_search/developer/lazyload_js_catnav 0
+     * @magentoConfigFixture default_store klevu_search/developer/lazyload_js_catnav 0
+     * @magentoConfigFixture default/klevu_frontendjs/configuration/defer_js 1
+     * @magentoConfigFixture default_store klevu_frontendjs/configuration/defer_js 1
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testThemeV2JavaScriptOutputToCategory_Enabled_WithJsDeferred()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Library JS include is not present in response body'
+            );
+            $this->assertStringContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is present in response body'
+            );
+
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'CatNav JS include is not present in response body'
+            );
+            $this->assertStringContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Lazyload CatNav JS include is not present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is not present in response body'
+            );
+        } else {
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Library JS include is not present in response body'
+            );
+            $this->assertContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is present in response body'
+            );
+
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>',  // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'CatNav JS include is not present in response body'
+            );
+            $this->assertContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>',  // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Lazyload CatNav JS include is not present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is not present in response body'
             );
         }
     }
@@ -104,26 +239,162 @@ class PageOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is not present in response body'
+            );
+
             $this->assertStringNotContainsString(
                 '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is not present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is not present in response body'
             );
             $this->assertStringContainsString(
                 '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Lazyload CatNav JS include is present in response body'
             );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is not present in response body'
+            );
         } else {
+            $this->assertContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is present in response body'
+            );
+
             $this->assertNotContains(
                 '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'CatNav JS include is not present in response body'
             );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is not present in response body'
+            );
             $this->assertContains(
                 '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
                 $responseBody,
                 'Lazyload CatNav JS include is present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is not present in response body'
+            );
+        }
+    }
+
+    /**
+     * @magentoAppArea frontend
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation disabled
+     * @magentoCache all disabled
+     * @magentoConfigFixture default/klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default_store klevu_search/categorylanding/enabledcategorynavigation 3
+     * @magentoConfigFixture default/klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default_store klevu_search/general/js_url js.klevu.com
+     * @magentoConfigFixture default/klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default_store klevu_search/developer/theme_version v2
+     * @magentoConfigFixture default/klevu_search/developer/lazyload_js_catnav 1
+     * @magentoConfigFixture default_store klevu_search/developer/lazyload_js_catnav 1
+     * @magentoConfigFixture default/klevu_frontendjs/configuration/defer_js 1
+     * @magentoConfigFixture default_store klevu_frontendjs/configuration/defer_js 1
+     * @magentoDataFixture loadCategoryFixtures
+     */
+    public function testThemeV2JavaScriptOutputToCategory_EnabledViaLazyLoad_WithJsDeferred()
+    {
+        $this->setupPhp5();
+
+        $this->dispatch($this->prepareUrl('klevu-test-category-1'));
+
+        $response = $this->getResponse();
+        $responseBody = $response->getBody();
+        $this->assertSame(200, $response->getHttpResponseCode());
+
+        if (method_exists($this, 'assertStringContainsString')) {
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Library JS include is present in response body'
+            );
+            $this->assertStringContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is present in response body'
+            );
+
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'CatNav JS include is not present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is not present in response body'
+            );
+            $this->assertStringNotContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Lazyload CatNav JS include is not present in response body'
+            );
+            $this->assertStringContainsString(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is present in response body'
+            );
+        } else {
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Library JS include is not present in response body'
+            );
+            $this->assertContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;core&#x2F;v2&#x2F;klevu.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Library JS include is present in response body'
+            );
+
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'CatNav JS include is not present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred CatNav JS include is not present in response body'
+            );
+            $this->assertNotContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Lazyload CatNav JS include is not present in response body'
+            );
+            $this->assertContains(
+                '<script type="text&#x2F;javascript" src="https&#x3A;&#x2F;&#x2F;js.klevu.com&#x2F;theme&#x2F;default&#x2F;v2&#x2F;catnav-theme.lazyload.js" defer="defer"></script>', // phpcs:ignore Generic.Files.LineLength.TooLong
+                $responseBody,
+                'Deferred Lazyload CatNav JS include is present in response body'
             );
         }
     }
