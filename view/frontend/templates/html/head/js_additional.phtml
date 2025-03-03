@@ -6,12 +6,10 @@
 ?>
 
 <?php
-$scriptString = <<<script
-
+$scriptString = "
     var klevu_pageCategory = '{$block->escapeJsQuote($block->getFullCategoryPath())}';
-    sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);
-
-script;
+    sessionStorage.setItem('klevu_pageCategory', klevu_pageCategory);
+";
 ?>
 <?= $secureRenderer->renderTag(
     'script',

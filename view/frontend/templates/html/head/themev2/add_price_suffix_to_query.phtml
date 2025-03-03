@@ -6,29 +6,27 @@
 ?>
 
 <?php
-$scriptStringChains = <<<script
+$scriptStringChains = "
     klevu.settings.chains.initChain.add({
-        name: "addPriceSuffixToCatNavQuery",
+        name: 'addPriceSuffixToCatNavQuery',
         fire: function (data) {
-            if (klevu.getObjectPath(klevu.search, "catnav", false)
-                && klevu.getGlobalSetting("flags.addPriceSuffixToQuery.catnav", false)
-                && typeof klevu_addPriceSuffixToQueryControl === "object"
+            if (klevu.getObjectPath(klevu.search, 'catnav', false)
+                && klevu.getGlobalSetting('flags.addPriceSuffixToQuery.catnav', false)
+                && typeof klevu_addPriceSuffixToQueryControl === 'object'
             ) {
                 klevu.search.catnav.getScope().chains.request.control.addAfter('initRequest', klevu_addPriceSuffixToQueryControl);
-                klevu.setObjectPath(data, "flags.addPriceSuffixToQuery.catnav", false);
+                klevu.setObjectPath(data, 'flags.addPriceSuffixToQuery.catnav', false);
             }
         }
-    });
-
-script;
+    });";
 ?>
 
 <?php
-$catNavPowerUp = <<<script
+$catNavPowerUp = "
 klevu({ powerUp: { catnav: true }});
-script;
+";
 
-$catNavPowerUpWithSuffix = <<<script
+$catNavPowerUpWithSuffix = "
 klevu({
     powerUp: { catnav: true },
     flags: {
@@ -36,13 +34,12 @@ klevu({
             catnav: true
         }
     }
-});
-script;
+});";
 ?>
 
 <?php if ($block->isDeferJs()): ?>
     <?php
-    $scriptString = <<<script
+    $scriptString = "
         window._klvReady = window._klvReady || [];
         window._klvReady.push(function() {
             {$scriptStringChains}
@@ -63,13 +60,11 @@ script;
             });
 
             return true;
-        };
-
-script;
+        };";
     ?>
 <?php else: ?>
     <?php
-    $scriptString = <<<script
+    $scriptString = "
         {$scriptStringChains}
 
         var klevuPowerUpCatNav = function() {
@@ -81,22 +76,18 @@ script;
             {$catNavPowerUpWithSuffix}
 
             return true;
-        };
-
-script;
+        };";
     ?>
 <?php endif; ?>
 
 <?php
-$scriptString .= <<<script
+$scriptString .= "
     document.addEventListener('{$block->getCustomerDataLoadErrorEventName()}', function () {
         klevuPowerUpCatNav();
     });
     document.addEventListener('{$block->getCustomerDataLoadedEventName()}', function () {
         klevuPowerUpCatNavWithSuffix();
-    });
-
-script;
+    });";
 ?>
 
 <?= $secureRenderer->renderTag(
