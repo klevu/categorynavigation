@@ -9,9 +9,8 @@
     <?php $jsonTrackingData = $block->getJsonTrackingData();?>
     <?php if ($jsonTrackingData) { ?>
         <?php
-        $scriptString = <<<script
-
-    document.addEventListener("DOMContentLoaded", function() {
+        $scriptString = "
+    document.addEventListener('DOMContentLoaded', function() {
         try {
             var counter = 0;
             var timeKlevuUpdate = setInterval(function () {
@@ -35,11 +34,11 @@
     function categoryAnaylticsProductClickKlevu() {
         let cats;
         try {
-            cats = JSON.parse(localStorage.getItem("categories"));
+            cats = JSON.parse(localStorage.getItem('categories'));
         } catch (e) {
             cats = null;
         }
-        const url = (document.referrer !== "") ? (new URL(document.referrer)) : null;
+        const url = (document.referrer !== '') ? (new URL(document.referrer)) : null;
         if (url === null || cats === null) {
             return;
         }
@@ -54,15 +53,15 @@
                 klevu_search_product_tracking.klevu_sessionId = document.getElementById('klevu_sessionId').innerHTML;
             }
 
-            var klevu_cat_productIds = localStorage.getItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
-            var klevu_page_startsfrom = localStorage.getItem("klevu_page_startsfrom");
-            var ids = (klevu_cat_productIds == null) ? [] : klevu_cat_productIds.split(",");
+            var klevu_cat_productIds = localStorage.getItem('klevu_cat_productIds_' + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
+            var klevu_page_startsfrom = localStorage.getItem('klevu_page_startsfrom');
+            var ids = (klevu_cat_productIds == null) ? [] : klevu_cat_productIds.split(',');
             var product_position = ids.indexOf(klevu_search_product_tracking.klevu_productId) + 1;
             product_position += parseInt(klevu_page_startsfrom);
 
             klevu_search_product_tracking.klevu_productPosition = product_position;
 
-            if (klevu_search_product_tracking.klevu_productId !== localStorage.getItem("klevu_product_call_sent")) {
+            if (klevu_search_product_tracking.klevu_productId !== localStorage.getItem('klevu_product_call_sent')) {
                 const fetchUrl = '{$block->escapeUrl($block->getCategoryNavigationTrackingUrl($block->getStoreId()))}'
                  + '?' + convertDataToUrlParams(klevu_search_product_tracking);
 
@@ -70,7 +69,7 @@
                     method: 'GET',
                     crossDomain: true
                 }).then(response => {
-                    localStorage.setItem("klevu_product_call_sent", klevu_search_product_tracking.klevu_productId);
+                    localStorage.setItem('klevu_product_call_sent', klevu_search_product_tracking.klevu_productId);
                 });
 
                 function convertDataToUrlParams(data) {
@@ -85,9 +84,7 @@
                 }
             }
         }
-    }
-
-script;
+    }";
         ?>
         <?= $secureRenderer->renderTag(
             'script',

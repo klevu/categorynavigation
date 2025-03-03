@@ -2,6 +2,8 @@
 
 namespace Klevu\Categorynavigation\Test\Integration\Block\Html\Head;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 use Magento\CatalogUrlRewrite\Model\CategoryUrlPathGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
@@ -50,11 +52,20 @@ class JsAdditionalOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString("var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';", $responseBody);
-            $this->assertStringContainsString('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertStringContainsString(
+                "var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';",
+                $responseBody
+            );
+            $this->assertStringContainsString(
+                "sessionStorage.setItem('klevu_pageCategory', klevu_pageCategory);",
+                $responseBody
+            );
         } else {
             $this->assertContains("var klevu_pageCategory = '", $responseBody);
-            $this->assertContains('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertContains(
+                "sessionStorage.setItem('klevu_pageCategory', klevu_pageCategory);",
+                $responseBody
+            );
         }
     }
 
@@ -82,11 +93,20 @@ class JsAdditionalOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString("var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';", $responseBody);
-            $this->assertStringNotContainsString('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertStringNotContainsString(
+                "var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';",
+                $responseBody
+            );
+            $this->assertStringNotContainsString(
+                'sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);',
+                $responseBody
+            );
         } else {
             $this->assertNotContains("var klevu_pageCategory = '", $responseBody);
-            $this->assertNotContains('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertNotContains(
+                'sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);',
+                $responseBody
+            );
         }
     }
 
@@ -114,11 +134,20 @@ class JsAdditionalOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString("var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';", $responseBody);
-            $this->assertStringNotContainsString('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertStringNotContainsString(
+                "var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';",
+                $responseBody
+            );
+            $this->assertStringNotContainsString(
+                'sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);',
+                $responseBody
+            );
         } else {
             $this->assertNotContains("var klevu_pageCategory = '", $responseBody);
-            $this->assertNotContains('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertNotContains(
+                'sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);',
+                $responseBody
+            );
         }
     }
 
@@ -146,11 +175,20 @@ class JsAdditionalOutputTest extends AbstractControllerTestCase
         $this->assertSame(200, $response->getHttpResponseCode());
 
         if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString("var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';", $responseBody);
-            $this->assertStringNotContainsString('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertStringNotContainsString(
+                "var klevu_pageCategory = '[Klevu] Parent Category 1;[Klevu] Child Category 1-1';",
+                $responseBody
+            );
+            $this->assertStringNotContainsString(
+                'sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);',
+                $responseBody
+            );
         } else {
             $this->assertNotContains("var klevu_pageCategory = '", $responseBody);
-            $this->assertNotContains('sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);', $responseBody);
+            $this->assertNotContains(
+                'sessionStorage.setItem("klevu_pageCategory", klevu_pageCategory);',
+                $responseBody
+            );
         }
     }
 

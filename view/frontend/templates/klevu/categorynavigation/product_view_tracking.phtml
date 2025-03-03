@@ -19,7 +19,7 @@
         ?>
 
         <?php
-        $scriptString = <<<script
+        $scriptString = "
 
     var already_reported;
     var array_difference;
@@ -31,14 +31,14 @@
     if (setupTime == null) {
         localStorage.setItem('setupTime', now)
     } else if (now - setupTime > hours * 60 * 60 * 1000) {
-        localStorage.removeItem("categories");
-        localStorage.removeItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
+        localStorage.removeItem('categories');
+        localStorage.removeItem('klevu_cat_productIds_' + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName));
         localStorage.setItem('setupTime', now);
     }
 
     function productViewTracking() {
         try {
-            var category_product_ids = document.querySelectorAll("div[data-product-id]");
+            var category_product_ids = document.querySelectorAll('div[data-product-id]');
             let product_ids = [];
             for (let i = 0; i < category_product_ids.length; i++) {
                 if (category_product_ids[i].dataset) {
@@ -47,8 +47,8 @@
             }
             //Fallback method to grab ids to send cat nav analytics
             if (category_product_ids.length === 0) {
-                let kl_mage_cat_prefix = "product-item-info_";
-                let kl_mage_cat_ids = document.querySelectorAll("[id^='" + kl_mage_cat_prefix + "']");
+                let kl_mage_cat_prefix = 'product-item-info_';
+                let kl_mage_cat_ids = document.querySelectorAll('[id^='' + kl_mage_cat_prefix + '']');
 
                 for (let i = 0; i < kl_mage_cat_ids.length; i++) {
                     let kl_mage_cat_ele = kl_mage_cat_ids[i].id;
@@ -65,18 +65,18 @@
                 if ('undefined' === typeof already_reported || already_reported !== klevu_search_product_tracking.klevu_productIds) {
                     if ('undefined' === typeof already_reported) {
                         klevu_pageStartsFrom = 0;
-                        sessionStorage.setItem("product_per_page", product_ids.length);
+                        sessionStorage.setItem('product_per_page', product_ids.length);
                     } else if (already_reported) {
-                        const bb = already_reported.split(",");
+                        const bb = already_reported.split(',');
                         klevu_pageStartsFrom = bb.length;
                     }
 
                     if (p) {
-                        klevu_pageStartsFrom = (p - 1) * sessionStorage.getItem("product_per_page");
+                        klevu_pageStartsFrom = (p - 1) * sessionStorage.getItem('product_per_page');
                     }
                     if (already_reported) {
-                        let a = already_reported.split(",");
-                        let b = klevu_search_product_tracking.klevu_productIds.split(",");
+                        let a = already_reported.split(',');
+                        let b = klevu_search_product_tracking.klevu_productIds.split(',');
 
                         if (b.length > a.length) {
                             if (arrayContainsArray(b, a)) {
@@ -116,15 +116,15 @@
                     }
 
                     if (klevu_search_product_tracking.klevu_productIds.length > 0) {
-                        const url = '{$block->escapeUrl( $block->getCategoryNavigationTrackingUrl($block->getStoreId()))}'
+                        const url = '{$block->escapeUrl($block->getCategoryNavigationTrackingUrl($block->getStoreId()))}'
                             + '?' + convertDataToUrlParams(klevu_search_product_tracking);
 
                         fetch(url, {
                             method: 'GET',
                             crossDomain: true
                         }).then(response => {
-                            localStorage.setItem("klevu_cat_productIds_" + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName), klevu_search_product_tracking.klevu_productIds);
-                            localStorage.setItem("klevu_page_startsfrom", klevu_pageStartsFrom);
+                            localStorage.setItem('klevu_cat_productIds_' + encodeURIComponent(klevu_search_product_tracking.klevu_categoryName), klevu_search_product_tracking.klevu_productIds);
+                            localStorage.setItem('klevu_page_startsfrom', klevu_pageStartsFrom);
                         });
 
                         function convertDataToUrlParams(data) {
@@ -147,9 +147,9 @@
 
     let categories;
     try {
-        categories = JSON.parse(localStorage.getItem("categories") || "{}");
+        categories = JSON.parse(localStorage.getItem('categories') || '{}');
     } catch (e) {
-        categories = "{}";
+        categories = '{}';
     }
 
     const currentUrl = window.location.pathname;
@@ -157,7 +157,7 @@
         'name': encodeURIComponent(klevu_search_product_tracking.klevu_categoryName),
         'categoryPath': encodeURIComponent(klevu_search_product_tracking.klevu_categoryPath)
     };
-    localStorage.setItem("categories", JSON.stringify(categories));
+    localStorage.setItem('categories', JSON.stringify(categories));
 
     /**
      * Returns TRUE if the first specified array contains all elements
@@ -184,7 +184,7 @@
         klevuProductViewTrackingObserver.disconnect();
         klevuTimeOut = window.setTimeout(productViewTracking, 700);
     }
-    
+
     const klevuProductViewTrackingObserver = new MutationObserver(
         mutationList => mutationList.filter(m => m.type === 'childList').forEach(
             m => {
@@ -192,14 +192,13 @@
             }
         )
     );
-    klevuProductViewTrackingObserver.observe(document.getElementsByTagName("body")[0], {
+    klevuProductViewTrackingObserver.observe(document.getElementsByTagName('body')[0], {
         childList: true,
         subtree: true
     });
-    
-    sessionStorage.setItem("klevu_product_call_sent", '');
 
-script;
+    sessionStorage.setItem('klevu_product_call_sent', '');
+";
         ?>
         <?= $secureRenderer->renderTag(
             'script',

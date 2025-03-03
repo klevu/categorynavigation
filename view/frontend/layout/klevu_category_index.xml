@@ -50,7 +50,7 @@
         <!-- Theme V2 -->
         <referenceBlock name="head.additional">
             <block class="Klevu\Categorynavigation\Block\Html\Head\JsAdditional"
-                   after="klevu_frontendjs.js_init"
+                   before="-"
                    name="klevu_js_additional.catnav"
                    template="Klevu_Categorynavigation::html/head/js_additional.phtml"
                    ifconfig="klevu_search/categorylanding/enabledcategorynavigation"/>

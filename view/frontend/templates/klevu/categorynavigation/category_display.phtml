@@ -178,13 +178,11 @@ if (!empty($pathIds)) {
 }
 ?>
 <?php
-$categoryPageScriptString = <<<script
-
-    document.getElementById("searchedKeyword").value = '*';
+$categoryPageScriptString = "
+    document.getElementById('searchedKeyword').value = '*';
     klevu_pageCategory = '{$block->escapeJsQuote($allCategoryNames)}';
     var klevu_setTermInSearchBox = false;
-
-script;
+";
 ?>
 <?= $secureRenderer->renderTag(
     'script',
@@ -195,8 +193,7 @@ script;
 
 <?php if ($block->isCustomerGroupPriceEnabled()) { ?>
     <?php
-    $groupPriceScriptString = <<<script
-
+    $groupPriceScriptString = "
     var counter = 0;
     var klevuMagentoCustomerGroupFlag = false;
     var timeKlevuUpdate = setInterval(function () {
@@ -204,7 +201,7 @@ script;
         if (elem !== null && elem.innerHTML) {
             // custom code here
             klevuMagentoCustomerGroupFlag = true;
-            if (typeof klevu_pageLoadEvent == "function") {
+            if (typeof klevu_pageLoadEvent == 'function') {
                 klevu_pageLoadEvent();
             }
             clearInterval(timeKlevuUpdate);
@@ -212,15 +209,14 @@ script;
             counter++;
             if (counter > 7) {
                 klevuMagentoCustomerGroupFlag = true;
-                if (typeof klevu_pageLoadEvent == "function") {
+                if (typeof klevu_pageLoadEvent == 'function') {
                     klevu_pageLoadEvent();
                 }
                 clearInterval(timeKlevuUpdate);
             }
         }
     }, 700);
-
-script;
+";
     ?>
     <?= $secureRenderer->renderTag(
         'script',
