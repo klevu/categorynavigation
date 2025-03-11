@@ -86,10 +86,13 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         } else {
             $this->assertContains('<div id="system_config_tabs"', $responseBody);
         }
-        if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression(
+                '#<fieldset[^>]+id="klevu_search_categorylanding"#',
+                $responseBody
+            );
         } else {
-            $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
+            $this->assertNotRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
 
         $matches = [];
@@ -98,13 +101,7 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $responseBody,
             $matches
         );
-        $this->assertCount(1, $matches);
-        $cmsContentRow = current($matches);
-        if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('Switch to Store View scope to manage', $cmsContentRow);
-        } else {
-            $this->assertContains('Switch to Store View scope to manage', $cmsContentRow);
-        }
+        $this->assertCount(0, $matches);
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             $this->assertDoesNotMatchRegularExpression(
                 '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
@@ -161,10 +158,13 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         } else {
             $this->assertContains('<div id="system_config_tabs"', $responseBody);
         }
-        if (method_exists($this, 'assertMatchesRegularExpression')) {
-            $this->assertMatchesRegularExpression('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
+        if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
+            $this->assertDoesNotMatchRegularExpression(
+                '#<fieldset[^>]+id="klevu_search_categorylanding"#',
+                $responseBody
+            );
         } else {
-            $this->assertRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
+            $this->assertNotRegExp('#<fieldset[^>]+id="klevu_search_categorylanding"#', $responseBody);
         }
 
         $matches = [];
@@ -173,13 +173,7 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
             $responseBody,
             $matches
         );
-        $this->assertCount(1, $matches);
-        $cmsContentRow = current($matches);
-        if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString('Switch to Store View scope to manage', $cmsContentRow);
-        } else {
-            $this->assertContains('Switch to Store View scope to manage', $cmsContentRow);
-        }
+        $this->assertCount(0, $matches);
         if (method_exists($this, 'assertDoesNotMatchRegularExpression')) {
             $this->assertDoesNotMatchRegularExpression(
                 '#<tr[^>]+id="row_klevu_search_categorylanding_enabledcategorynavigation".*?</tr>#s',
@@ -296,11 +290,6 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
-        if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('disabled', $catNavOrderingField);
-        } else {
-            $this->assertNotContains('disabled', $catNavOrderingField);
-        }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression(
                 '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
@@ -480,11 +469,6 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
-        if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('disabled', $catNavOrderingField);
-        } else {
-            $this->assertNotContains('disabled', $catNavOrderingField);
-        }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression(
                 '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
@@ -1072,11 +1056,6 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
-        if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('disabled', $catNavOrderingField);
-        } else {
-            $this->assertNotContains('disabled', $catNavOrderingField);
-        }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression(
                 '#<option[^>]+value="1"[^>]+selected.*?>\s*Native\s*</option>#s',
@@ -1266,11 +1245,6 @@ class RenderPluginTest extends AbstractBackendControllerTestCase
         );
         $this->assertCount(1, $matches, 'CatNav Ordering field');
         $catNavOrderingField = current($matches);
-        if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString('disabled', $catNavOrderingField);
-        } else {
-            $this->assertNotContains('disabled', $catNavOrderingField);
-        }
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression(
                 '#<option[^>]+value="1".*?>\s*Native\s*</option>#s',

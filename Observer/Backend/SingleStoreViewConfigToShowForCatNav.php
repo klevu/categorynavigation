@@ -10,6 +10,10 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
+/**
+ * @deprecated 2.11.1 - no longer required. Targeted config load rather than config save.
+ * @see no direct alternative
+ */
 class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
 {
     /**
@@ -29,6 +33,12 @@ class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
      */
     private $_klevuHelperConfigCatNav;
 
+    /**
+     * @param RequestInterface $request
+     * @param StoreManagerInterface $storeManager
+     * @param Klevu_HelperManager $klevuHelperManager
+     * @param Klevu_HelperConfigCatNav $KlevuHelperConfigCatNav
+     */
     public function __construct(
         RequestInterface $request,
         StoreManagerInterface $storeManager,
@@ -45,40 +55,12 @@ class SingleStoreViewConfigToShowForCatNav implements ObserverInterface
      * @param EventObserver $observer
      *
      * @return void
+     *
+     * @deprecated 2.11.1 - no longer required. Targeted config load rather than config save.
+     * @see no direct alternative. Changed adminhtml/system.xml fields to all have showInDefault="1"
+     *       using group showInDefault to control visibility
      */
-    public function execute(EventObserver $observer)
+    public function execute(EventObserver $observer) // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedFunction
     {
-        try {
-            if (!($this->_storeManager->isSingleStoreMode())) {
-                return;
-            }
-            if (
-                $this->_request->getFullActionName() !== 'adminhtml_system_config_edit' ||
-                $this->_request->getParam('section') !== 'klevu_search'
-            ) {
-                return;
-            }
-            /** @var \Klevu\Search\Helper\Config $klevuConfig */
-            $klevuConfig = $this->_klevuHelperManager->getConfigHelper();
-            if (!$klevuConfig->getModuleInfoCatNav()) {
-                return;
-            }
-            $catNavURL = $this->_klevuHelperConfigCatNav->getCategoryNavigationUrl($this->_storeManager->getStore());
-            $catNavTrackURL = $this->_klevuHelperConfigCatNav->getCategoryNavigationTrackingUrl($this->_storeManager->getStore());
-
-            $klevuConfig->setGlobalConfig(Klevu_HelperConfigCatNav::XML_PATH_CATEGORY_NAVIGATION_URL, $catNavURL);
-            $klevuConfig->setGlobalConfig(Klevu_HelperConfigCatNav::XML_PATH_CATEGORY_NAVIGATION_TRACKING_URL, $catNavTrackURL);
-        } catch (\Exception $e) {
-            $klevuDataHelper = $this->_klevuHelperManager->getDataHelper();
-            $klevuDataHelper->log(
-                LoggerConstants::ZEND_LOG_CRIT,
-                sprintf(
-                    "Exception thrown for single store view cat nav %s::%s - %s",
-                    __CLASS__, __METHOD__, $e->getMessage()
-                )
-            );
-        }
     }
-
 }
-
