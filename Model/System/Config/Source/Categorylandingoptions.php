@@ -35,7 +35,7 @@ class Categorylandingoptions
      */
     public function __construct(
         Klevu_ProductSync $klevuProductSync,
-        GetFeaturesInterface $getFeatures = null
+        ?GetFeaturesInterface $getFeatures = null
     ) {
         $this->_klevuProductSync = $klevuProductSync;
         $this->getFeatures = $getFeatures ?: ObjectManager::getInstance()->get(GetFeaturesInterface::class);

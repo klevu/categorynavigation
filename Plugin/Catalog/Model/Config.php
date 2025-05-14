@@ -64,12 +64,12 @@ class Config
      * @param Registry|null $registry
      */
     public function __construct(
-        StoreManagerInterface    $storeManager,
-        KlevuCatConfig           $klevuCatConfig,
-        KlevuCatData             $searchHelper,
-        TemplateOverride         $templateOverride,
-        Klevu_SearchConfigHelper $klevuSearchConfigHelper = null,
-        Registry                 $registry = null
+        StoreManagerInterface     $storeManager,
+        KlevuCatConfig            $klevuCatConfig,
+        KlevuCatData              $searchHelper,
+        TemplateOverride          $templateOverride,
+        ?Klevu_SearchConfigHelper $klevuSearchConfigHelper = null,
+        ?Registry                 $registry = null
     )
     {
         $this->_storeManager = $storeManager;

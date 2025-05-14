@@ -61,7 +61,7 @@ class CateoryNavigationUrl implements ObserverInterface
         Request $request,
         CategoryNavigationUrlAction $apiActionCategoryNavigationURL,
         ConfigInterface $configInterface,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->_categorynavigationHelper = $categorynavigationHelper;
         $this->request = $request;
