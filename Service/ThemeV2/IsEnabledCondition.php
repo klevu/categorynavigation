@@ -28,10 +28,11 @@ class IsEnabledCondition implements
 
     /**
      * @param ScopeConfigInterface $scopeConfig
+     * @param RequestInterface|null $request
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-		RequestInterface $request = null
+        ?RequestInterface $request = null
     ) {
         $this->scopeConfig = $scopeConfig;
 		$this->request = $request;
