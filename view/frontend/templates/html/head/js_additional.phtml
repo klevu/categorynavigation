@@ -11,7 +11,7 @@ $scriptString = "
     sessionStorage.setItem('klevu_pageCategory', klevu_pageCategory);
 ";
 ?>
-<?= $secureRenderer->renderTag(
+<?= /* @noEscape */ $secureRenderer->renderTag(
     'script',
     ['type' => 'text/javascript'],
     $scriptString,
